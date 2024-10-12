@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { AppBar, Box } from '@mui/material';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-
     return (
         <>
             <AppBar
@@ -24,9 +23,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                     height: '100%',
                     width: '100%',
-                    marginTop: '3%',
+                    marginTop: '2%',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'cloumn',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}

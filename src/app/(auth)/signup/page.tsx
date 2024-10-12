@@ -12,6 +12,7 @@ export default function SignupPage() {
           display: 'flex',
           flexDirection: 'column',
           padding: 4,
+          boxShadow: 'none',
         }
       }
     >
