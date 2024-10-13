@@ -1,20 +1,13 @@
 import React from 'react';
-import { Box, Button, Typography, Container, AppBar, Toolbar } from '@mui/material';
-import Link from 'next/link';
+import { Box, Typography, Container } from '@mui/material';
 import Image from 'next/image';
+import AuthAppBar from '@/components/auth/AuthAppBar';
+import LetsChatButton from '@/components/LetsChatButton';
 
 export default function HomePage() {
   return (
     <>
-      <AppBar position="static" color="default" sx={{ boxShadow: 'none' }}>
-        <Toolbar>
-          <Link href="/">
-            <Box sx={{ flexGrow: 1 }}>
-              <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} />
-            </Box>
-          </Link>
-        </Toolbar>
-      </AppBar>
+      <AuthAppBar />
       <Container
         maxWidth="md"
         sx={{
@@ -35,16 +28,7 @@ export default function HomePage() {
           Welcome to Nexio, the platform that connects you with the world.
         </Typography>
         <Box>
-          <Link href="/signin" passHref>
-            <Button color="primary" variant="outlined" sx={{ mr: 2 }}>
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/signup" passHref>
-            <Button color="primary" variant="contained">
-              Sign Up
-            </Button>
-          </Link>
+          <LetsChatButton />
         </Box>
       </Container>
     </>

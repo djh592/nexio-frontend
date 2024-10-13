@@ -1,19 +1,10 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { AppBar, Box, Toolbar } from '@mui/material';
+import { Box } from '@mui/material';
+import AuthAppBar from '@/components/auth/AuthAppBar';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <AppBar position="static" color="default" sx={{ boxShadow: 'none' }}>
-                <Toolbar>
-                    <Link href="/">
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} />
-                        </Box>
-                    </Link>
-                </Toolbar>
-            </AppBar>
+            <AuthAppBar />
             <Box
                 sx={{
                     height: '100%',
