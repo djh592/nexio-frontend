@@ -4,6 +4,7 @@ import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from "@m
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setToken, setUser } from "@/lib/features/auth/authSlice";
+import UserProfileDrawer from "./UserProfileDrawer";
 
 export default function UserAvatar() {
     const router = useRouter();
@@ -12,6 +13,8 @@ export default function UserAvatar() {
     const user = useAppSelector((state) => state.auth.user);
 
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+    const [openDrawer, setOpenDrawer] = React.useState(false);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -76,7 +79,12 @@ export default function UserAvatar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
-                <MenuItem key="Profile" onClick={handleCloseUserMenu}>
+                <MenuItem key="Profile" onClick={
+                    () => {
+                        setOpenDrawer(true);
+                        handleCloseUserMenu();
+                    }
+                }>
                     <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
                 </MenuItem>
                 <MenuItem key="Logout" onClick={() => {
@@ -88,9 +96,10 @@ export default function UserAvatar() {
                     <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
                 </MenuItem>
                 <MenuItem key="Unregister" onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: 'Unregister' }}>Profile</Typography>
+                    <Typography sx={{ textAlign: 'Unregister' }}>Unregister</Typography>
                 </MenuItem>
             </Menu>
+            <UserProfileDrawer open={openDrawer} onClose={() => setOpenDrawer(false)} />
         </Box>
     );
 }
