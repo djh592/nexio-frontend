@@ -1,20 +1,21 @@
 'use client';
-import React from "react";
-import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { setToken, setUser } from "@/lib/features/auth/authSlice";
-import UserProfileDrawer from "./UserProfileDrawer";
+import React from 'react';
+import { Box, Tooltip, IconButton, Avatar, Menu, MenuItem, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { setToken, setUser } from '@/lib/features/auth/authSlice';
+import UserProfileDrawer from './UserProfileDrawer';
 
-export default function UserAvatar() {
+function UserAvatar() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const token = useAppSelector((state) => state.auth.token);
     const user = useAppSelector((state) => state.auth.user);
 
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
     const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [openUnregisterDialog, setOpenUnregisterDialog] = React.useState(false);
+    const [password, setPassword] = React.useState('');
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -53,6 +54,39 @@ export default function UserAvatar() {
         }
         else {
             alert("Logout failed" + data.message);
+        }
+    };
+
+    const handleUnregister = async () => {
+        const headers = new Headers();
+        headers.append("Authorization", token);
+
+        const response = await fetch(`/api/unregister`, {
+            method: "POST",
+            body: JSON.stringify({
+                username: user.name,
+                password: password,
+            }),
+            headers: headers,
+        });
+
+        const data = await response.json();
+        const code = Number(data.code);
+
+        if (code === 200) {
+            dispatch(setToken(""));
+            dispatch(setUser({
+                id: "",
+                name: "",
+                password: "",
+                email: "",
+                phone: "",
+                avatar: "",
+            }));
+            router.push("/");
+        }
+        else {
+            alert("Unregister failed: " + data.message);
         }
     };
 
@@ -95,11 +129,54 @@ export default function UserAvatar() {
                 }}>
                     <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
                 </MenuItem>
-                <MenuItem key="Unregister" onClick={handleCloseUserMenu}>
-                    <Typography sx={{ textAlign: 'Unregister' }}>Unregister</Typography>
+                <MenuItem key="Unregister" onClick={() => {
+                    setOpenUnregisterDialog(true);
+                    handleCloseUserMenu();
+                }}>
+                    <Typography sx={{ textAlign: 'center' }}>Unregister</Typography>
                 </MenuItem>
             </Menu>
             <UserProfileDrawer open={openDrawer} onClose={() => setOpenDrawer(false)} />
+            <Dialog
+                open={openUnregisterDialog}
+                onClose={() => setOpenUnregisterDialog(false)}
+                aria-labelledby="unregister-dialog-title"
+                aria-describedby="unregister-dialog-description"
+            >
+                <DialogTitle color='error' id="unregister-dialog-title">{"Confirm Unregister"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="unregister-dialog-description" >
+                        To unregister, please enter your password to confirm.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="password"
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        variant="standard"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        // error={invalidPassword}
+                        // helperText={invalidPassword && "Incorrect password"}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenUnregisterDialog(false)}>Cancel</Button>
+                    <Button color='error'
+                        onClick={() => {
+                            handleUnregister().catch((err) => {
+                                alert("Unregister failed: " + err);
+                            });
+                            setOpenUnregisterDialog(false);
+                        }}>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }
+
+export default UserAvatar;
