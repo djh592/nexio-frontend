@@ -1,8 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import { Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
+import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
 
 export default function SigninForm() {
+    const theme = useTheme();
+
     const [formValues, setFormValues] = useState({
         username: '',
         password: '',
@@ -40,7 +42,15 @@ export default function SigninForm() {
                 <FormHelperText>{Invalid.password && "Please enter your password"}</FormHelperText>
             </FormControl>
             <Button
-                sx={{ height: '56px' }}
+                sx={{
+                    height: '56px',
+                    backgroundColor: theme.palette.primary.light,
+                    color: '#fff',
+                    '&:hover': {
+                        backgroundColor: theme.palette.primary.main,
+                    },
+                    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+                }}
                 variant="contained"
                 color="primary"
                 onClick={() => {
