@@ -1,9 +1,14 @@
 'use client';
-import React, { useState } from 'react';
-import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/lib/hooks';
+import { setUserName, setUserPassword } from '@/lib/features/auth/authSlice';
 
 export default function SigninForm() {
     const theme = useTheme();
+    const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const [formValues, setFormValues] = useState({
         username: '',
@@ -17,6 +22,57 @@ export default function SigninForm() {
 
     const handleChange = (prop: keyof typeof formValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setFormValues({ ...formValues, [prop]: event.target.value });
+    };
+
+    const [successAlert, setSuccessAlert] = useState({
+        open: false,
+        message: '',
+    });
+
+    useEffect(() => {
+        if (successAlert.open) {
+            setTimeout(() => {
+                setSuccessAlert({ open: false, message: '' });
+            }, 2000);
+        }
+    }, [successAlert]);
+
+    const [errorAlert, setErrorAlert] = useState({
+        open: false,
+        message: '',
+    });
+
+    useEffect(() => {
+        if (errorAlert.open) {
+            setTimeout(() => {
+                setErrorAlert({ open: false, message: '' });
+            }, 2000);
+        }
+    }, [errorAlert]);
+
+    const submitForm = () => {
+        fetch(`/api/login`, {
+            method: "POST",
+            body: JSON.stringify({
+                userName: formValues.username,
+                password: formValues.password,
+            }),
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if (Number(res.code) === 0) {
+                    dispatch(setUserName(formValues.username));
+                    dispatch(setUserPassword(formValues.password));
+                    setSuccessAlert({ open: true, message: 'Login successful!' });
+                    router.push('/chat');
+                }
+                else {
+                    setErrorAlert({ open: true, message: 'Login failed: ' + res.message });
+                }
+            })
+            .catch((err) => {
+                setErrorAlert({ open: true, message: 'Login failed: ' + err });
+            });
     };
 
     return (
@@ -62,12 +118,14 @@ export default function SigninForm() {
                         password: invalidPassword,
                     });
                     if (isValid) {
-                        alert('Form submitted');
+                        submitForm();
                     }
                 }}
             >
                 Sign In
             </Button>
+            {successAlert.open && <Alert severity="success">{successAlert.message}</Alert>}
+            {errorAlert.open && <Alert severity="error">{errorAlert.message}</Alert>}
         </Box>
     );
 }

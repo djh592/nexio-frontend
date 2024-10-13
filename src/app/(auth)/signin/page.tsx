@@ -11,7 +11,8 @@ export default function SigninPage() {
           width: '40%',
           display: 'flex',
           flexDirection: 'column',
-          padding: 4,
+          px: 4,
+          py: 3,
           boxShadow: 'none',
         }
       }

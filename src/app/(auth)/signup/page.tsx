@@ -11,21 +11,22 @@ export default function SignupPage() {
           width: '40%',
           display: 'flex',
           flexDirection: 'column',
-          padding: 4,
+          px: 4,
+          py: 3,
           boxShadow: 'none',
         }
       }
     >
       <Typography
         variant="h4"
-        sx={{ fontWeight: 'bold', mb: 2 }}
+        sx={{ fontWeight: 'bold', mb: 1 }}
       >
         Sign up
       </Typography>
       <SignupForm />
       <Typography
         variant="body2"
-        sx={{ alignSelf: 'center', mt: 2 }}
+        sx={{ alignSelf: 'center', mt: 1 }}
       >
         {"Already have an account? "}
         <Link href="/signin" passHref>
