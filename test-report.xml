@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/home/djh592/dev/se/nexio-frontend/src/test/empty.test.ts">
+    <testCase name="empty test" duration="2"/>
+  </file>
+</testExecutions>
