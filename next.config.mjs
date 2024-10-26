@@ -8,7 +8,7 @@ const nextConfig = {
         return [{
             source: "/api/:path*",
             // TODO: Change the destination to the actual API URL
-            destination: "http://127.0.0.1:8000/:path*",
+            destination: "https://nexio-backend-nexio.app.secoder.net/:path*",
         }];
     }
 };
