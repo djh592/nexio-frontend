@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
-import { setUserName, setUserPassword } from '@/lib/features/auth/authSlice';
+import { setToken, setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
 
 export default function SigninForm() {
     const theme = useTheme();
@@ -15,7 +15,7 @@ export default function SigninForm() {
         password: '',
     });
 
-    const [Invalid, setInvalid] = useState({
+    const [invalid, setInvalid] = useState({
         username: false,
         password: false,
     });
@@ -61,8 +61,12 @@ export default function SigninForm() {
             .then((res) => res.json())
             .then((res) => {
                 if (Number(res.code) === 0) {
-                    dispatch(setUserName(formValues.username));
-                    dispatch(setUserPassword(formValues.password));
+                    dispatch(setToken(res.token));
+                    dispatch(setUserId(res.data.userId));
+                    dispatch(setUserName(res.data.userName));
+                    dispatch(setUserPhone(res.data.phoneNumber));
+                    dispatch(setUserEmail(res.data.emailAddress));
+                    dispatch(setUserAvatar(res.data.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Login successful!' });
                     router.push('/chat');
                 }
@@ -82,20 +86,20 @@ export default function SigninForm() {
                 variant="outlined"
                 value={formValues.username}
                 onChange={handleChange('username')}
-                error={Invalid.username}
-                helperText={Invalid.username && "Please enter your username"}
+                error={invalid.username}
+                helperText={invalid.username && "Please enter your username"}
             />
-            <FormControl variant="outlined" error={Invalid.password}>
-                <InputLabel htmlFor="outlined-adornment-password" error={Invalid.password}>Password</InputLabel>
+            <FormControl variant="outlined" error={invalid.password}>
+                <InputLabel htmlFor="outlined-adornment-password" error={invalid.password}>Password</InputLabel>
                 <OutlinedInput
                     id="outlined-adornment-password"
                     type="password"
                     value={formValues.password}
                     onChange={handleChange('password')}
                     label="Password"
-                    error={Invalid.password}
+                    error={invalid.password}
                 />
-                <FormHelperText>{Invalid.password && "Please enter your password"}</FormHelperText>
+                <FormHelperText>{invalid.password && "Please enter your password"}</FormHelperText>
             </FormControl>
             <Button
                 sx={{

@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Tooltip, IconButton, Avatar, Menu, MenuItem, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { setToken, setUser } from '@/lib/features/auth/authSlice';
+import { resetAuth } from '@/lib/features/auth/authSlice';
 import UserProfileDrawer from './UserProfileDrawer';
 
 function UserAvatar() {
@@ -32,7 +32,7 @@ function UserAvatar() {
         const response = await fetch(`/api/logout`, {
             method: "POST",
             body: JSON.stringify({
-                username: user.name,
+                username: user.userName,
             }),
             headers: headers,
         });
@@ -41,15 +41,7 @@ function UserAvatar() {
         const code = Number(data.code);
 
         if (code === 200) {
-            dispatch(setToken(""));
-            dispatch(setUser({
-                id: "",
-                name: "",
-                password: "",
-                email: "",
-                phone: "",
-                avatar: "",
-            }));
+            dispatch(resetAuth());
             router.push("/");
         }
         else {
@@ -64,7 +56,7 @@ function UserAvatar() {
         const response = await fetch(`/api/unregister`, {
             method: "POST",
             body: JSON.stringify({
-                username: user.name,
+                username: user.userName,
                 password: password,
             }),
             headers: headers,
@@ -74,15 +66,7 @@ function UserAvatar() {
         const code = Number(data.code);
 
         if (code === 200) {
-            dispatch(setToken(""));
-            dispatch(setUser({
-                id: "",
-                name: "",
-                password: "",
-                email: "",
-                phone: "",
-                avatar: "",
-            }));
+            dispatch(resetAuth());
             router.push("/");
         }
         else {
@@ -158,8 +142,8 @@ function UserAvatar() {
                         variant="standard"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        // error={invalidPassword}
-                        // helperText={invalidPassword && "Incorrect password"}
+                    // error={invalidPassword}
+                    // helperText={invalidPassword && "Incorrect password"}
                     />
                 </DialogContent>
                 <DialogActions>

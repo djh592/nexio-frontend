@@ -9,12 +9,11 @@ interface AuthState {
 const initialState: AuthState = {
     token: "",
     user: {
-        id: "",
-        name: "",
-        password: "",
-        email: "",
-        phone: "",
-        avatar: "",
+        userId: "",
+        userName: "",
+        phoneNumber: "",
+        emailAddress: "",
+        avatarUrl: "",
     },
 };
 
@@ -28,34 +27,33 @@ export const authSlice = createSlice({
         setUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         },
+        setUserId: (state, action: PayloadAction<string>) => {
+            state.user.userId = action.payload;
+        },
         setUserName: (state, action: PayloadAction<string>) => {
-            state.user.name = action.payload;
-        },
-        setUserPassword: (state, action: PayloadAction<string>) => {
-            state.user.password = action.payload;
-        },
-        setUserEmail: (state, action: PayloadAction<string>) => {
-            state.user.email = action.payload;
+            state.user.userName = action.payload;
         },
         setUserPhone: (state, action: PayloadAction<string>) => {
-            state.user.phone = action.payload;
+            state.user.phoneNumber = action.payload;
+        },
+        setUserEmail: (state, action: PayloadAction<string>) => {
+            state.user.emailAddress = action.payload;
         },
         setUserAvatar: (state, action: PayloadAction<string>) => {
-            state.user.avatar = action.payload;
+            state.user.avatarUrl = action.payload;
         },
         resetAuth: (state) => {
             state.token = "";
             state.user = {
-                id: "",
-                name: "",
-                password: "",
-                email: "",
-                phone: "",
-                avatar: "",
+                userId: "",
+                userName: "",
+                phoneNumber: "",
+                emailAddress: "",
+                avatarUrl: "",
             };
         },
     },
 });
 
-export const { setToken, setUser, setUserName, setUserPassword, setUserEmail, setUserPhone, setUserAvatar, resetAuth } = authSlice.actions;
+export const { setToken, setUser, setUserId, setUserName, setUserPhone, setUserEmail, setUserAvatar, resetAuth } = authSlice.actions;
 export default authSlice.reducer;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
-import { setUserName, setUserPassword, setUserEmail, setUserPhone } from '@/lib/features/auth/authSlice';
+import { setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
 
 export default function SignupForm() {
     const theme = useTheme();
@@ -17,7 +17,7 @@ export default function SignupForm() {
         phone: ''
     });
 
-    const [Invalid, setInvalid] = useState({
+    const [invalid, setInvalid] = useState({
         username: false,
         password: false,
         email: false,
@@ -55,20 +55,23 @@ export default function SignupForm() {
     }, [errorAlert]);
 
     const submitForm = () => {
-        fetch(`/api/login`, {
+        fetch(`/api/register`, {
             method: "POST",
             body: JSON.stringify({
                 userName: formValues.username,
                 password: formValues.password,
+                phoneNumber: formValues.phone,
+                emailAddress: formValues.email
             }),
         })
             .then((res) => res.json())
             .then((res) => {
                 if (Number(res.code) === 0) {
-                    dispatch(setUserName(formValues.username));
-                    dispatch(setUserPassword(formValues.password));
-                    dispatch(setUserEmail(formValues.email));
-                    dispatch(setUserPhone(formValues.phone));
+                    dispatch(setUserId(res.data.userId));
+                    dispatch(setUserName(res.data.userName));
+                    dispatch(setUserPhone(res.data.phoneNumber));
+                    dispatch(setUserEmail(res.data.emailAddress));
+                    dispatch(setUserAvatar(res.data.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Signup successful!' });
                     router.push('/chat');
                 }
@@ -88,34 +91,34 @@ export default function SignupForm() {
                 variant="outlined"
                 value={formValues.username}
                 onChange={handleChange('username')}
-                error={Invalid.username}
-                helperText={Invalid.username && "Username must be at least 1 character"}
+                error={invalid.username}
+                helperText={invalid.username && "Username must be at least 1 character"}
             />
-            <FormControl variant="outlined" error={Invalid.password}>
-                <InputLabel htmlFor="outlined-adornment-password" error={Invalid.password}>Password</InputLabel>
+            <FormControl variant="outlined" error={invalid.password}>
+                <InputLabel htmlFor="outlined-adornment-password" error={invalid.password}>Password</InputLabel>
                 <OutlinedInput
                     id="outlined-adornment-password"
                     type="password"
                     value={formValues.password}
                     onChange={handleChange('password')}
                     label="Password"
-                    error={Invalid.password}
+                    error={invalid.password}
                 />
-                <FormHelperText>{Invalid.password && "Password must be at least 6 characters"}</FormHelperText>
+                <FormHelperText>{invalid.password && "Password must be at least 6 characters"}</FormHelperText>
             </FormControl>
             <TextField
                 label="Email"
                 variant="outlined"
                 value={formValues.email}
                 onChange={handleChange('email')}
-                error={Invalid.email}
+                error={invalid.email}
             />
             <TextField
                 label="Phone"
                 variant="outlined"
                 value={formValues.phone}
                 onChange={handleChange('phone')}
-                error={Invalid.phone}
+                error={invalid.phone}
             />
             <Button
                 sx={{
@@ -131,7 +134,7 @@ export default function SignupForm() {
                 color="primary"
                 onClick={() => {
                     const invalidUsername = formValues.username === '';
-                    const invalidPassword = formValues.password.length < 8;
+                    const invalidPassword = formValues.password.length < 6;
                     const invalidEmail = false;
                     const invalidPhone = false;
                     const isValid = !invalidUsername && !invalidPassword && !invalidEmail && !invalidPhone;

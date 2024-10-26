@@ -11,7 +11,7 @@ export default function LetsChatButton() {
     const theme = useTheme();
 
     const handleClick = () => {
-        if (user && user.id) {
+        if (user.userId) {
             router.push('/chat');
         } else {
             router.push('/signin');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Drawer, Box, Typography, TextField, Button, IconButton, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
@@ -12,11 +12,18 @@ interface UserProfileDrawerProps {
 const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({ open, onClose }) => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
-    const [formValues, setFormValues] = React.useState(user);
-    const [editableFields, setEditableFields] = React.useState({
+    const [formValues, setFormValues] = useState({
+        username: user.userName,
+        password: '',
+        phone: user.phoneNumber,
+        email: user.emailAddress,
+        avatar: user.avatarUrl,
+    });
+    const [editableFields, setEditableFields] = useState({
         name: false,
-        email: false,
+        password: false,
         phone: false,
+        email: false,
         avatar: false,
     });
 
@@ -30,7 +37,13 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({ open, onClose }) 
 
     const handleSave = () => {
         // TODO：发送请求更新用户信息
-        dispatch(setUser(formValues));
+        dispatch(setUser({
+            ...user,
+            userName: formValues.username,
+            phoneNumber: formValues.phone,
+            emailAddress: formValues.email,
+            avatarUrl: formValues.avatar
+        }));
         onClose();
     };
 
@@ -39,7 +52,7 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({ open, onClose }) 
             <Box sx={{ width: 400, padding: 2 }}>
                 <Typography variant="h6" sx={{ marginBottom: 2 }}>User Profile</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                    <Avatar alt={formValues.name} src={formValues.avatar} sx={{ marginRight: 2 }} />
+                    <Avatar alt={formValues.username} src={formValues.avatar} sx={{ marginRight: 2 }} />
                     <TextField
                         label="Avatar URL"
                         variant="outlined"
@@ -56,8 +69,8 @@ const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({ open, onClose }) 
                     <TextField
                         label="Name"
                         variant="outlined"
-                        value={formValues.name}
-                        onChange={handleChange('name')}
+                        value={formValues.username}
+                        onChange={handleChange('username')}
                         fullWidth
                         disabled={!editableFields.name}
                     />
