@@ -11,7 +11,10 @@ export default function DashboardAppBar() {
             color="default"
             sx={{
                 boxShadow: 'none',
-                zIndex: (theme) => theme.zIndex.drawer + 1
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                top: 0,
+                left: 0,
+                right: 0,
             }}
         >
             <Toolbar>

@@ -1,16 +1,21 @@
 'use client';
 import React from 'react';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SecurityIcon from '@mui/icons-material/Security';
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box, Typography, Stack, Avatar } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
+import ChatIcon from '@mui/icons-material/Chat';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useRouter } from 'next/navigation';
+import { useAppSelector } from '@/lib/hooks';
 
 const drawerWidth = 240;
 
 export default function DashboardSideNav() {
     const router = useRouter();
+    const user = useAppSelector((state) => state.auth.user);
 
     const handleNavigation = (path: string) => {
         router.push(path);
@@ -22,42 +27,89 @@ export default function DashboardSideNav() {
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,
+                whiteSpace: 'nowrap',
                 [`& .MuiDrawer-paper`]: {
                     width: drawerWidth,
                     borderRight: 'none',
-                    borderTopRightRadius: 20,
                     boxSizing: 'border-box',
-                    backgroundColor: '#f5f5f5'
+                    backgroundColor: '#f5f5f5',
+                    position: 'fixed',
                 },
             }}
         >
             <Toolbar />
+            <Stack
+                direction="row"
+                sx={{
+                    p: 2,
+                    gap: 2,
+                    alignItems: 'center',
+                }}
+            >
+                <Avatar
+                    sizes="small"
+                    alt={user.userName}
+                    src={user.avatarUrl}
+                    sx={{ width: 40, height: 40 }}
+                />
+                <Box sx={{ mr: 'auto' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: '16px' }}>
+                        {user.userName || 'UserName'}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        {user.emailAddress || 'EmailAddress'}
+                    </Typography>
+                </Box>
+            </Stack>
+            <Divider
+                sx={{
+                    mb: 2,
+                }}
+            />
             <Box sx={{
                 overflow: 'auto',
                 height: '100%',
             }}>
                 <List>
-                    <ListItem
-                        disablePadding
-                        sx={{
-                            mt: 2,
-                        }}
-                    >
-                        <ListItemButton onClick={() => handleNavigation('/profile')}>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleNavigation('/chats')}>
                             <ListItemIcon>
-                                <AccountCircleIcon />
+                                <ChatIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Profile" />
+                            <ListItemText primary="Chats" />
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton onClick={() => handleNavigation('/security')}>
+                        <ListItemButton onClick={() => handleNavigation('/friends')}>
                             <ListItemIcon>
-                                <SecurityIcon />
+                                <PersonIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Security" />
+                            <ListItemText primary="Friends" />
                         </ListItemButton>
                     </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleNavigation('/groups')}>
+                            <ListItemIcon>
+                                <GroupIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Groups" />
+                        </ListItemButton>
+                    </ListItem>
+                    <Divider
+                        sx={{
+                            mt: 2,
+                            mb: 2,
+                        }}
+                    />
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleNavigation('/account')}>
+                            <ListItemIcon>
+                                <AccountBoxIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Account" />
+                        </ListItemButton>
+                    </ListItem>
+
                     <ListItem disablePadding>
                         <ListItemButton onClick={() => handleNavigation('/settings')}>
                             <ListItemIcon>
@@ -66,7 +118,6 @@ export default function DashboardSideNav() {
                             <ListItemText primary="Settings" />
                         </ListItemButton>
                     </ListItem>
-                    <Divider />
                     <ListItem disablePadding>
                         <ListItemButton onClick={() => handleNavigation('/about')}>
                             <ListItemIcon>
@@ -77,20 +128,17 @@ export default function DashboardSideNav() {
                     </ListItem>
                 </List>
             </Box>
-            <Box
-                sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                }} >
-                <List>
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => handleNavigation('/logout')}>
-                            <ListItemText primary="Logout" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Box>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => handleNavigation('/logout')}>
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Logout" />
+                    </ListItemButton>
+                </ListItem>
+            </List>
         </Drawer>
     );
 };
