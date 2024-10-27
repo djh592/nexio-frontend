@@ -1,3 +1,4 @@
+import ChatSession from "@/components/chat/ChatSession";
 import { Box, Paper } from "@mui/material";
 
 export default function ChatPageLayout({ children }: { children: React.ReactNode }) {
@@ -41,7 +42,7 @@ export default function ChatPageLayout({ children }: { children: React.ReactNode
                         borderRadius: '10px',
                     }}
                 >
-                    <h1>Chat Session</h1>
+                    <ChatSession />
                 </Paper>
             </Box>
         </>
