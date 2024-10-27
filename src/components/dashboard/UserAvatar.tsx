@@ -4,7 +4,7 @@ import { Box, Tooltip, IconButton, Avatar, Menu, MenuItem, Typography, Dialog, D
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
-import UserProfileDrawer from './UserProfileDrawer';
+import UserProfileDrawer from '../chat/UserProfileDrawer';
 
 function UserAvatar() {
     const router = useRouter();

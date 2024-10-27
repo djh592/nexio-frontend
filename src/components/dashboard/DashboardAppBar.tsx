@@ -2,7 +2,7 @@
 import { AppBar, Box, Toolbar } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import UserAvatar from "../chat/UserAvatar";
+import UserAvatar from "./UserAvatar";
 
 export default function DashboardAppBar() {
     return (
