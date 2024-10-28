@@ -1,9 +1,9 @@
 'use client';
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
-export default function ChatSession() {
+const ChatSessionContent = () => {
     const searchParams = useSearchParams();
     const [chatId, setChatId] = useState('0');
 
@@ -16,10 +16,16 @@ export default function ChatSession() {
 
     return (
         <>
-            <Suspense fallback={<div>Loading...</div>}>
-                <h1>Chat Session</h1>
-                <p>Chat ID: {chatId}</p>
-            </Suspense>
+            <h1>Chat Session</h1>
+            <p>Chat ID: {chatId}</p>
         </>
+    );
+};
+
+export default function ChatSession() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ChatSessionContent />
+        </Suspense>
     );
 }
