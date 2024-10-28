@@ -6,7 +6,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <>
             <DashboardAppBar />
-            <DashboardSideNav />
             <Box
                 sx={{
                     display: 'flex',
@@ -17,6 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     overflowY: 'auto',
                 }}
             >
+                <DashboardSideNav />
                 {children}
             </Box>
         </>
