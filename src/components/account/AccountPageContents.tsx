@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase } from '@mui/material';
+import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase, FormControl, FormHelperText } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { setUser, setUserAvatar } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,6 +30,14 @@ export default function AccountPageContent() {
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
+    });
+    const [invalid, setInvalid] = useState({
+        username: false,
+        email: false,
+        phone: false,
+        oldPassword: false,
+        newPassword: false,
+        confirmPassword: false,
     });
     const [editableFields, setEditableFields] = useState({
         username: false,
@@ -145,7 +153,6 @@ export default function AccountPageContent() {
                     emailAddress: newProfile.emailAddress,
                     avatarUrl: newProfile.avatarUrl,
                 }));
-                setEditableFields({ username: false, phone: false, email: false });
             } else {
                 console.error('Failed to update password');
             }
@@ -215,6 +222,7 @@ export default function AccountPageContent() {
                 <Typography variant="h6">Personal Info</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Phone:</Typography>
+
                     <OutlinedInput
                         fullWidth
                         defaultValue={formValues.phone || user.phoneNumber || 'Phone Number'}
@@ -228,7 +236,9 @@ export default function AccountPageContent() {
 
                         }
                         disabled={!editableFields.phone}
+                        error={invalid.phone}
                     />
+
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Email:</Typography>
@@ -244,6 +254,7 @@ export default function AccountPageContent() {
                             </InputAdornment>
                         }
                         disabled={!editableFields.email}
+                        error={invalid.email}
                     />
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
@@ -263,46 +274,68 @@ export default function AccountPageContent() {
                 <Typography variant="h6">Security</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Old Password:</Typography>
-                    <OutlinedInput
-                        fullWidth
-                        type="password"
-                        value={formValues.oldPassword}
-                        placeholder="Old Password"
-                        onChange={handleChange('oldPassword')}
-                    />
+                    <FormControl fullWidth variant="outlined" error={invalid.oldPassword}>
+                        <OutlinedInput
+                            fullWidth
+                            type="password"
+                            value={formValues.oldPassword}
+                            placeholder="Old Password"
+                            onChange={handleChange('oldPassword')}
+                            error={invalid.oldPassword}
+                        />
+                        <FormHelperText>{invalid.oldPassword && "Wrong password"}</FormHelperText>
+                    </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>New Password:</Typography>
-                    <OutlinedInput
-                        fullWidth
-                        type="password"
-                        value={formValues.newPassword}
-                        placeholder="New Password"
-                        onChange={handleChange('newPassword')}
-                    />
+                    <FormControl fullWidth variant="outlined" error={invalid.newPassword}>
+                        <OutlinedInput
+                            fullWidth
+                            type="password"
+                            value={formValues.newPassword}
+                            placeholder="New Password"
+                            onChange={handleChange('newPassword')}
+                            error={invalid.newPassword}
+                        />
+                        <FormHelperText>{invalid.newPassword && "Password must be at least 6 characters"}</FormHelperText>
+                    </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Confirm Password:</Typography>
-                    <OutlinedInput
-                        fullWidth
-                        type="password"
-                        value={formValues.confirmPassword}
-                        placeholder="Confirm Password"
-                        onChange={handleChange('confirmPassword')}
-                    />
+                    <FormControl fullWidth variant="outlined" error={invalid.confirmPassword}>
+                        <OutlinedInput
+                            fullWidth
+                            type="password"
+                            value={formValues.confirmPassword}
+                            placeholder="Confirm Password"
+                            onChange={handleChange('confirmPassword')}
+                            error={invalid.confirmPassword}
+                        />
+                        <FormHelperText>{invalid.confirmPassword && "Passwords do not match"}</FormHelperText>
+                    </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
                     <Button
                         variant="contained"
                         color="primary"
                         startIcon={<SaveIcon />}
-                        onClick={savePasswordChanges}
+                        onClick={() => {
+                            if (formValues.newPassword.length < 6) {
+                                setInvalid({ ...invalid, newPassword: true });
+                                return;
+                            }
+                            if (formValues.newPassword !== formValues.confirmPassword) {
+                                setInvalid({ ...invalid, confirmPassword: true });
+                                return;
+                            }
+                            savePasswordChanges();
+                        }}
                         disabled={loading}
                     >
                         Save Changes
                     </Button>
                 </Box>
-            </Stack>
+            </Stack >
         </Box >
     );
 }
