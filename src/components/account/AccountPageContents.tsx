@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { setUser, setUserAvatar } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import EditUserNameDialog from './EditUserNameDialog';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -45,6 +46,7 @@ export default function AccountPageContent() {
         email: false,
     });
     const [loading, setLoading] = useState(false);
+    const [openEditUserNameDialog, setOpenEditUserNameDialog] = useState(false);
 
     const handleChange = (prop: keyof typeof formValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setFormValues({ ...formValues, [prop]: event.target.value });
@@ -213,16 +215,21 @@ export default function AccountPageContent() {
                         {user.userName || 'User Name'}
                     </Typography>
                 </Box>
-                <IconButton >
+                <IconButton
+                    onClick={() => setOpenEditUserNameDialog(true)}
+                >
                     <EditIcon />
                 </IconButton>
+                <EditUserNameDialog
+                    open={openEditUserNameDialog}
+                    onClose={() => setOpenEditUserNameDialog(false)}
+                />
             </Box>
             <Divider sx={{ marginBottom: 2 }} />
             <Stack spacing={2}>
                 <Typography variant="h6">Personal Info</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Phone:</Typography>
-
                     <OutlinedInput
                         fullWidth
                         defaultValue={formValues.phone || user.phoneNumber || 'Phone Number'}
@@ -238,7 +245,6 @@ export default function AccountPageContent() {
                         disabled={!editableFields.phone}
                         error={invalid.phone}
                     />
-
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
                     <Typography variant="body1" sx={{ width: '40%' }}>Email:</Typography>
