@@ -1,5 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAppSelector } from '@/lib/hooks';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box, Typography, Stack, Avatar } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
@@ -8,14 +10,14 @@ import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
+import LogoutDialog from '../auth/LogoutDialog';
 
 const drawerWidth = 240;
 
 export default function DashboardSideNav() {
     const router = useRouter();
     const user = useAppSelector((state) => state.auth.user);
+    const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
     const handleNavigation = (path: string) => {
         router.push(path);
@@ -131,7 +133,9 @@ export default function DashboardSideNav() {
             <Divider />
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleNavigation('/logout')}>
+                    <ListItemButton onClick={() => {
+                        setOpenLogoutDialog(true);
+                    }}>
                         <ListItemIcon>
                             <LogoutIcon />
                         </ListItemIcon>
@@ -139,6 +143,7 @@ export default function DashboardSideNav() {
                     </ListItemButton>
                 </ListItem>
             </List>
+            <LogoutDialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)} />
         </Drawer>
     );
 };
