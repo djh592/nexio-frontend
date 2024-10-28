@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
@@ -15,8 +16,10 @@ export default function ChatSession() {
 
     return (
         <>
-            <h1>Chat Session</h1>
-            <p>Chat ID: {chatId}</p>
+            <Suspense fallback={<div>Loading...</div>}>
+                <h1>Chat Session</h1>
+                <p>Chat ID: {chatId}</p>
+            </Suspense>
         </>
     );
 }
