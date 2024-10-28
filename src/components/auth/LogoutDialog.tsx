@@ -45,6 +45,8 @@ export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
             onClose={onClose}
             aria-labelledby="logout-dialog-title"
             aria-describedby="logout-dialog-description"
+            maxWidth="sm"
+            fullWidth
         >
             <DialogTitle id="logout-dialog-title">
                 <Typography variant="h6" color="error">{"Confirm Logout"}</Typography>
