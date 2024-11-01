@@ -1,7 +1,7 @@
-import AccountPageContents from '@/components/account/AccountPageContents';
+import AccountPageContent from '@/components/account/AccountPageContent';
 
 export default function AccountPage() {
     return (
-        <AccountPageContents />
+        <AccountPageContent />
     );
 }
