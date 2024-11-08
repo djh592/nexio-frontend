@@ -62,11 +62,11 @@ export default function SigninForm() {
             .then((res) => {
                 if (Number(res.code) === 0) {
                     dispatch(setToken(res.token));
-                    dispatch(setUserId(res.data.userId));
-                    dispatch(setUserName(res.data.userName));
-                    dispatch(setUserPhone(res.data.phoneNumber));
-                    dispatch(setUserEmail(res.data.emailAddress));
-                    dispatch(setUserAvatar(res.data.avatarUrl));
+                    dispatch(setUserId(res.user.userId));
+                    dispatch(setUserName(res.user.userName));
+                    dispatch(setUserPhone(res.user.phoneNumber));
+                    dispatch(setUserEmail(res.user.emailAddress));
+                    dispatch(setUserAvatar(res.user.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Login successful!' });
                     router.push('/chats');
                 }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
-import { setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
+import { setToken, setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
 
 export default function SignupForm() {
     const theme = useTheme();
@@ -67,11 +67,12 @@ export default function SignupForm() {
             .then((res) => res.json())
             .then((res) => {
                 if (Number(res.code) === 0) {
-                    dispatch(setUserId(res.data.userId));
-                    dispatch(setUserName(res.data.userName));
-                    dispatch(setUserPhone(res.data.phoneNumber));
-                    dispatch(setUserEmail(res.data.emailAddress));
-                    dispatch(setUserAvatar(res.data.avatarUrl));
+                    dispatch(setToken(res.token));
+                    dispatch(setUserId(res.user.userId));
+                    dispatch(setUserName(res.user.userName));
+                    dispatch(setUserPhone(res.user.phoneNumber));
+                    dispatch(setUserEmail(res.user.emailAddress));
+                    dispatch(setUserAvatar(res.user.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Signup successful!' });
                     router.push('/chats');
                 }
