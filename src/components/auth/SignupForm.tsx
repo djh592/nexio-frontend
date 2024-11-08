@@ -73,7 +73,7 @@ export default function SignupForm() {
                     dispatch(setUserEmail(res.data.emailAddress));
                     dispatch(setUserAvatar(res.data.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Signup successful!' });
-                    router.push('/chat');
+                    router.push('/chats');
                 }
                 else {
                     setErrorAlert({ open: true, message: 'Signup failed: ' + res.message });
