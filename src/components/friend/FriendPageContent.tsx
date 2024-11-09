@@ -4,7 +4,7 @@ import FriendSearch from '@/components/friend/FriendSearch';
 
 export default function FriendPageContent() {
     return (
-        <Box sx={{ width: '100%', padding: 2 }}>
+        <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: 2 }}>
             <Typography
                 variant="h5"
                 sx={{
@@ -17,7 +17,9 @@ export default function FriendPageContent() {
             </Typography>
             <Divider />
             <FriendSearch />
-            <FriendList />
+            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                <FriendList />
+            </Box>
         </Box>
     );
 }
