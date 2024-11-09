@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-
 import authReducer from '@/lib/features/auth/authSlice';
+import socketMiddleware from '@/lib/socketMiddleware';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             auth: authReducer
-        }
+        },
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(socketMiddleware),
     })
 }
 
