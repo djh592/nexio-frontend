@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import FriendPageContent from '@/components/friend/FriendPageContent';
 
 export default function FriendsPage() {
     return (
@@ -8,7 +9,7 @@ export default function FriendsPage() {
                 width: '100%',
             }}
         >
-            <h1>Friends Page</h1>
+            <FriendPageContent />
         </Box>
     );
 }
