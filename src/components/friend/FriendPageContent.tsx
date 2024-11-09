@@ -1,5 +1,6 @@
 import { Box, Typography, Divider } from "@mui/material";
 import FriendList from "@/components/friend/FriendList";
+import FriendSearch from '@/components/friend/FriendSearch';
 
 export default function FriendPageContent() {
     return (
@@ -15,6 +16,7 @@ export default function FriendPageContent() {
                 My Friends
             </Typography>
             <Divider />
+            <FriendSearch />
             <FriendList />
         </Box>
     );
