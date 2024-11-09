@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { Box, Avatar, Stack, Typography, Dialog } from "@mui/material";
 import { User } from "@/lib/definitions";

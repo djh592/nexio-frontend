@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/hooks';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box, Typography, Stack, Avatar } from '@mui/material';
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -10,7 +10,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
-import LogoutDialog from '../auth/LogoutDialog';
+import LogoutDialog from '@/components/auth/LogoutDialog';
+import UserStack from '@/components/UserStack';
 
 const drawerWidth = 240;
 
@@ -40,7 +41,7 @@ export default function DashboardSideNav() {
             }}
         >
             <Toolbar />
-            <Stack
+            {/* <Stack
                 direction="row"
                 sx={{
                     p: 2,
@@ -62,7 +63,8 @@ export default function DashboardSideNav() {
                         {user.emailAddress || 'EmailAddress'}
                     </Typography>
                 </Box>
-            </Stack>
+            </Stack> */}
+            <UserStack user={user} />
             <Divider
                 sx={{
                     mb: 2,
