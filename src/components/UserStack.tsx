@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Box, Avatar, Stack, Typography, Dialog } from "@mui/material";
+import { Box, Avatar, Stack, Typography } from "@mui/material";
 import { User } from "@/lib/definitions";
 import UserDialog from './UserDialog';
 
@@ -13,10 +13,6 @@ export default function UserStack({ user }: UserStackProps) {
 
     const handleClick = () => {
         setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
     };
 
     return (
@@ -50,9 +46,13 @@ export default function UserStack({ user }: UserStackProps) {
                     </Typography>
                 </Box>
             </Stack>
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                <UserDialog user={user} onClose={handleClose} />
-            </Dialog>
+            <UserDialog
+                user={user}
+                open={open}
+                onClose={
+                    () => setOpen(false)
+                }
+            />
         </>
     );
 }
