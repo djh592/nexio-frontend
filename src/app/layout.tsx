@@ -13,6 +13,8 @@ const roboto = Roboto({
   variable: '--font-roboto',
 });
 
+export const experimental_ppr = true;
+
 export const metadata: Metadata = {
   title: "Nexio",
   description: "Nexio is an instant messaging application that allows users to communicate via text, voice, and video. Nexio also supports file transfer and screen sharing.",
