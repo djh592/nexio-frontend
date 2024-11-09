@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
 import { useAppDispatch } from '@/lib/hooks';
 import { addSentRequest } from '@/lib/features/friends/friendsSlice';
@@ -6,25 +6,21 @@ import { User } from '@/lib/definitions';
 
 interface SendFriendRequestDialogProps {
     user: User;
+    open: boolean;
     onClose: () => void;
 }
 
-export default function SendFriendRequestDialog({ user, onClose }: SendFriendRequestDialogProps) {
-    const [open, setOpen] = useState(false);
+export default function SendFriendRequestDialog({ user, open, onClose }: SendFriendRequestDialogProps) {
     const dispatch = useAppDispatch();
 
     const handleSendRequest = () => {
         dispatch(addSentRequest({ requestId: '', createdAt: new Date().toISOString(), fromUser: user, toUser: user, status: 'pending' }));
-        setOpen(false);
         onClose();
     };
 
     return (
         <>
-            <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
-                Send Friend Request
-            </Button>
-            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+            <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
                 <DialogTitle>
                     <Typography variant="h6">Confirm Send Friend Request</Typography>
                 </DialogTitle>
@@ -34,7 +30,7 @@ export default function SendFriendRequestDialog({ user, onClose }: SendFriendReq
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpen(false)} color="primary">
+                    <Button onClick={onClose} color="primary">
                         Cancel
                     </Button>
                     <Button onClick={handleSendRequest} color="primary" variant="contained">
