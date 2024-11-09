@@ -62,31 +62,25 @@ export default function AccountPageContent() {
             const reader = new FileReader();
             reader.onloadend = async () => {
                 const base64String = reader.result as string;
-
                 const headers = new Headers();
                 headers.append("Authorization", token);
                 const data = {
                     userId: user.userId,
-                    newProfile: {
-                        avatarImage: base64String
-                    }
+                    avatarImage: base64String
                 };
-
                 try {
                     setLoading(true);
                     const response = await fetch(`/api/user/${user.userId}`, {
-                        method: 'POST',
+                        method: 'PUT',
                         headers,
                         body: JSON.stringify(data),
                     });
-
                     if (response.ok) {
                         const responseData = await response.json();
-                        dispatch(setUserAvatar(
-                            responseData.data.avatarUrl
-                        ));
+                        dispatch(setUserAvatar(responseData.user.avatarUrl));
                     } else {
-                        console.error('Failed to upload avatar');
+                        const errorData = await response.json();
+                        console.error('Failed to upload avatar:', errorData.info);
                     }
                 } catch (error) {
                     console.error('Error uploading avatar:', error);
@@ -104,9 +98,12 @@ export default function AccountPageContent() {
         headers.append("Authorization", token);
         try {
             const response = await fetch(`/api/user/${user.userId}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers,
                 body: JSON.stringify({
+                    oldPassword: formValues.oldPassword,
+                    newPassword: formValues.newPassword,
+                    userName: formValues.username,
                     phoneNumber: formValues.phone,
                     emailAddress: formValues.email,
                 }),
@@ -123,7 +120,8 @@ export default function AccountPageContent() {
                 }));
                 setEditableFields({ username: false, phone: false, email: false });
             } else {
-                console.error('Failed to update profile');
+                const errorData = await response.json();
+                console.error('Failed to update profile:', errorData.info);
             }
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -138,7 +136,7 @@ export default function AccountPageContent() {
         headers.append("Authorization", token);
         try {
             const response = await fetch(`/api/user/${user.userId}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers,
                 body: JSON.stringify({
                     oldPassword: formValues.oldPassword,
@@ -156,14 +154,15 @@ export default function AccountPageContent() {
                     avatarUrl: newProfile.avatarUrl,
                 }));
             } else {
-                console.error('Failed to update password');
+                const errorData = await response.json();
+                console.error('Failed to update password:', errorData.info);
             }
         } catch (error) {
             console.error('Error updating password:', error);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <Box sx={{ padding: 4 }}>
@@ -240,7 +239,6 @@ export default function AccountPageContent() {
                                     <EditIcon />
                                 </IconButton>
                             </InputAdornment>
-
                         }
                         disabled={!editableFields.phone}
                         error={invalid.phone}
