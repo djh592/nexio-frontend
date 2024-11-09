@@ -23,6 +23,9 @@ const friendsSlice = createSlice({
         addFriend: (state, action: PayloadAction<User>) => {
             state.friends.push(action.payload);
         },
+        removeFriend: (state, action: PayloadAction<User>) => {
+            state.friends = state.friends.filter((friend) => friend.userId !== action.payload.userId);
+        },
         setSentRequests: (state, action: PayloadAction<FriendRequest[]>) => {
             state.sentRequests = action.payload;
         },
@@ -48,6 +51,7 @@ const friendsSlice = createSlice({
 export const {
     setFriends,
     addFriend,
+    removeFriend,
     setSentRequests,
     addSentRequest,
     setReceivedRequests,

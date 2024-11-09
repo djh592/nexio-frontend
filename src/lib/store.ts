@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '@/lib/features/auth/authSlice';
+import FriendsReducer from '@/lib/features/friends/friendsSlice';
 import socketMiddleware from '@/lib/socketMiddleware';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            auth: authReducer
+            auth: authReducer,
+            friends: FriendsReducer
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(socketMiddleware),
