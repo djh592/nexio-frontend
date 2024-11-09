@@ -5,3 +5,13 @@ export type User = {
     emailAddress: string;
     avatarUrl: string;
 };
+
+export type Friends = User[];
+
+export type FriendRequest = {
+    requestId: string;
+    createdAt: string;
+    fromUser: User;
+    toUser: User;
+    status: 'pending' | 'accepted' | 'rejected';
+};
