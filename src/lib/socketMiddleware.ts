@@ -1,7 +1,7 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
-import { addReceivedRequest } from '@/lib/features/friends/friendsSlice';
+import { addReceivedRequest } from '@/lib/features/friend/friendSlice';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
 
