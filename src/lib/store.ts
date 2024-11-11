@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '@/lib/features/auth/authSlice';
 import FriendReducer from '@/lib/features/friend/friendSlice';
-import socketMiddleware from '@/lib/socketMiddleware';
+import socketMiddleware from '@/lib/middleware/socketMiddleware';
 
 export const makeStore = () => {
     return configureStore({
