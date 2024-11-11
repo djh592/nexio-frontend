@@ -1,7 +1,7 @@
-// src/lib/socketMiddleware.ts
 import { Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
+import { addReceivedRequest } from '@/lib/features/friends/friendsSlice';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
 
@@ -26,6 +26,11 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
 
         socket.on('connect_error', (err) => {
             console.error('Connection error:', err);
+        });
+
+        // Handle incoming friend requests
+        socket.on('friendRequest', (request) => {
+            store.dispatch(addReceivedRequest(request));
         });
 
         // TODO: Handle incoming messages
