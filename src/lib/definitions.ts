@@ -13,5 +13,5 @@ export type FriendRequest = {
     createdAt: string;
     fromUserId: string;
     toUserId: string;
-    status: 'pending' | 'accepted' | 'rejected';
+    status: 'pending' | 'accepted' | 'rejected' | 'cancelled' | 'failed';
 };
