@@ -1,7 +1,10 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
-import { addReceivedRequest } from '@/lib/features/friend/friendSlice';
+import { 
+    addSentRequest,
+    addReceivedRequest,
+ } from '@/lib/features/friend/friendSlice';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
 
@@ -30,13 +33,13 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         });
 
         // Handle incoming friend requests
-        socket.on('friendRequest', (request) => {
+        socket.on('friend_request', (request) => {
             store.dispatch(addReceivedRequest(request));
         });
 
         // TODO: Handle incoming messages
-        socket.on('message', (message) => {
-            store.dispatch({ type: 'socket/message', payload: message });
+        socket.on('message', () => {
+            // to be implemented
         });
     }
 
@@ -44,6 +47,10 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         if (socket) {
             socket.disconnect();
         }
+    }
+
+    if (addSentRequest.match(action)) {
+        socket.emit('friend_request', action.payload);
     }
 
     return next(action);
