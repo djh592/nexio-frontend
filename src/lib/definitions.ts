@@ -38,4 +38,35 @@ export type FriendRequest = {
     fromUserId: string;
     toUserId: string;
     status: FriendRequestStatus;
+}
+
+export enum MessageType {
+    Text = 'Text',
+    Image = 'Image',
+    Video = 'Video',
+    Audio = 'Audio',
+    File = 'File',
+    Forwarded = 'Forwarded'
+}
+
+export type Message = {
+    messageId: string;
+    createdAt: string;
+    fromUserId: string;
+    type: MessageType;
+    content: string;
+    replyMessageId?: string;
+    repliedMessageId?: string;
+}
+
+export type Messages = Message[];
+
+export type Chat = {
+    ChatId: string;
+    createdAt: string;
+    participants: User[];
+    messages: Messages;
+    unreadCount: number;
+    isMuted: boolean;
+    isPinned: boolean;
 };
