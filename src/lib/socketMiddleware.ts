@@ -4,7 +4,9 @@ import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
 import { 
     addSentRequest,
     addReceivedRequest,
- } from '@/lib/features/friend/friendSlice';
+    updateRequestStatus,
+    addFriend,
+} from '@/lib/features/friend/friendSlice';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
 
@@ -28,18 +30,23 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         });
 
         socket.on('connect_error', (err) => {
-            // console.error('Connection error:', err);
             console.log('Connection error:', err);
         });
 
-        // Handle incoming friend requests
-        socket.on('friend_request', (request) => {
-            store.dispatch(addReceivedRequest(request));
+        socket.on('friend_request_sent', (data) => {
+            store.dispatch(addSentRequest(data));
         });
 
-        // TODO: Handle incoming messages
-        socket.on('message', () => {
-            // to be implemented
+        socket.on('friend_request_received', (data) => {
+            store.dispatch(addReceivedRequest(data));
+        });
+
+        socket.on('friend_request_status_update', (data) => {
+            store.dispatch(updateRequestStatus(data));
+        });
+
+        socket.on('friend_added', (data) => {
+            store.dispatch(addFriend(data));
         });
     }
 
@@ -47,10 +54,6 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         if (socket) {
             socket.disconnect();
         }
-    }
-
-    if (addSentRequest.match(action)) {
-        socket.emit('friend_request', action.payload);
     }
 
     return next(action);
