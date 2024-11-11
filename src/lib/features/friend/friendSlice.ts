@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User, Friends, FriendRequest } from '@/lib/definitions';
+import { User, Friends, FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 
 interface FriendsState {
     friends: Friends;
@@ -38,7 +38,7 @@ const friendSlice = createSlice({
         addReceivedRequest: (state, action: PayloadAction<FriendRequest>) => {
             state.receivedRequests.push(action.payload);
         },
-        updateRequestStatus: (state, action: PayloadAction<{ id: string; status: 'accepted' | 'rejected' }>) => {
+        updateRequestStatus: (state, action: PayloadAction<{ id: string; status: FriendRequestStatus }>) => {
             const { id, status } = action.payload;
             const request = state.receivedRequests.find(req => req.requestId === id);
             if (request) {

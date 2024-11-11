@@ -1,8 +1,8 @@
 export type User = {
     userId: string;
     userName: string;
-    phoneNumber: string;
     emailAddress: string;
+    phoneNumber: string;
     avatarUrl: string;
 };
 
@@ -15,19 +15,27 @@ export type FriendGroup = {
 
 export type FriendGroups = FriendGroup[];
 
-export const DEFAULT_GROUP_NAME = "My Friends";
+export const DEFAULT_FRIEND_GROUP_NAME = "My Friends";
 
 export const initialFriendGroups: FriendGroups = [
     {
-        groupName: DEFAULT_GROUP_NAME,
+        groupName: DEFAULT_FRIEND_GROUP_NAME,
         friends: []
     }
 ];
+
+export enum FriendRequestStatus {
+    Pending = 'Pending',
+    Accepted = 'Accepted',
+    Rejected = 'Rejected',
+    Canceled = 'Canceled',
+    Failed = 'Failed'
+}
 
 export type FriendRequest = {
     requestId: string;
     createdAt: string;
     fromUserId: string;
     toUserId: string;
-    status: 'pending' | 'accepted' | 'rejected' | 'cancelled' | 'failed';
+    status: FriendRequestStatus;
 };

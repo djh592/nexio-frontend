@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
 import { useAppDispatch } from '@/lib/hooks';
 import { addSentRequest } from '@/lib/features/friend/friendSlice';
-import { User } from '@/lib/definitions';
+import { User, FriendRequestStatus } from '@/lib/definitions';
 
 interface SendFriendRequestDialogProps {
     user: User;
@@ -14,7 +14,7 @@ export default function SendFriendRequestDialog({ user, open, onClose }: SendFri
     const dispatch = useAppDispatch();
 
     const handleSendRequest = () => {
-        dispatch(addSentRequest({ requestId: '', createdAt: new Date().toISOString(), fromUser: user, toUser: user, status: 'pending' }));
+        dispatch(addSentRequest({ requestId: '', createdAt: new Date().toISOString(), fromUserId: user.userId, toUserId: user.userId, status: FriendRequestStatus.Pending }));
         onClose();
     };
 
