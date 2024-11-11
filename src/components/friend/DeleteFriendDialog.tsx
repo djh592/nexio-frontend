@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
 import { useAppDispatch } from '@/lib/hooks';
-import { removeFriend } from '@/lib/features/friends/friendsSlice';
+import { removeFriend } from '@/lib/features/friend/friendSlice';
 import { User } from '@/lib/definitions';
 
 interface DeleteFriendDialogProps {

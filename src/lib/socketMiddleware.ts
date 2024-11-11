@@ -25,7 +25,8 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         });
 
         socket.on('connect_error', (err) => {
-            console.error('Connection error:', err);
+            // console.error('Connection error:', err);
+            console.log('Connection error:', err);
         });
 
         // Handle incoming friend requests

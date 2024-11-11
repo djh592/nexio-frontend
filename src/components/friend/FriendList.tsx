@@ -5,7 +5,7 @@ import { Box, Stack } from '@mui/material';
 import UserStack from '@/components/UserStack';
 
 export default function FriendList() {
-    const friends = useAppSelector((state) => state.friends.friends);
+    const friends = useAppSelector((state) => state.friend.friends);
     // const friends = [
     //     {
     //         userId: '1',

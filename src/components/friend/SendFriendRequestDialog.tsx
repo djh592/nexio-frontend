@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
 import { useAppDispatch } from '@/lib/hooks';
-import { addSentRequest } from '@/lib/features/friends/friendsSlice';
+import { addSentRequest } from '@/lib/features/friend/friendSlice';
 import { User } from '@/lib/definitions';
 
 interface SendFriendRequestDialogProps {
