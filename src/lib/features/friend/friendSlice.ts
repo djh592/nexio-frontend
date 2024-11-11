@@ -13,7 +13,7 @@ const initialState: FriendsState = {
     receivedRequests: [],
 };
 
-const friendsSlice = createSlice({
+const friendSlice = createSlice({
     name: 'friends',
     initialState,
     reducers: {
@@ -57,6 +57,6 @@ export const {
     setReceivedRequests,
     addReceivedRequest,
     updateRequestStatus,
-} = friendsSlice.actions;
+} = friendSlice.actions;
 
-export default friendsSlice.reducer;
+export default friendSlice.reducer;
