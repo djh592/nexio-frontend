@@ -11,7 +11,7 @@ export type Friends = User[];
 export type FriendRequest = {
     requestId: string;
     createdAt: string;
-    fromUser: User;
-    toUser: User;
+    fromUserId: string;
+    toUserId: string;
     status: 'pending' | 'accepted' | 'rejected';
 };
