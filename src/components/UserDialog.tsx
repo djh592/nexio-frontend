@@ -16,7 +16,7 @@ interface UserDialogProps {
 export default function UserDialog({ user, open, onClose }: UserDialogProps) {
     const router = useRouter();
     const currentUser = useAppSelector((state) => state.auth.user);
-    const isFriend = useAppSelector((state) => state.friend.friends).some(friend => friend.userId === user.userId);
+    const isFriend = useAppSelector((state) => state.friend.friendGroups).some((group) => group.friends.some((friend) => friend.userId === user.userId));
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [sendRequestDialogOpen, setSendRequestDialogOpen] = useState(false);
