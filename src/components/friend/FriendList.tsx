@@ -5,7 +5,7 @@ import { Box, Stack } from '@mui/material';
 import UserStack from '@/components/UserStack';
 
 export default function FriendList() {
-    const friends = useAppSelector((state) => state.friend.friends);
+    const friendGroups = useAppSelector((state) => state.friend.friendGroups);
     // const friends = [
     //     {
     //         userId: '1',
@@ -82,8 +82,12 @@ export default function FriendList() {
     return (
         <Box sx={{ height: '100%', overflowY: 'auto' }}>
             <Stack spacing={2} >
-                {friends.map((friend) => (
-                    <UserStack key={friend.userId} user={friend} />
+                {friendGroups.map((group) => (
+                    <Stack key={group.groupName} spacing={1}>
+                        {group.friends.map((friend) => (
+                            <UserStack key={friend.userId} user={friend} />
+                        ))}
+                    </Stack>
                 ))}
             </Stack>
         </Box>
