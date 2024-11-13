@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User, Friends, FriendRequest, FriendRequestStatus } from '@/lib/definitions';
+import { User, FriendGroups, initialFriendGroups, FriendRequest } from '@/lib/definitions';
 
 interface FriendsState {
-    friends: Friends;
+    friendGroups: FriendGroups;
     sentRequests: FriendRequest[];
     receivedRequests: FriendRequest[];
 }
 
 const initialState: FriendsState = {
-    friends: [],
+    friendGroups: initialFriendGroups,
     sentRequests: [],
     receivedRequests: [],
 };
@@ -17,14 +17,70 @@ const friendSlice = createSlice({
     name: 'friends',
     initialState,
     reducers: {
-        setFriends: (state, action: PayloadAction<Friends>) => {
-            state.friends = action.payload;
+        setFriendGroups: (state, action: PayloadAction<FriendGroups>) => {
+            state.friendGroups = action.payload;
         },
         addFriend: (state, action: PayloadAction<User>) => {
-            state.friends.push(action.payload);
+            state.friendGroups[0].friends.push(action.payload);
         },
         removeFriend: (state, action: PayloadAction<User>) => {
-            state.friends = state.friends.filter((friend) => friend.userId !== action.payload.userId);
+            state.friendGroups.forEach((group) => {
+                group.friends = group.friends.filter((friend) => friend.userId !== action.payload.userId);
+            });
+        },
+        updateFriendProfile: (state, action: PayloadAction<User>) => {
+            const updatedUser = action.payload;
+            state.friendGroups = state.friendGroups.map((group) => {
+                group.friends = group.friends.map((friend) => {
+                    if (friend.userId === updatedUser.userId) {
+                        return updatedUser;
+                    }
+                    return friend;
+                });
+                return group;
+            });
+        },
+        // note: use try/catch block to handle errors
+        addFriendGroup: (state, action: PayloadAction<string>) => {
+            const newGroupName = action.payload;
+            if (state.friendGroups.some(group => group.groupName === newGroupName)) {
+                throw new Error(`Group ${newGroupName} already exists.`);
+            }
+            state.friendGroups.push({ groupName: newGroupName, friends: [] });
+        },
+        // note: use try/catch block to handle errors
+        removeFriendGroup: (state, action: PayloadAction<string>) => {
+            const groupName = action.payload;
+            const group = state.friendGroups.find(group => group.groupName === groupName);
+            if (group) {
+                state.friendGroups[0].friends = [...state.friendGroups[0].friends, ...group.friends];
+                state.friendGroups = state.friendGroups.filter(group => group.groupName !== groupName);
+            }
+            else {
+                throw new Error(`Group ${groupName} does not exist.`);
+            }
+        },
+        // note: use try/catch block to handle errors
+        moveFriendToGroup: (state, action: PayloadAction<{ friendId: string; fromGroupName: string; toGroupName: string }>) => {
+            const { friendId, fromGroupName, toGroupName } = action.payload;
+            const fromGroup = state.friendGroups.find(group => group.groupName === fromGroupName);
+            const toGroup = state.friendGroups.find(group => group.groupName === toGroupName);
+
+            if (!fromGroup) {
+                throw new Error(`Source group ${fromGroupName} not found.`);
+            }
+            if (!toGroup) {
+                throw new Error(`Target group ${toGroupName} not found.`);
+            }
+
+            const friendIndex = fromGroup.friends.findIndex(friend => friend.userId === friendId);
+            if (friendIndex === -1) {
+                throw new Error(`Friend not found in group ${fromGroupName}.`);
+            }
+
+            const friend = fromGroup.friends[friendIndex];
+            fromGroup.friends = fromGroup.friends.filter(f => f.userId !== friendId);
+            toGroup.friends.push(friend);
         },
         setSentRequests: (state, action: PayloadAction<FriendRequest[]>) => {
             state.sentRequests = action.payload;
@@ -32,31 +88,62 @@ const friendSlice = createSlice({
         addSentRequest: (state, action: PayloadAction<FriendRequest>) => {
             state.sentRequests.push(action.payload);
         },
+        removeSentRequest: (state, action: PayloadAction<string>) => {
+            const requestId = action.payload;
+            state.sentRequests = state.sentRequests.filter((req) => req.requestId !== requestId);
+        },
         setReceivedRequests: (state, action: PayloadAction<FriendRequest[]>) => {
             state.receivedRequests = action.payload;
         },
         addReceivedRequest: (state, action: PayloadAction<FriendRequest>) => {
             state.receivedRequests.push(action.payload);
         },
-        updateRequestStatus: (state, action: PayloadAction<{ id: string; status: FriendRequestStatus }>) => {
-            const { id, status } = action.payload;
-            const request = state.receivedRequests.find(req => req.requestId === id);
-            if (request) {
-                request.status = status;
+        removeReceivedRequest: (state, action: PayloadAction<string>) => {
+            const requestId = action.payload;
+            state.receivedRequests = state.receivedRequests.filter((req) => req.requestId !== requestId);
+        },
+        // note: use try/catch block to handle errors
+        updateRequest: (state, action: PayloadAction<FriendRequest>) => {
+            const newRequest = action.payload;
+            let found = false;
+            state.sentRequests = state.sentRequests.map((req) => {
+                if (req.requestId === newRequest.requestId) {
+                    found = true;
+                    return newRequest;
+                }
+                return req;
+            });
+            if (!found) {
+                state.receivedRequests = state.receivedRequests.map((req) => {
+                    if (req.requestId === newRequest.requestId) {
+                        found = true;
+                        return newRequest;
+                    }
+                    return req;
+                });
+            }
+            if (!found) {
+                throw new Error(`Request not found: ${newRequest.requestId}`);
             }
         },
     },
 });
 
 export const {
-    setFriends,
+    setFriendGroups,
     addFriend,
     removeFriend,
+    updateFriendProfile,
+    addFriendGroup,
+    removeFriendGroup,
+    moveFriendToGroup,
     setSentRequests,
     addSentRequest,
+    removeSentRequest,
     setReceivedRequests,
     addReceivedRequest,
-    updateRequestStatus,
+    removeReceivedRequest,
+    updateRequest,
 } = friendSlice.actions;
 
 export default friendSlice.reducer;
