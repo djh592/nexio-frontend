@@ -7,8 +7,68 @@ interface FriendsState {
     receivedRequests: FriendRequest[];
 }
 
+const placeholderFriendGroups: FriendGroups = [
+    {
+        groupName: 'Friends',
+        friends: [
+            {
+                userId: '1',
+                userName: 'Alice',
+                emailAddress: 'alice@123.com',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+            {
+                userId: '2',
+                userName: 'Bob',
+                emailAddress: '',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+            {
+                userId: '3',
+                userName: 'Charlie',
+                emailAddress: '',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+        ],
+    },
+    {
+        groupName: 'Family',
+        friends: [
+            {
+                userId: '4',
+                userName: 'David',
+                emailAddress: '',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+            {
+                userId: '5',
+                userName: 'Eve',
+                emailAddress: '',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+        ],
+    },
+    {
+        groupName: 'Work',
+        friends: [
+            {
+                userId: '6',
+                userName: 'Frank',
+                emailAddress: '',
+                phoneNumber: '3241243241',
+                avatarUrl: '',
+            },
+        ],
+    },
+];
+
 const initialState: FriendsState = {
-    friendGroups: initialFriendGroups,
+    friendGroups: placeholderFriendGroups,
     sentRequests: [],
     receivedRequests: [],
 };
