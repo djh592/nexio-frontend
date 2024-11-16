@@ -1,6 +1,11 @@
 'use client';
 import React, { useState, MouseEvent } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, ListItemIcon, ListItemText } from '@mui/material';
+import {
+    Accordion, AccordionSummary, AccordionDetails,
+    Typography, Box, Menu, MenuItem, Dialog,
+    DialogTitle, DialogContent, DialogActions,
+    Button, TextField, ListItemIcon, ListItemText
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -59,7 +64,11 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
     return (
         <Box sx={{ width: '100%' }}>
             {friendGroups.map((group) => (
-                <Accordion key={group.groupName} sx={{ boxShadow: 'none', border: 'none' }} onContextMenu={(event) => handleRightClick(event, group.groupName)}>
+                <Accordion
+                    key={group.groupName}
+                    sx={{ boxShadow: 'none', border: 'none' }}
+                    onContextMenu={(event) => handleRightClick(event, group.groupName)}
+                >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls={`${group.groupName}-content`}
