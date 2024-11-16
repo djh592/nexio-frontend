@@ -9,7 +9,7 @@ interface FriendsState {
 
 const placeholderFriendGroups: FriendGroups = [
     {
-        groupName: 'Friends',
+        groupName: 'My Friends',
         friends: [
             {
                 userId: '1',

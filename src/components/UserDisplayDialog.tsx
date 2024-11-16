@@ -1,12 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import { Box, Avatar, Typography, Button, DialogActions, DialogContent, DialogTitle, Dialog, Divider, IconButton } from '@mui/material';
+import { Box, Avatar, Typography, Button, DialogActions, DialogContent, DialogTitle, Dialog, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/hooks';
+import { User } from '@/lib/definitions';
 import DeleteFriendDialog from '@/components/friend/DeleteFriendDialog';
 import SendFriendRequestDialog from '@/components/friend/SendFriendRequestDialog';
-import { User } from '@/lib/definitions';
-import EditIcon from '@mui/icons-material/Edit';
+import FriendGroupSelect from '@/components/friend/FriendGroupSelect';
 
 interface UserDialogProps {
     user: User;
@@ -61,27 +61,20 @@ export default function UserDialog({ user, open, onClose }: UserDialogProps) {
                         <Typography variant="h6">{user.userName || "UserName"}</Typography>
                         <Divider sx={{ width: '100%', my: 2 }} />
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mx: 3, my: 1 }}>
-                            <Typography variant="body1">Email:</Typography>
-                            <Typography variant="body1">{user.emailAddress || "UserEmail"}</Typography>
+                            <Typography variant="body1" >Email:</Typography>
+                            <Typography variant="body1" >{user.emailAddress || "UserEmail"}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mx: 3, my: 1 }}>
                             <Typography variant="body1">Phone:</Typography>
                             <Typography variant="body1">{user.phoneNumber || "UserPhone"}</Typography>
                         </Box>
                         {
-                            // 展示 Friend Group 并且可以修改
                             groupName && (
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mx: 3, my: 1 }}>
                                     <Typography variant="body1">Group:</Typography>
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                                        <Typography variant="body1">{groupName}</Typography>
-                                        <IconButton size="small" onClick={() => setDeleteDialogOpen(true)}>
-                                            <EditIcon
-                                                fontSize="small"
-                                                color="primary"
-                                            />
-                                        </IconButton>
-                                    </Box>
+                                    <FriendGroupSelect
+                                        friend={user}
+                                    />
                                 </Box>
                             )
                         }
