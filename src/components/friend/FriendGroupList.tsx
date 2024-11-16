@@ -2,7 +2,7 @@
 import React from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import UserStack from '@/components/UserStack';
+import UserDisplayCard from '@/components/UserDisplayCard';
 import { FriendGroups } from '@/lib/definitions';
 
 interface FriendGroupListProps {
@@ -24,7 +24,7 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
                     <AccordionDetails sx={{ padding: 0 }}>
                         {group.friends.map((friend) => (
                             <Box key={friend.userId} sx={{ width: '100%' }}>
-                                <UserStack user={friend} />
+                                <UserDisplayCard user={friend} />
                             </Box>
                         ))}
                     </AccordionDetails>

@@ -11,9 +11,9 @@ import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LogoutDialog from '@/components/auth/LogoutDialog';
-import UserStack from '@/components/UserStack';
+import UserStack from '@/components/UserDisplayCard';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export default function DashboardSideNav() {
     const router = useRouter();

@@ -1,26 +1,22 @@
 'use client';
 import React, { useState } from 'react';
 import { Box, Avatar, Stack, Typography } from "@mui/material";
+import UserDisplayDialog from '@/components/UserDisplayDialog';
 import { User } from "@/lib/definitions";
-import UserDialog from './UserDialog';
 
-interface UserStackProps {
+interface UserDisplayCardProps {
     user: User;
 }
 
-export default function UserStack({ user }: UserStackProps) {
+export default function UserDisplayCard({ user }: UserDisplayCardProps) {
     const [open, setOpen] = useState(false);
-
-    const handleClick = () => {
-        setOpen(true);
-    };
 
     return (
         <>
             <Stack
                 direction="row"
                 sx={{
-                    p: 2,
+                    p: 1,
                     gap: 2,
                     alignItems: 'center',
                     width: '100%',
@@ -29,7 +25,7 @@ export default function UserStack({ user }: UserStackProps) {
                         backgroundColor: 'rgba(0, 0, 0, 0.1)',
                     },
                 }}
-                onClick={handleClick}
+                onClick={() => setOpen(true)}
             >
                 <Avatar
                     sizes="small"
@@ -46,12 +42,10 @@ export default function UserStack({ user }: UserStackProps) {
                     </Typography>
                 </Box>
             </Stack>
-            <UserDialog
+            <UserDisplayDialog
                 user={user}
                 open={open}
-                onClose={
-                    () => setOpen(false)
-                }
+                onClose={() => setOpen(false)}
             />
         </>
     );

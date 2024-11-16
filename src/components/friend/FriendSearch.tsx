@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { IconButton, Popover, Paper, Stack, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import UserStack from '@/components/UserStack';
+import UserDisplayCard from '@/components/UserDisplayCard';
 import { User } from '@/lib/definitions';
 
 export default function FriendSearch() {
@@ -142,7 +142,7 @@ export default function FriendSearch() {
             >
                 <Stack sx={{ px: 1, py: 2 }}>
                     {searchResults.map((user) => (
-                        <UserStack key={user.userId} user={user} />
+                        <UserDisplayCard key={user.userId} user={user} />
                     ))}
                 </Stack>
             </Popover>
