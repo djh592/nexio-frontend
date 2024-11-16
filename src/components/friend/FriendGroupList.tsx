@@ -4,15 +4,16 @@ import {
     Accordion, AccordionSummary, AccordionDetails,
     Typography, Box, Menu, MenuItem, Dialog,
     DialogTitle, DialogContent, DialogActions,
-    Button, TextField, ListItemIcon, ListItemText
+    Button, ListItemIcon, ListItemText
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UserDisplayCard from '@/components/UserDisplayCard';
+import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import { FriendGroups } from '@/lib/definitions';
 import { useAppDispatch } from '@/lib/hooks';
-import { addFriendGroup, removeFriendGroup } from '@/lib/features/friend/friendSlice';
+import { removeFriendGroup } from '@/lib/features/friend/friendSlice';
 
 interface FriendGroupListProps {
     friendGroups: FriendGroups;
@@ -22,8 +23,7 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
     const dispatch = useAppDispatch();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [newGroupName, setNewGroupName] = useState('');
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const handleRightClick = (event: MouseEvent<HTMLElement>, groupName: string) => {
@@ -37,21 +37,13 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
     };
 
     const handleAddGroup = () => {
-        setDialogOpen(true);
+        setAddDialogOpen(true);
         handleCloseMenu();
     };
 
     const handleDeleteGroup = () => {
         setDeleteDialogOpen(true);
         handleCloseMenu();
-    };
-
-    const handleConfirmAddGroup = () => {
-        if (newGroupName.trim()) {
-            dispatch(addFriendGroup(newGroupName));
-            setNewGroupName('');
-            setDialogOpen(false);
-        }
     };
 
     const handleConfirmDeleteGroup = () => {
@@ -111,27 +103,10 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
                     <ListItemText primary="Delete Group" />
                 </MenuItem>
             </Menu>
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>Add New Group</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Group Name"
-                        fullWidth
-                        value={newGroupName}
-                        onChange={(e) => setNewGroupName(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDialogOpen(false)} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleConfirmAddGroup} color="primary">
-                        Add
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AddFriendGroupDialog
+                open={addDialogOpen}
+                onClose={() => setAddDialogOpen(false)}
+            />
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>

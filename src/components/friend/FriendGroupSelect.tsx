@@ -1,11 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import { MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, ListItemIcon, ListItemText } from '@mui/material';
+import { MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
-import { moveFriendToGroup, addFriendGroup } from '@/lib/features/friend/friendSlice';
+import { moveFriendToGroup } from '@/lib/features/friend/friendSlice';
 import AddIcon from '@mui/icons-material/Add';
+import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 
 interface FriendGroupSelectProps {
     friend: User;
@@ -18,7 +19,6 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
         const group = friendGroups.find((group) => group.friends.some((f) => f.userId === friend.userId));
         return group ? group.groupName : '';
     });
-    const [newGroupName, setNewGroupName] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -28,16 +28,6 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
         } else {
             dispatch(moveFriendToGroup({ friendId: friend.userId, fromGroupName: selectedGroup, toGroupName: newGroupName }));
             setSelectedGroup(newGroupName);
-        }
-    };
-
-    const handleAddGroup = () => {
-        if (newGroupName.trim()) {
-            dispatch(addFriendGroup(newGroupName));
-            dispatch(moveFriendToGroup({ friendId: friend.userId, fromGroupName: selectedGroup, toGroupName: newGroupName }));
-            setSelectedGroup(newGroupName);
-            setNewGroupName('');
-            setDialogOpen(false);
         }
     };
 
@@ -56,27 +46,7 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
                     <ListItemText primary="Add a Group" />
                 </MenuItem>
             </Select>
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>Add New Group</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Group Name"
-                        fullWidth
-                        value={newGroupName}
-                        onChange={(e) => setNewGroupName(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDialogOpen(false)} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleAddGroup} color="primary">
-                        Add
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AddFriendGroupDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
         </>
     );
 }
