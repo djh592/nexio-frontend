@@ -17,6 +17,8 @@ import { removeFriendGroup } from '@/lib/features/friend/friendSlice';
 
 export default function FriendGroupList() {
     const dispatch = useAppDispatch();
+    const token = useAppSelector((state) => state.auth.token);
+    const userId = useAppSelector((state) => state.auth.user.userId);
     const friendGroups = useAppSelector((state) => state.friend.friendGroups);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
@@ -43,10 +45,31 @@ export default function FriendGroupList() {
         handleCloseMenu();
     };
 
-    const handleConfirmDeleteGroup = () => {
+    const handleConfirmDeleteGroup = async () => {
         if (selectedGroup) {
-            dispatch(removeFriendGroup(selectedGroup));
-            setDeleteDialogOpen(false);
+            try {
+                const headers = new Headers();
+                headers.append("Authorization", token);
+                const response = await fetch('/api/friends/groups', {
+                    method: 'DELETE',
+                    headers: headers,
+                    body: JSON.stringify({
+                        userId: userId,
+                        groupName: selectedGroup,
+                    }),
+                });
+                if (response.ok) {
+                    dispatch(removeFriendGroup(selectedGroup));
+                    setDeleteDialogOpen(false);
+                }
+                else {
+                    const data = await response.json();
+                    console.log('Failed to delete friend group:', data.message);
+                }
+            }
+            catch (error) {
+                console.log('Failed to delete friend group:', error);
+            }
         }
     };
 
@@ -110,9 +133,6 @@ export default function FriendGroupList() {
                     <Typography>{`Are you sure you want to delete the group "${selectedGroup}"?`}</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
-                        Cancel
-                    </Button>
                     <Button onClick={handleConfirmDeleteGroup} color="primary">
                         Delete
                     </Button>

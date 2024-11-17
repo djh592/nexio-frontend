@@ -26,14 +26,14 @@ export default function AddFriendGroupDialog(
                 headers: headers,
                 body: JSON.stringify({ userId, groupName: newGroupName })
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to add new group');
+            if (response.ok) {
+                dispatch(addFriendGroup(newGroupName));
+                setNewGroupName('');
+                onClose();
             }
-
-            dispatch(addFriendGroup(newGroupName));
-            setNewGroupName('');
-            onClose();
+            else {
+                console.log('Failed to add new group:', response.statusText);
+            }
         } catch (error) {
             console.log('Error adding new group:', error);
         }

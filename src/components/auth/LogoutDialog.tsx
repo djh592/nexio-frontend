@@ -11,10 +11,11 @@ interface LogoutDialogProps {
 }
 
 export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
-    const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
-    const router = useRouter();
     const token = useAppSelector((state) => state.auth.token);
+    const user = useAppSelector((state) => state.auth.user);
+    const router = useRouter();
+
 
     const handleLogout = async () => {
         try {
