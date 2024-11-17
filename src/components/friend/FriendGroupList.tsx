@@ -11,16 +11,13 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UserDisplayCard from '@/components/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
-import { FriendGroups } from '@/lib/definitions';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { removeFriendGroup } from '@/lib/features/friend/friendSlice';
 
-interface FriendGroupListProps {
-    friendGroups: FriendGroups;
-}
 
-export default function FriendGroupList({ friendGroups }: FriendGroupListProps) {
+export default function FriendGroupList() {
     const dispatch = useAppDispatch();
+    const friendGroups = useAppSelector((state) => state.friend.friendGroups);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -66,7 +63,7 @@ export default function FriendGroupList({ friendGroups }: FriendGroupListProps) 
                         aria-controls={`${group.groupName}-content`}
                         id={`${group.groupName}-header`}
                     >
-                        <Typography variant="subtitle1">{group.groupName}</Typography>
+                        {group.groupName}
                     </AccordionSummary>
                     <AccordionDetails sx={{ padding: 0 }}>
                         {group.friends.map((friend) => (

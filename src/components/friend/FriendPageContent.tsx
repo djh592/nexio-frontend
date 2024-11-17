@@ -11,7 +11,6 @@ export default function FriendPageContent() {
     const dispatch = useAppDispatch();
     const token = useAppSelector((state) => state.auth.token);
     const userId = useAppSelector((state) => state.auth.user.userId);
-    const friendGroups = useAppSelector((state) => state.friend.friendGroups);
 
     useEffect(() => {
         async function fetchFriendGroups() {
@@ -56,9 +55,7 @@ export default function FriendPageContent() {
                 <FriendRequestNotificationButton />
             </Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-                <FriendGroupList
-                    friendGroups={friendGroups}
-                />
+                <FriendGroupList />
             </Box>
         </Box>
     );
