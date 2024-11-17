@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import {
-    Box, Stack, Typography, Accordion, AccordionSummary, AccordionDetails, Divider
+    Box, Typography, Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from '@/lib/hooks';

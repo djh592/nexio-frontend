@@ -93,7 +93,11 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
     };
 
     return (
-        <Card sx={{ mb: 2, width: '100%' }}>
+        <Card sx={{
+            width: '100%',
+            border: 'none',
+            boxShadow: 'none',
+        }}>
             <CardContent>
                 <Stack direction="row" alignItems="center" spacing={2}>
                     <Avatar alt={request.fromUserId} src={`/api/avatar/${request.fromUserId}`} />
