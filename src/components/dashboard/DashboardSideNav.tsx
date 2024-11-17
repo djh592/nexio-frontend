@@ -8,12 +8,13 @@ import InfoIcon from '@mui/icons-material/Info';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LogoutDialog from '@/components/auth/LogoutDialog';
 import UserStack from '@/components/UserDisplayCard';
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 export default function DashboardSideNav() {
     const router = useRouter();
@@ -41,29 +42,6 @@ export default function DashboardSideNav() {
             }}
         >
             <Toolbar />
-            {/* <Stack
-                direction="row"
-                sx={{
-                    p: 2,
-                    gap: 2,
-                    alignItems: 'center',
-                }}
-            >
-                <Avatar
-                    sizes="small"
-                    alt={user.userName}
-                    src={user.avatarUrl}
-                    sx={{ width: 40, height: 40 }}
-                />
-                <Box sx={{ mr: 'auto' }}>
-                    <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                        {user.userName || 'UserName'}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        {user.emailAddress || 'EmailAddress'}
-                    </Typography>
-                </Box>
-            </Stack> */}
             <UserStack user={user} />
             <Divider
                 sx={{
@@ -99,6 +77,14 @@ export default function DashboardSideNav() {
                             <ListItemText primary="Groups" />
                         </ListItemButton>
                     </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleNavigation('/notifications')}>
+                            <ListItemIcon>
+                                <NotificationsIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Notifications" />
+                        </ListItemButton>
+                    </ListItem>
                     <Divider
                         sx={{
                             mt: 2,
@@ -113,7 +99,6 @@ export default function DashboardSideNav() {
                             <ListItemText primary="Account" />
                         </ListItemButton>
                     </ListItem>
-
                     <ListItem disablePadding>
                         <ListItemButton onClick={() => handleNavigation('/settings')}>
                             <ListItemIcon>

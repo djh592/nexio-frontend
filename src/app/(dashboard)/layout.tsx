@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     display: 'flex',
                     flexDirection: 'column',
                     marginTop: '64px', // Adjust this value based on the height of your AppBar
-                    marginLeft: '200px', // Adjust this value based on the width of your SideNav
+                    marginLeft: '240px', // Adjust this value based on the width of your SideNav
                     height: 'calc(100vh - 64px)', // Adjust this value based on the height of your AppBar
                     overflowY: 'auto',
                 }}
