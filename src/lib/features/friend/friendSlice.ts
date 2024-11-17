@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User, FriendGroups, initialFriendGroups, FriendRequest } from '@/lib/definitions';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { User, FriendGroups, initialFriendGroups, FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 
 interface FriendsState {
     friendGroups: FriendGroups;
     sentRequests: FriendRequest[];
     receivedRequests: FriendRequest[];
+    newRequestCount: number;
 }
 
 const placeholderFriendGroups: FriendGroups = [
@@ -67,37 +69,37 @@ const placeholderFriendGroups: FriendGroups = [
     },
 ];
 
-const placeholderSentRequests = [
+const placeholderSentRequests: FriendRequest[] = [
     {
         requestId: '1',
         createdAt: '2021-08-01T12:00:00Z',
         fromUserId: '7',
         toUserId: '1',
-        status: 'Pending',
+        status: 'Pending' as FriendRequestStatus,
     },
     {
         requestId: '2',
         createdAt: '2021-08-01T12:00:00Z',
         fromUserId: '8',
         toUserId: '1',
-        status: 'Pending',
+        status: 'Pending' as FriendRequestStatus,
     },
 ];
 
-const placeholderReceivedRequests = [
+const placeholderReceivedRequests: FriendRequest[] = [
     {
         requestId: '3',
         createdAt: '2021-08-01T12:00:00Z',
         fromUserId: '1',
         toUserId: '9',
-        status: 'Pending',
+        status: 'Pending' as FriendRequestStatus,
     },
     {
         requestId: '4',
         createdAt: '2021-08-01T12:00:00Z',
         fromUserId: '1',
         toUserId: '10',
-        status: 'Pending',
+        status: 'Pending' as FriendRequestStatus,
     },
 ];
 
@@ -106,6 +108,7 @@ const initialState: FriendsState = {
     friendGroups: placeholderFriendGroups,
     sentRequests: placeholderSentRequests,
     receivedRequests: placeholderReceivedRequests,
+    newRequestCount: 0,
 };
 
 const friendSlice = createSlice({

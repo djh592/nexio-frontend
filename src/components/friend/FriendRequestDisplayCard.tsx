@@ -16,7 +16,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleAccept = async () => {
         try {
-            const response = await fetch('/friends/requests', {
+            const response = await fetch('api/friends/requests', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

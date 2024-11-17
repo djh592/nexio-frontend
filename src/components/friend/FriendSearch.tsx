@@ -100,7 +100,7 @@ export default function FriendSearch() {
         <>
             <Paper
                 component="form"
-                sx={{ width: '100%', display: 'flex', alignItems: 'center', mb: 2 }}
+                sx={{ width: '100%', display: 'flex', alignItems: 'center'}}
                 ref={paperRef}
             >
                 <InputBase
