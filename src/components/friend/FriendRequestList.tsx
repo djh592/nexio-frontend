@@ -16,7 +16,7 @@ export default function FriendRequestList() {
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Accordion sx={{ boxShadow: 'none', border: 'none' }} >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">Received Requests</Typography>
+                    Received Requests
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: 0 }}>
                     {receivedRequests.length > 0 ? (
@@ -32,7 +32,7 @@ export default function FriendRequestList() {
             </Accordion>
             <Accordion sx={{ boxShadow: 'none', border: 'none' }} >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">Sent Requests</Typography>
+                    Sent Requests
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: 0 }}>
                     {sentRequests.length > 0 ? (

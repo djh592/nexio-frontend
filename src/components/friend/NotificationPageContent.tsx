@@ -42,7 +42,7 @@ export default function NotificationPageContent() {
             <Stack direction="row" alignItems="center" spacing={1}>
                 <BackButton to="/friends" />
                 <Typography
-                    variant="h5"
+                    variant="h4"
                     sx={{
                         fontWeight: 'bold',
                         mb: 1,
