@@ -16,12 +16,11 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleAccept = async () => {
         try {
+            const headers = new Headers();
+            headers.append("Authorization", token);
             const response = await fetch('api/friends/requests', {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: headers,
                 body: JSON.stringify({
                     FriendRequest: {
                         ...request,
@@ -31,7 +30,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.ok) {
                 const data = await response.json();
-                dispatch(updateRequest(data.FriendRequest));
+                dispatch(updateRequest(data.friendRequest));
             } else {
                 console.error('Failed to accept friend request');
             }
@@ -42,12 +41,11 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleReject = async () => {
         try {
-            const response = await fetch('/friends/requests', {
+            const headers = new Headers();
+            headers.append("Authorization", token);
+            const response = await fetch('api/friends/requests', {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: headers,
                 body: JSON.stringify({
                     FriendRequest: {
                         ...request,
@@ -57,7 +55,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.ok) {
                 const data = await response.json();
-                dispatch(updateRequest(data.FriendRequest));
+                dispatch(updateRequest(data.friendRequest));
             } else {
                 console.error('Failed to reject friend request');
             }
@@ -68,12 +66,11 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleCancel = async () => {
         try {
-            const response = await fetch('/friends/requests', {
+            const headers = new Headers();
+            headers.append("Authorization", token);
+            const response = await fetch('api/friends/requests', {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: headers,
                 body: JSON.stringify({
                     FriendRequest: {
                         ...request,
@@ -83,6 +80,12 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.ok) {
                 const data = await response.json();
+                if (data.FriendRequest.status !== FriendRequestStatus.Canceled) {
+                    throw new Error('Failed to cancel friend request');
+                }
+                if (data.friendRequest.requestId !== request.requestId) {
+                    throw new Error('Invalid request');
+                }
                 dispatch(removeSentRequest(request.requestId));
             } else {
                 console.error('Failed to cancel friend request');
