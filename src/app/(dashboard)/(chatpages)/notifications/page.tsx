@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import FriendRequestList from '@/components/friend/FriendRequestList';
 
 export default function NotificationsPage() {
     return (
@@ -8,7 +9,7 @@ export default function NotificationsPage() {
                 width: '100%',
             }}
         >
-            <h1>Notifications Page</h1>
+            <FriendRequestList />
         </Box>
     );
 }

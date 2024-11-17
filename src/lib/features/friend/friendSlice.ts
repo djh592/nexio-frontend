@@ -67,10 +67,45 @@ const placeholderFriendGroups: FriendGroups = [
     },
 ];
 
+const placeholderSentRequests = [
+    {
+        requestId: '1',
+        createdAt: '2021-08-01T12:00:00Z',
+        fromUserId: '7',
+        toUserId: '1',
+        status: 'Pending',
+    },
+    {
+        requestId: '2',
+        createdAt: '2021-08-01T12:00:00Z',
+        fromUserId: '8',
+        toUserId: '1',
+        status: 'Pending',
+    },
+];
+
+const placeholderReceivedRequests = [
+    {
+        requestId: '3',
+        createdAt: '2021-08-01T12:00:00Z',
+        fromUserId: '1',
+        toUserId: '9',
+        status: 'Pending',
+    },
+    {
+        requestId: '4',
+        createdAt: '2021-08-01T12:00:00Z',
+        fromUserId: '1',
+        toUserId: '10',
+        status: 'Pending',
+    },
+];
+
+
 const initialState: FriendsState = {
     friendGroups: placeholderFriendGroups,
-    sentRequests: [],
-    receivedRequests: [],
+    sentRequests: placeholderSentRequests,
+    receivedRequests: placeholderReceivedRequests,
 };
 
 const friendSlice = createSlice({
