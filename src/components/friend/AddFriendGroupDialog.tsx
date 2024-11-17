@@ -19,12 +19,11 @@ export default function AddFriendGroupDialog(
 
     const handleConfirmAddGroup = async () => {
         try {
+            const headers = new Headers();
+            headers.append("Authorization", token);
             const response = await fetch('/api/friends/groups', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
+                headers: headers,
                 body: JSON.stringify({ userId, groupName: newGroupName })
             });
 

@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,7 @@ export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
             fullWidth
         >
             <DialogTitle id="logout-dialog-title">
-                <Typography variant="h6" color="error">{"Confirm Logout"}</Typography>
+                Confirm Logout
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="logout-dialog-description">

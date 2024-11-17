@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { useAppDispatch } from '@/lib/hooks';
 import { addSentRequest } from '@/lib/features/friend/friendSlice';
 import { User, FriendRequestStatus } from '@/lib/definitions';
@@ -22,7 +22,7 @@ export default function SendFriendRequestDialog({ user, open, onClose }: SendFri
         <>
             <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
                 <DialogTitle>
-                    <Typography variant="h6">Confirm Send Friend Request</Typography>
+                    Confirm Send Friend Request
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
