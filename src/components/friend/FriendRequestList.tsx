@@ -20,7 +20,7 @@ export default function FriendRequestList() {
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: 0 }}>
                     {receivedRequests.length > 0 ? (
-                        receivedRequests.map((request: FriendRequest) => (
+                        receivedRequests.reverse().map((request: FriendRequest) => (
                             <FriendRequestDisplayCard key={request.requestId} request={request} />
                         ))
                     ) : (
@@ -36,7 +36,7 @@ export default function FriendRequestList() {
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: 0 }}>
                     {sentRequests.length > 0 ? (
-                        sentRequests.map((request: FriendRequest) => (
+                        sentRequests.reverse().map((request: FriendRequest) => (
                             <FriendRequestDisplayCard key={request.requestId} request={request} />
                         ))
                     ) : (
