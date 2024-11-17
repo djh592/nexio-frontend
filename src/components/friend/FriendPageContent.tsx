@@ -9,12 +9,26 @@ import { setFriendGroups } from "@/lib/features/friend/friendSlice";
 
 export default function FriendPageContent() {
     const dispatch = useAppDispatch();
+    const token = useAppSelector((state) => state.auth.token);
+    const userId = useAppSelector((state) => state.auth.user.userId);
     const friendGroups = useAppSelector((state) => state.friend.friendGroups);
 
     useEffect(() => {
         async function fetchFriendGroups() {
             try {
-                const response = await fetch('/api/friends');
+                const headers = new Headers();
+                headers.append("Authorization", token);
+                const response = await fetch(
+                    '/api/friends',
+                    {
+                        method: 'GET',
+                        headers: headers,
+                        body: JSON.stringify({
+                            userId: userId,
+                        })
+                    }
+
+                );
                 const data = await response.json();
                 dispatch(setFriendGroups(data.friendGroups));
             } catch (error) {
@@ -23,7 +37,7 @@ export default function FriendPageContent() {
         }
 
         fetchFriendGroups();
-    }, [dispatch]);
+    }, [dispatch, token, userId]);
 
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: 2 }}>
