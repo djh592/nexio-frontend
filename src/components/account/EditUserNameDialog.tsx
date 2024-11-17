@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { setUserName } from '@/lib/features/auth/authSlice';
 
@@ -52,7 +52,7 @@ export default function EditUserNameDialog({ open, onClose }: EditUserNameDialog
             fullWidth
         >
             <DialogTitle id="edit-username-dialog-title">
-                <Typography variant="h6">{"Edit Username"}</Typography>
+                Edit Username
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="edit-username-dialog-description">

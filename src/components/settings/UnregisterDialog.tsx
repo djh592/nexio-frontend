@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
@@ -57,7 +57,7 @@ export default function UnregisterDialog(
             fullWidth
         >
             <DialogTitle id="delete-account-dialog-title">
-                <Typography variant="h6" color="error">{"Confirm Delete Account"}</Typography>
+                Confirm Delete Account
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="delete-account-dialog-description">
