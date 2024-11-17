@@ -93,7 +93,7 @@ export default function UserDialog({ user, open, onClose }: UserDialogProps) {
                             </Button>
                             <DeleteFriendDialog
                                 open={deleteDialogOpen}
-                                user={user}
+                                friend={user}
                                 onClose={() => setDeleteDialogOpen(false)}
                             />
                         </>
