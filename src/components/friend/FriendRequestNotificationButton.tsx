@@ -10,7 +10,7 @@ export default function FriendRequestNotificationButton() {
     const newRequestCount = useAppSelector((state) => state.friend.newRequestCount);
 
     const handleClick = () => {
-        router.push('/notifications');
+        router.push('/friends/notifications');
     };
 
     return (

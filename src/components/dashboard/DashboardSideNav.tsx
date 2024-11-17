@@ -8,13 +8,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LogoutDialog from '@/components/auth/LogoutDialog';
 import UserStack from '@/components/UserDisplayCard';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export default function DashboardSideNav() {
     const router = useRouter();
@@ -75,14 +74,6 @@ export default function DashboardSideNav() {
                                 <GroupIcon />
                             </ListItemIcon>
                             <ListItemText primary="Groups" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => handleNavigation('/notifications')}>
-                            <ListItemIcon>
-                                <NotificationsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Notifications" />
                         </ListItemButton>
                     </ListItem>
                     <Divider
