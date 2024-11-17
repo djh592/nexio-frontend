@@ -1,6 +1,9 @@
 'use client';
 import React from 'react';
-import { Box, Stack, Typography, Divider } from '@mui/material';
+import {
+    Box, Stack, Typography, Accordion, AccordionSummary, AccordionDetails, Divider
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from '@/lib/hooks';
 import FriendRequestDisplayCard from './FriendRequestDisplayCard';
 import { FriendRequest } from '@/lib/definitions';
@@ -10,39 +13,39 @@ export default function FriendRequestList() {
     const receivedRequests = useAppSelector((state) => state.friend.receivedRequests);
 
     return (
-        <Box sx={{ width: '100%', padding: 2 }}>
-            <Typography variant="h4" gutterBottom>
-                Friend Requests
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="h6" gutterBottom>
-                Received Requests
-            </Typography>
-            <Stack spacing={2} sx={{ mb: 4 }}>
-                {receivedRequests.length > 0 ? (
-                    receivedRequests.map((request: FriendRequest) => (
-                        <FriendRequestDisplayCard key={request.requestId} request={request} />
-                    ))
-                ) : (
-                    <Typography variant="body2" color="text.secondary">
-                        No received requests.
-                    </Typography>
-                )}
-            </Stack>
-            <Typography variant="h6" gutterBottom>
-                Sent Requests
-            </Typography>
-            <Stack spacing={2}>
-                {sentRequests.length > 0 ? (
-                    sentRequests.map((request: FriendRequest) => (
-                        <FriendRequestDisplayCard key={request.requestId} request={request} />
-                    ))
-                ) : (
-                    <Typography variant="body2" color="text.secondary">
-                        No sent requests.
-                    </Typography>
-                )}
-            </Stack>
+        <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Accordion sx={{ boxShadow: 'none', border: 'none' }} >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6">Received Requests</Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ padding: 0 }}>
+                    {receivedRequests.length > 0 ? (
+                        receivedRequests.map((request: FriendRequest) => (
+                            <FriendRequestDisplayCard key={request.requestId} request={request} />
+                        ))
+                    ) : (
+                        <Typography variant="body2" color="text.secondary">
+                            No received requests.
+                        </Typography>
+                    )}
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ boxShadow: 'none', border: 'none' }} >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6">Sent Requests</Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ padding: 0 }}>
+                    {sentRequests.length > 0 ? (
+                        sentRequests.map((request: FriendRequest) => (
+                            <FriendRequestDisplayCard key={request.requestId} request={request} />
+                        ))
+                    ) : (
+                        <Typography variant="body2" color="text.secondary">
+                            No sent requests.
+                        </Typography>
+                    )}
+                </AccordionDetails>
+            </Accordion>
         </Box>
     );
 }
