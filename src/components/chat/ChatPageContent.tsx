@@ -45,6 +45,9 @@ export default function ChatPageContent() {
                                 content: "Hi, Alice!",
                             },
                         ],
+                        unreadCount: 10,
+                        isMuted: false,
+                        isPinned: false,
                     } as Chat
                 }
             />

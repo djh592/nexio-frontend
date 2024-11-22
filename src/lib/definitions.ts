@@ -71,6 +71,8 @@ export type Messages = Message[];
 
 export type Chat = {
     chatId: string;
+    chatName: string;
+    chatAvatarUrl: string;
     createdAt: string;
     participants: User[];
     messages: Messages;
