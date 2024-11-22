@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 const ChatSessionContent = () => {
     const searchParams = useSearchParams();
-    const [chatId, setChatId] = useState('0');
+    const [chatId, setChatId] = useState<null | string>(null);
 
     useEffect(() => {
         const chatId = searchParams.get('chat');

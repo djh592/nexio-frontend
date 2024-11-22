@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import ChatPageContent from '@/components/chat/ChatPageContent';
 
 export default function ChatsPage() {
     return (
@@ -8,7 +9,7 @@ export default function ChatsPage() {
                 width: '100%',
             }}
         >
-            <h1>Chats Page</h1>
+            <ChatPageContent />
         </Box>
     );
 }
