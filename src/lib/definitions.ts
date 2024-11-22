@@ -6,6 +6,14 @@ export type User = {
     avatarUrl: string;
 };
 
+export const INITIAL_USER: User = {
+    userId: "",
+    userName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    avatarUrl: "",
+};
+
 export type Friends = User[];
 
 export type FriendGroup = {
@@ -17,11 +25,11 @@ export type FriendGroups = FriendGroup[];
 
 export const DEFAULT_FRIEND_GROUP_NAME = "My Friends";
 
-export const initialFriendGroups: FriendGroups = [
+export const INITIAL_FRIEND_GROUPS: FriendGroups = [
     {
         groupName: DEFAULT_FRIEND_GROUP_NAME,
-        friends: []
-    }
+        friends: [],
+    },
 ];
 
 export enum FriendRequestStatus {
@@ -62,7 +70,7 @@ export type Message = {
 export type Messages = Message[];
 
 export type Chat = {
-    ChatId: string;
+    chatId: string;
     createdAt: string;
     participants: User[];
     messages: Messages;

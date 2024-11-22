@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/lib/definitions";
+import { INITIAL_USER } from "@/lib/definitions";
 
 interface AuthState {
     token: string;
@@ -8,13 +9,7 @@ interface AuthState {
 
 const initialState: AuthState = {
     token: "",
-    user: {
-        userId: "",
-        userName: "",
-        phoneNumber: "",
-        emailAddress: "",
-        avatarUrl: "",
-    },
+    user: INITIAL_USER,
 };
 
 export const authSlice = createSlice({

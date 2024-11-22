@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User, FriendGroups, FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { User, FriendGroups, initialFriendGroups, FriendRequest, FriendRequestStatus } from '@/lib/definitions';
+import { INITIAL_FRIEND_GROUPS } from '@/lib/definitions';
 
 interface FriendsState {
     friendGroups: FriendGroups;
