@@ -55,3 +55,22 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<LoginResponse>('/login', data);
     return response.data;
 };
+
+
+// DELETE: /unregister
+export interface UnregisterRequest {
+    userId: string;
+    password: string;
+}
+
+export interface UnregisterResponse {
+    code: number;
+    info: string;
+}
+
+export const unregisterUser = async (data: UnregisterRequest): Promise<UnregisterResponse> => {
+    const response = await apiClient.delete<UnregisterResponse>('/unregister', { data });
+    return response.data;
+};
+
+
