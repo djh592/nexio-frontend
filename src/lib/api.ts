@@ -18,74 +18,74 @@ apiClient.interceptors.request.use((config) => {
 
 
 // POST: /register
-export interface RegisterRequest {
+export interface PostRegisterRequest {
     userName: string;
     password: string;
     phoneNumber?: string;
     emailAddress?: string;
 }
 
-export interface RegisterResponse {
+export interface PostRegisterResponse {
     code: number;
     info: string;
     token: string;
     user: User;
 }
 
-export const registerUser = async (data: RegisterRequest): Promise<RegisterResponse> => {
-    const response = await apiClient.post<RegisterResponse>('/register', data);
+export const postRegister = async (data: PostRegisterRequest): Promise<PostRegisterResponse> => {
+    const response = await apiClient.post<PostRegisterResponse>('/register', data);
     return response.data;
 };
 
 
 // POST: /login
-export interface LoginRequest {
+export interface PostLoginRequest {
     userName: string;
     password: string;
 }
 
-export interface LoginResponse {
+export interface PostLoginResponse {
     code: number;
     info: string;
     token: string;
     user: User;
 }
 
-export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('/login', data);
+export const postLogin = async (data: PostLoginRequest): Promise<PostLoginResponse> => {
+    const response = await apiClient.post<PostLoginResponse>('/login', data);
     return response.data;
 };
 
 
 // DELETE: /unregister
-export interface UnregisterRequest {
+export interface DeleteUnregisterRequest {
     userId: string;
     password: string;
 }
 
-export interface UnregisterResponse {
+export interface DeleteUnregisterResponse {
     code: number;
     info: string;
 }
 
-export const unregisterUser = async (data: UnregisterRequest): Promise<UnregisterResponse> => {
-    const response = await apiClient.delete<UnregisterResponse>('/unregister', { data });
+export const deleteUser = async (data: DeleteUnregisterRequest): Promise<DeleteUnregisterResponse> => {
+    const response = await apiClient.delete<DeleteUnregisterResponse>('/unregister', { data });
     return response.data;
 };
 
 
 // DELETE: /logout
-export interface LogoutRequest {
+export interface DeleteLogoutRequest {
     userId: string;
 }
 
-export interface LogoutResponse {
+export interface DeleteLogoutResponse {
     code: number;
     info: string;
 }
 
-export const logoutUser = async (data: LogoutRequest): Promise<LogoutResponse> => {
-    const response = await apiClient.delete<LogoutResponse>('/logout', { data });
+export const deleteLogout = async (data: DeleteLogoutRequest): Promise<DeleteLogoutResponse> => {
+    const response = await apiClient.delete<DeleteLogoutResponse>('/logout', { data });
     return response.data;
 };
 
@@ -104,7 +104,7 @@ export const getUser = async (userId: string): Promise<GetUserResponse> => {
 
 
 // PUT: /user/{userId}
-export interface UpdateUserRequest {
+export interface PutUserRequest {
     oldPassword?: string;
     newPassword?: string;
     userName?: string;
@@ -113,40 +113,40 @@ export interface UpdateUserRequest {
     avatarImage?: string;
 }
 
-function checkUpdateUserRequest(request: UpdateUserRequest): boolean {
+function checkUpdateUserRequest(request: PutUserRequest): boolean {
     if (request.oldPassword && !request.newPassword) return false;
     if (request.newPassword && !request.oldPassword) return false;
     return true;
 }
 
-export interface UpdateUserResponse {
+export interface PutUserResponse {
     code: number;
     info: string;
     user: User;
 }
 
-export const updateUser = async (userId: string, data: UpdateUserRequest): Promise<UpdateUserResponse> => {
+export const putUser = async (userId: string, data: PutUserRequest): Promise<PutUserResponse> => {
     if (!checkUpdateUserRequest(data)) {
-        throw new Error('Both oldPassword and newPassword must be provided.');
+        throw new Error('Old password and new password must be provided together.');
     }
-    const response = await apiClient.put<UpdateUserResponse>(`/user/${userId}`, data);
+    const response = await apiClient.put<PutUserResponse>(`/user/${userId}`, data);
     return response.data;
 };
 
 
 // GET: /users/search
-export interface SearchUsersRequest {
-    query: string;
+export interface GetUsersSearchRequest {
+    searchText: string;
 }
 
-export interface SearchUsersResponse {
+export interface GetUsersSearchResponse {
     code: number;
     info: string;
-    resluts: User[];
+    users: User[];
 }
 
-export const searchUsers = async (data: SearchUsersRequest): Promise<SearchUsersResponse> => {
-    const response = await apiClient.get<SearchUsersResponse>('/users/search', { params: data });
+export const getUsersSearch = async (data: GetUsersSearchRequest): Promise<GetUsersSearchResponse> => {
+    const response = await apiClient.get<GetUsersSearchResponse>('/users/search', { params: data });
     return response.data;
 };
 
