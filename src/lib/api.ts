@@ -206,3 +206,21 @@ export const patchFriendGroup = async (data: PatchFriendGroupRequest): Promise<P
     return response.data;
 };
 
+
+// GET: /friends
+export interface GetFriendsRequest {
+    userId: string;
+}
+
+export interface GetFriendsResponse {
+    code: number;
+    info: string;
+    friendGroups: FriendGroups;
+}
+
+export const getFriends = async (data: GetFriendsRequest): Promise<GetFriendsResponse> => {
+    const response = await apiClient.get<GetFriendsResponse>('/friends', { params: data });
+    return response.data;
+};
+
+
