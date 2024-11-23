@@ -160,7 +160,7 @@ export interface PostFriendsGroupsRequest {
 export interface PostFriendsGroupsResponse {
     code: number;
     info: string;
-    friendGroups: FriendGroups;
+    friendGroup: FriendGroup;
 }
 
 export const postFriendsGroups = async (data: PostFriendsGroupsRequest): Promise<PostFriendsGroupsResponse> => {
