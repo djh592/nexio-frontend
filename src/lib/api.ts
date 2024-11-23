@@ -132,3 +132,20 @@ export const updateUser = async (userId: string, data: UpdateUserRequest): Promi
     const response = await apiClient.put<UpdateUserResponse>(`/user/${userId}`, data);
     return response.data;
 };
+
+
+// GET: /users/search
+export interface SearchUsersRequest {
+    query: string;
+}
+
+export interface SearchUsersResponse {
+    code: number;
+    info: string;
+    resluts: User[];
+}
+
+export const searchUsers = async (data: SearchUsersRequest): Promise<SearchUsersResponse> => {
+    const response = await apiClient.get<SearchUsersResponse>('/users/search', { params: data });
+    return response.data;
+};
