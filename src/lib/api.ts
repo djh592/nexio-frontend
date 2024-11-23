@@ -276,3 +276,18 @@ export const patchFriendRequest = async (data: PatchFriendRequestRequest): Promi
     return response.data;
 };
 
+
+// DELETE: /friends/{friendId}
+export interface DeleteFriendRequest {
+    userId: string;
+}
+
+export interface DeleteFriendResponse {
+    code: number;
+    info: string;
+}
+
+export const deleteFriend = async (data: DeleteFriendRequest): Promise<DeleteFriendResponse> => {
+    const response = await apiClient.delete<DeleteFriendResponse>(`/friends/${data.userId}`, { data });
+    return response.data;
+};
