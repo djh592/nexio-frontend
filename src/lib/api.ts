@@ -88,3 +88,47 @@ export const logoutUser = async (data: LogoutRequest): Promise<LogoutResponse> =
     const response = await apiClient.delete<LogoutResponse>('/logout', { data });
     return response.data;
 };
+
+
+// GET: /user/{userId}
+export interface GetUserResponse {
+    code: number;
+    info: string;
+    user: User;
+}
+
+export const getUser = async (userId: string): Promise<GetUserResponse> => {
+    const response = await apiClient.get<GetUserResponse>(`/user/${userId}`);
+    return response.data;
+};
+
+
+// PUT: /user/{userId}
+export interface UpdateUserRequest {
+    oldPassword?: string;
+    newPassword?: string;
+    userName?: string;
+    phoneNumber?: string;
+    emailAddress?: string;
+    avatarImage?: string;
+}
+
+function checkUpdateUserRequest(request: UpdateUserRequest): boolean {
+    if (request.oldPassword && !request.newPassword) return false;
+    if (request.newPassword && !request.oldPassword) return false;
+    return true;
+}
+
+export interface UpdateUserResponse {
+    code: number;
+    info: string;
+    user: User;
+}
+
+export const updateUser = async (userId: string, data: UpdateUserRequest): Promise<UpdateUserResponse> => {
+    if (!checkUpdateUserRequest(data)) {
+        throw new Error('Both oldPassword and newPassword must be provided.');
+    }
+    const response = await apiClient.put<UpdateUserResponse>(`/user/${userId}`, data);
+    return response.data;
+};
