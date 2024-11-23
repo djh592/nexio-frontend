@@ -74,3 +74,17 @@ export const unregisterUser = async (data: UnregisterRequest): Promise<Unregiste
 };
 
 
+// DELETE: /logout
+export interface LogoutRequest {
+    userId: string;
+}
+
+export interface LogoutResponse {
+    code: number;
+    info: string;
+}
+
+export const logoutUser = async (data: LogoutRequest): Promise<LogoutResponse> => {
+    const response = await apiClient.delete<LogoutResponse>('/logout', { data });
+    return response.data;
+};
