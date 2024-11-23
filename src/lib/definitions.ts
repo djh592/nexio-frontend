@@ -51,6 +51,8 @@ export type FriendRequest = {
     status: FriendRequestStatus;
 }
 
+export type FriendRequests = FriendRequest[];
+
 export enum MessageType {
     Text = 'Text',
     Image = 'Image',

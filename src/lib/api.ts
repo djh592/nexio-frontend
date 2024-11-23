@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User, FriendGroup, FriendGroups } from '@/lib/definitions';
+import { User, FriendGroup, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definitions';
 
 const apiClient = axios.create({
     baseURL: 'https://nexio-backend-nexio.app.secoder.net',
@@ -223,4 +223,56 @@ export const getFriends = async (data: GetFriendsRequest): Promise<GetFriendsRes
     return response.data;
 };
 
+
+// GET: /friends/requests
+export interface GetFriendRequestsRequest {
+    userId: string;
+}
+
+export interface GetFriendRequestsResponse {
+    code: number;
+    info: string;
+    sentRequests: FriendRequests;
+    receivedRequests: FriendRequests;
+}
+
+export const getFriendRequests = async (data: GetFriendRequestsRequest): Promise<GetFriendRequestsResponse> => {
+    const response = await apiClient.get<GetFriendRequestsResponse>('/friends/requests', { params: data });
+    return response.data;
+};
+
+
+// POST: /friends/requests
+export interface PostFriendRequestRequest {
+    fromUserId: string;
+    toUserId: string;
+}
+
+export interface PostFriendRequestResponse {
+    code: number;
+    info: string;
+    friendRequest: FriendRequest;
+}
+
+export const postFriendRequest = async (data: PostFriendRequestRequest): Promise<PostFriendRequestResponse> => {
+    const response = await apiClient.post<PostFriendRequestResponse>('/friends/requests', data);
+    return response.data;
+};
+
+
+// PATCH: /friends/requests
+export interface PatchFriendRequestRequest {
+    friendRequest: FriendRequest;
+}
+
+export interface PatchFriendRequestResponse {
+    code: number;
+    info: string;
+    friendRequest: FriendRequest;
+}
+
+export const patchFriendRequest = async (data: PatchFriendRequestRequest): Promise<PatchFriendRequestResponse> => {
+    const response = await apiClient.patch<PatchFriendRequestResponse>('/friends/requests', data);
+    return response.data;
+};
 
