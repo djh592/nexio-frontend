@@ -1,4 +1,5 @@
 export type User = {
+    id?: number;
     userId: string;
     userName: string;
     emailAddress: string;
@@ -17,6 +18,7 @@ export const INITIAL_USER: User = {
 export type Friends = User[];
 
 export type FriendGroup = {
+    id?: number;
     groupName: string;
     friends: Friends;
 };
@@ -41,6 +43,7 @@ export enum FriendRequestStatus {
 }
 
 export type FriendRequest = {
+    id?: number;
     requestId: string;
     createdAt: string;
     fromUserId: string;
@@ -70,6 +73,7 @@ export type Message = {
 export type Messages = Message[];
 
 export type Chat = {
+    id?: number;
     chatId: string;
     chatName: string;
     chatAvatarUrl: string;
