@@ -4,6 +4,7 @@ import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInpu
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
 import { setToken, setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
+import { postRegister } from '@/lib/api';
 
 export default function SignupForm() {
     const theme = useTheme();
@@ -55,16 +56,12 @@ export default function SignupForm() {
     }, [errorAlert]);
 
     const submitForm = () => {
-        fetch(`/api/register`, {
-            method: "POST",
-            body: JSON.stringify({
-                userName: formValues.username,
-                password: formValues.password,
-                phoneNumber: formValues.phone,
-                emailAddress: formValues.email
-            }),
+        postRegister({
+            userName: formValues.username,
+            password: formValues.password,
+            emailAddress: formValues.email,
+            phoneNumber: formValues.phone
         })
-            .then((res) => res.json())
             .then((res) => {
                 if (Number(res.code) === 0) {
                     dispatch(setToken(res.token));
@@ -75,9 +72,8 @@ export default function SignupForm() {
                     dispatch(setUserAvatar(res.user.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Signup successful!' });
                     router.push('/chats');
-                }
-                else {
-                    setErrorAlert({ open: true, message: 'Signup failed: ' + res.message });
+                } else {
+                    setErrorAlert({ open: true, message: 'Signup failed: ' + res.info });
                 }
             })
             .catch((err) => {

@@ -4,6 +4,7 @@ import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInpu
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
 import { setToken, setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
+import { postLogin } from '@/lib/api';
 
 export default function SigninForm() {
     const theme = useTheme();
@@ -51,14 +52,10 @@ export default function SigninForm() {
     }, [errorAlert]);
 
     const submitForm = () => {
-        fetch(`/api/login`, {
-            method: "POST",
-            body: JSON.stringify({
-                userName: formValues.username,
-                password: formValues.password,
-            }),
+        postLogin({
+            userName: formValues.username,
+            password: formValues.password,
         })
-            .then((res) => res.json())
             .then((res) => {
                 if (Number(res.code) === 0) {
                     dispatch(setToken(res.token));
@@ -71,7 +68,7 @@ export default function SigninForm() {
                     router.push('/chats');
                 }
                 else {
-                    setErrorAlert({ open: true, message: 'Login failed: ' + res.message });
+                    setErrorAlert({ open: true, message: 'Login failed: ' + res.info });
                 }
             })
             .catch((err) => {
