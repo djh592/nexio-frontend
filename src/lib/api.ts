@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User } from '@/lib/definitions';
+import { User, FriendGroup, FriendGroups } from '@/lib/definitions';
 
 const apiClient = axios.create({
     baseURL: 'https://nexio-backend-nexio.app.secoder.net',
@@ -149,3 +149,60 @@ export const searchUsers = async (data: SearchUsersRequest): Promise<SearchUsers
     const response = await apiClient.get<SearchUsersResponse>('/users/search', { params: data });
     return response.data;
 };
+
+
+// POST: /friends/groups
+export interface PostFriendsGroupsRequest {
+    userId: string;
+    groupName: string;
+}
+
+export interface PostFriendsGroupsResponse {
+    code: number;
+    info: string;
+    friendGroups: FriendGroups;
+}
+
+export const postFriendsGroups = async (data: PostFriendsGroupsRequest): Promise<PostFriendsGroupsResponse> => {
+    const response = await apiClient.post<PostFriendsGroupsResponse>('/friends/groups', data);
+    return response.data;
+};
+
+
+// DELETE: /friends/groups
+export interface DeleteFriendGroupRequest {
+    userId: string;
+    groupName: string;
+}
+
+export interface DeleteFriendGroupResponse {
+    code: number;
+    info: string;
+    friendGroups: FriendGroups;
+}
+
+export const deleteFriendGroup = async (data: DeleteFriendGroupRequest): Promise<DeleteFriendGroupResponse> => {
+    const response = await apiClient.delete<DeleteFriendGroupResponse>('/friends/groups', { data });
+    return response.data;
+};
+
+
+// PATCH: /friends/groups
+export interface PatchFriendGroupRequest {
+    userId: string;
+    friendUserId: string;
+    fromGroupName: string;
+    toGroupName: string;
+}
+
+export interface PatchFriendGroupResponse {
+    code: number;
+    info: string;
+    friendGroups: FriendGroups;
+}
+
+export const patchFriendGroup = async (data: PatchFriendGroupRequest): Promise<PatchFriendGroupResponse> => {
+    const response = await apiClient.patch<PatchFriendGroupResponse>('/friends/groups', data);
+    return response.data;
+};
+
