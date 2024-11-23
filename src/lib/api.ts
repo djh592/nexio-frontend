@@ -36,3 +36,22 @@ export const registerUser = async (data: RegisterRequest): Promise<RegisterRespo
     const response = await apiClient.post<RegisterResponse>('/register', data);
     return response.data;
 };
+
+
+// POST: /login
+export interface LoginRequest {
+    userName: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    code: number;
+    info: string;
+    token: string;
+    user: User;
+}
+
+export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
+    const response = await apiClient.post<LoginResponse>('/login', data);
+    return response.data;
+};
