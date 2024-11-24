@@ -189,12 +189,10 @@ export type Chat = {
     chatType: ChatType;
     chatName: string;
     chatAvatarUrl: string;
+    chatSettings: ChatSettings;
 
     messageListId: string;
     participantListId: string;
     notificationListId: string;
     joinRequestListId: string;
-
-    unreadCount: number;
-    settings: ChatSettings;
 };

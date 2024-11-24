@@ -21,7 +21,6 @@ export class AppDatabase extends Dexie {
     chatJoinRequestLists!: Table<ChatJoinRequestList>;
     chats!: Table<Chat>;
 
-
     constructor() {
         super('AppDatabase');
         this.version(1).stores({
