@@ -3,12 +3,10 @@ import { User } from "@/lib/definitions";
 import { INITIAL_USER } from "@/lib/definitions";
 
 interface AuthState {
-    token: string;
     user: User;
 }
 
 const initialState: AuthState = {
-    token: "",
     user: INITIAL_USER,
 };
 
@@ -17,7 +15,6 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         setToken: (state, action: PayloadAction<string>) => {
-            state.token = action.payload;
             localStorage.setItem("token", action.payload);
         },
         setUser: (state, action: PayloadAction<User>) => {
@@ -39,7 +36,6 @@ export const authSlice = createSlice({
             state.user.avatarUrl = action.payload;
         },
         resetAuth: (state) => {
-            state.token = "";
             localStorage.removeItem("token");
             state.user = {
                 userId: "",

@@ -4,6 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
+import { deleteUnregister } from '@/lib/api';
 
 interface UnregisterDialogLogoutDialogProps {
     open: boolean;
@@ -14,7 +15,6 @@ export default function UnregisterDialog(
     { open, onClose }: UnregisterDialogLogoutDialogProps
 ) {
     const user = useAppSelector((state) => state.auth.user);
-    const token = useAppSelector((state) => state.auth.token);
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [password, setPassword] = useState('');
@@ -23,22 +23,12 @@ export default function UnregisterDialog(
     const handleDeleteAccount = async () => {
         setLoading(true);
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('/api/unregister', {
-                method: 'DELETE',
-                headers: headers,
-                body: JSON.stringify({
-                    userId: user.userId,
-                    password: password,
-                }),
-            });
-            if (response.ok) {
+            const response = await deleteUnregister({ userId: user.userId, password });
+            if (response.code === 0) {
                 dispatch(resetAuth());
                 router.push('/');
             } else {
-                const data = await response.json();
-                alert("Failed to delete account: " + data.message);
+                throw new Error(response.info);
             }
         } catch (error) {
             alert("Failed to delete account: " + error);

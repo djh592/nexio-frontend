@@ -4,6 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
+import { deleteLogout } from '@/lib/api';
 
 interface LogoutDialogProps {
     open: boolean;
@@ -12,28 +13,18 @@ interface LogoutDialogProps {
 
 export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
     const dispatch = useAppDispatch();
-    const token = useAppSelector((state) => state.auth.token);
     const user = useAppSelector((state) => state.auth.user);
     const router = useRouter();
 
 
     const handleLogout = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('/api/logout', {
-                method: 'DELETE',
-                headers: headers,
-                body: JSON.stringify({
-                    "userId": user.userId,
-                }),
-            });
-            if (response.ok) {
+            const response = await deleteLogout({ userId: user.userId });
+            if (response.code === 0) {
                 dispatch(resetAuth());
                 router.push('/');
             } else {
-                const data = await response.json();
-                alert("Logout failed: " + data.message);
+                throw new Error(response.info);
             }
         } catch (error) {
             alert("Logout failed: " + error);

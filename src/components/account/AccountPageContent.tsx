@@ -7,6 +7,7 @@ import { setUser, setUserAvatar } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
+import { putUser } from '@/lib/api';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -21,7 +22,6 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function AccountPageContent() {
-    const token = useAppSelector((state) => state.auth.token);
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
     const [formValues, setFormValues] = useState({
@@ -62,28 +62,20 @@ export default function AccountPageContent() {
             const reader = new FileReader();
             reader.onloadend = async () => {
                 const base64String = reader.result as string;
-                const headers = new Headers();
-                headers.append("Authorization", token);
                 const data = {
                     userId: user.userId,
                     avatarImage: base64String
                 };
                 try {
                     setLoading(true);
-                    const response = await fetch(`/api/user/${user.userId}`, {
-                        method: 'PUT',
-                        headers,
-                        body: JSON.stringify(data),
-                    });
-                    if (response.ok) {
-                        const responseData = await response.json();
-                        dispatch(setUserAvatar(responseData.user.avatarUrl));
+                    const response = await putUser(user.userId, data);
+                    if (response.code === 0) {
+                        dispatch(setUserAvatar(response.user.avatarUrl));
                     } else {
-                        const errorData = await response.json();
-                        console.error('Failed to upload avatar:', errorData.info);
+                        throw new Error(response.info);
                     }
                 } catch (error) {
-                    console.error('Error uploading avatar:', error);
+                    console.log('Error uploading avatar:', error);
                 } finally {
                     setLoading(false);
                 }
@@ -94,23 +86,14 @@ export default function AccountPageContent() {
 
     const saveProfileChanges = async () => {
         setLoading(true);
-        const headers = new Headers();
-        headers.append("Authorization", token);
         try {
-            const response = await fetch(`/api/user/${user.userId}`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify({
-                    oldPassword: formValues.oldPassword,
-                    newPassword: formValues.newPassword,
-                    userName: formValues.username,
-                    phoneNumber: formValues.phone,
-                    emailAddress: formValues.email,
-                }),
+            const response = await putUser(user.userId, {
+                userName: formValues.username,
+                phoneNumber: formValues.phone,
+                emailAddress: formValues.email,
             });
-            if (response.ok) {
-                const responseData = await response.json();
-                const newProfile = responseData.user;
+            if (response.code === 0) {
+                const newProfile = response.user;
                 dispatch(setUser({
                     ...user,
                     userName: newProfile.userName,
@@ -120,11 +103,10 @@ export default function AccountPageContent() {
                 }));
                 setEditableFields({ username: false, phone: false, email: false });
             } else {
-                const errorData = await response.json();
-                console.error('Failed to update profile:', errorData.info);
+                throw new Error(response.info);
             }
         } catch (error) {
-            console.error('Error updating profile:', error);
+            console.log('Error updating profile:', error);
         } finally {
             setLoading(false);
         }
@@ -132,20 +114,13 @@ export default function AccountPageContent() {
 
     const savePasswordChanges = async () => {
         setLoading(true);
-        const headers = new Headers();
-        headers.append("Authorization", token);
         try {
-            const response = await fetch(`/api/user/${user.userId}`, {
-                method: 'PUT',
-                headers,
-                body: JSON.stringify({
-                    oldPassword: formValues.oldPassword,
-                    newPassword: formValues.newPassword,
-                }),
+            const response = await putUser(user.userId, {
+                oldPassword: formValues.oldPassword,
+                newPassword: formValues.newPassword,
             });
-            if (response.ok) {
-                const responseData = await response.json();
-                const newProfile = responseData.user;
+            if (response.code === 0) {
+                const newProfile = response.user;
                 dispatch(setUser({
                     ...user,
                     userName: newProfile.userName,
@@ -154,11 +129,10 @@ export default function AccountPageContent() {
                     avatarUrl: newProfile.avatarUrl,
                 }));
             } else {
-                const errorData = await response.json();
-                console.error('Failed to update password:', errorData.info);
+                throw new Error(response.info);
             }
         } catch (error) {
-            console.error('Error updating password:', error);
+            console.log('Error updating password:', error);
         } finally {
             setLoading(false);
         }

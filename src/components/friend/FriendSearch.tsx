@@ -88,9 +88,8 @@ export default function FriendSearch() {
     };
 
     const handleClose = () => {
-        // setSearchResults([]);
         setAnchorEl(null);
-        
+        setSearchResults([]);
     };
 
     const open = Boolean(anchorEl);

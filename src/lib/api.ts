@@ -68,7 +68,7 @@ export interface DeleteUnregisterResponse {
     info: string;
 }
 
-export const deleteUser = async (data: DeleteUnregisterRequest): Promise<DeleteUnregisterResponse> => {
+export const deleteUnregister = async (data: DeleteUnregisterRequest): Promise<DeleteUnregisterResponse> => {
     const response = await apiClient.delete<DeleteUnregisterResponse>('/unregister', { data });
     return response.data;
 };
