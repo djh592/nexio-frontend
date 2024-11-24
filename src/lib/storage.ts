@@ -165,7 +165,7 @@ export const updateFriendRequests = async (userId: string): Promise<void> => {
         }
     }
     else {
-        throw new Error(response.info);
+        throw new Error(`Failed to fetch friend requests: ${response.info}`);
     }
 }
 

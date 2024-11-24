@@ -26,13 +26,9 @@ export default function FriendGroupList() {
     useEffect(() => {
         const userIds = friendGroups.flatMap((group) => group.friends.map((friend) => friend.userId));
         setFriendUserIds(userIds);
-    }
-        , [friendGroups]);
+    }, [friendGroups]);
 
-    useEffect(() => {
-        storeUsersByIds(friendUserIds);
-    }
-        , [friendUserIds]);
+    useEffect(() => { storeUsersByIds(friendUserIds) }, [friendUserIds]);
 
     const handleRightClick = (event: MouseEvent<HTMLElement>, groupName: string) => {
         event.preventDefault();

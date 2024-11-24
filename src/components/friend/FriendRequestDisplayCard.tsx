@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Button, Card, CardContent, CardActions, Stack, Avatar } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
@@ -7,6 +7,7 @@ import { updateRequest } from '@/lib/features/friend/friendSlice';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { storeUsersByIds } from '@/lib/storage';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
@@ -21,6 +22,8 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
     const isReceiver = toUserId === myId;
     const fromUser = useLiveQuery(() => db.users.where('userId').equals(fromUserId).first());
     const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first());
+
+    useEffect(() => { storeUsersByIds([fromUserId, toUserId]); }, [fromUserId, toUserId]);
 
     const handleAccept = async () => {
         try {

@@ -14,12 +14,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 export default function FriendRequestList() {
     const myUserId = useAppSelector((state) => state.auth.user.userId);
 
-    useEffect(() => {
-        updateFriendRequests(myUserId)
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [myUserId]);
+    useEffect(() => { updateFriendRequests(myUserId); }, [myUserId]);
 
     const sentRequests = useLiveQuery(() => db.friendRequests.where('fromUserId').equals(myUserId).toArray(), [myUserId]);
     const receivedRequests = useLiveQuery(() => db.friendRequests.where('toUserId').equals(myUserId).toArray(), [myUserId]);
