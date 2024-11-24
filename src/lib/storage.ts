@@ -3,6 +3,7 @@ import { User, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definit
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
 import {
     getUsers as getUsersFromBackend,
+    getFriends as getFriendsFromBackend,
     getFriendsRequests as getFriendsRequestsFromBackend
 } from '@/lib/api';
 
@@ -118,6 +119,28 @@ export const moveFriendToGroup = async (friendId: string, fromGroupName: string,
 };
 
 // Friend Groups
+export const updateFriendGroups = async (userId: string): Promise<void> => {
+    try {
+        const response = await getFriendsFromBackend({ userId: userId });
+        if (response.code === 0) {
+            const fetchedGroups = response.friendGroups;
+            for (const group of fetchedGroups) {
+                const existingGroup = await db.friendGroups.where('groupName').equals(group.groupName).first();
+                if (existingGroup) {
+                    await db.friendGroups.put({ ...group, id: existingGroup.id });
+                } else {
+                    await db.friendGroups.add(group);
+                }
+            }
+        }
+        else {
+            throw new Error(response.info);
+        }
+    } catch (error) {
+        console.log(`Failed to fetch friend groups: ${error}`);
+    }
+}
+
 export const getFriendGroups = async (): Promise<FriendGroups> => {
     return await db.friendGroups.toArray();
 };
@@ -152,20 +175,25 @@ export const removeFriendGroup = async (groupName: string): Promise<void> => {
 
 // Friend Requests
 export const updateFriendRequests = async (userId: string): Promise<void> => {
-    const response = await getFriendsRequestsFromBackend({ userId: userId });
-    if (response.code === 0) {
-        const fetchedRequests = [...response.sentRequests, ...response.receivedRequests];
-        for (const request of fetchedRequests) {
-            const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
-            if (existingRequest) {
-                await db.friendRequests.put({ ...request, id: existingRequest.id });
-            } else {
-                await db.friendRequests.add(request);
+    try {
+        const response = await getFriendsRequestsFromBackend({ userId: userId });
+        if (response.code === 0) {
+            const fetchedRequests = [...response.sentRequests, ...response.receivedRequests];
+            for (const request of fetchedRequests) {
+                const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
+                if (existingRequest) {
+                    await db.friendRequests.put({ ...request, id: existingRequest.id });
+                } else {
+                    await db.friendRequests.add(request);
+                }
             }
         }
+        else {
+            throw new Error(response.info);
+        }
     }
-    else {
-        throw new Error(`Failed to fetch friend requests: ${response.info}`);
+    catch (error) {
+        console.log(`Failed to fetch friend requests: ${error}`);
     }
 }
 

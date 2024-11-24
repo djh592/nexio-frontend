@@ -21,8 +21,8 @@ apiClient.interceptors.request.use((config) => {
 export interface PostRegisterRequest {
     userName: string;
     password: string;
-    phoneNumber?: string;
-    emailAddress?: string;
+    phoneNumber: string;
+    emailAddress: string;
 }
 
 export interface PostRegisterResponse {
