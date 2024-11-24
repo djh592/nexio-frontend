@@ -2,23 +2,18 @@
 import React, { useState, MouseEvent } from 'react';
 import {
     Accordion, AccordionSummary, AccordionDetails,
-    Typography, Box, Menu, MenuItem, Dialog,
-    DialogTitle, DialogContent, DialogActions,
-    Button, ListItemIcon, ListItemText
+    Box, Menu, MenuItem, ListItemIcon, ListItemText
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UserDisplayCard from '@/components/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { removeFriendGroup } from '@/lib/features/friend/friendSlice';
+import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
+import { useAppSelector } from '@/lib/hooks';
 
 
 export default function FriendGroupList() {
-    const dispatch = useAppDispatch();
-    const token = useAppSelector((state) => state.auth.token);
-    const userId = useAppSelector((state) => state.auth.user.userId);
     const friendGroups = useAppSelector((state) => state.friend.friendGroups);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
@@ -43,34 +38,6 @@ export default function FriendGroupList() {
     const handleDeleteGroup = () => {
         setDeleteDialogOpen(true);
         handleCloseMenu();
-    };
-
-    const handleConfirmDeleteGroup = async () => {
-        if (selectedGroup) {
-            try {
-                const headers = new Headers();
-                headers.append("Authorization", token);
-                const response = await fetch('/api/friends/groups', {
-                    method: 'DELETE',
-                    headers: headers,
-                    body: JSON.stringify({
-                        userId: userId,
-                        groupName: selectedGroup,
-                    }),
-                });
-                if (response.ok) {
-                    dispatch(removeFriendGroup(selectedGroup));
-                    setDeleteDialogOpen(false);
-                }
-                else {
-                    const data = await response.json();
-                    console.log('Failed to delete friend group:', data.message);
-                }
-            }
-            catch (error) {
-                console.log('Failed to delete friend group:', error);
-            }
-        }
     };
 
     return (
@@ -127,17 +94,11 @@ export default function FriendGroupList() {
                 open={addDialogOpen}
                 onClose={() => setAddDialogOpen(false)}
             />
-            <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    <Typography>{`Are you sure you want to delete the group "${selectedGroup}"?`}</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleConfirmDeleteGroup} color="primary">
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <DeleteFriendGroupDialog
+                groupName={selectedGroup || ''}
+                open={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+            />
         </Box>
     );
 }
