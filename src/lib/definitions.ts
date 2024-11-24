@@ -65,8 +65,8 @@ export type FriendRequest = {
 export type FriendRequests = FriendRequest[];
 
 
-// Message
-export enum MessageContentType {
+// ChatMessage
+export enum ChatMessageContentType {
     Text = 'Text',
     Image = 'Image',
     Video = 'Video',
@@ -75,16 +75,16 @@ export enum MessageContentType {
     Forwarded = 'Forwarded'
 }
 
-export type MessageContent = {
-    contentType: MessageContentType;
+export type ChatMessageContent = {
+    contentType: ChatMessageContentType;
     contentPayload: string;
 }
 
-export type Message = {
+export type ChatMessage = {
     messageId: string;
     createdAt: string;
     fromUserId: string;
-    content: MessageContent;
+    content: ChatMessageContent;
 
     readBy: string[]; // userIds
     withdrawn: boolean;
@@ -94,12 +94,12 @@ export type Message = {
     repliedMessageId?: string;
 }
 
-export type Messages = Message[];
+export type ChatMessages = ChatMessage[];
 
-export type MessageList = {
+export type ChatMessageList = {
     id?: number;
     messageListId: string;
-    messages: Messages;
+    messages: ChatMessages;
 };
 
 
@@ -141,7 +141,7 @@ export type ChatNotificationList = {
 
 
 // JoinChatRequest
-export enum JoinChatRequestStatus {
+export enum ChatJoinRequestStatus {
     Pending = 'Pending',
     Accepted = 'Accepted',
     Rejected = 'Rejected',
@@ -149,20 +149,20 @@ export enum JoinChatRequestStatus {
     Failed = 'Failed'
 }
 
-export type JoinChatRequest = {
+export type ChatJoinRequest = {
     requestId: string;
     createdAt: string;
     fromUserId: string;
     toChatId: string;
-    status: JoinChatRequestStatus;
+    status: ChatJoinRequestStatus;
 };
 
-export type JoinChatRequests = JoinChatRequest[];
+export type ChatJoinRequests = ChatJoinRequest[];
 
-export type JoinChatRequestList = {
+export type ChatJoinRequestList = {
     id?: number;
-    joinChatRequestListId: string;
-    requests: JoinChatRequests;
+    joinRequestListId: string;
+    requests: ChatJoinRequests;
 };
 
 

@@ -1,12 +1,26 @@
 import Dexie, { Table } from 'dexie';
-import { User, FriendGroup, FriendRequest } from '@/lib/definitions';
+import {
+    User, FriendGroup, FriendRequest,
+    ChatMessageList, ChatParticipantList,
+    ChatNotificationList, ChatJoinRequestList,
+    Chat
+} from '@/lib/definitions';
 
 
 export class AppDatabase extends Dexie {
+    // All Users
     users!: Table<User>;
+    // Friend
     friendGroups!: Table<FriendGroup>;
     sentRequests!: Table<FriendRequest>;
     receivedRequests!: Table<FriendRequest>;
+    // Chat
+    chatMessageLists!: Table<ChatMessageList>;
+    chatParticipantLists!: Table<ChatParticipantList>;
+    chatNotificationLists!: Table<ChatNotificationList>;
+    chatJoinRequestLists!: Table<ChatJoinRequestList>;
+    chats!: Table<Chat>;
+
 
     constructor() {
         super('AppDatabase');
