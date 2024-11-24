@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import {
     Accordion, AccordionSummary, AccordionDetails,
     Box, Menu, MenuItem, ListItemIcon, ListItemText
@@ -11,6 +11,7 @@ import UserDisplayCard from '@/components/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
 import { useAppSelector } from '@/lib/hooks';
+import { storeUsersByIds } from '@/lib/storage';
 
 
 export default function FriendGroupList() {
@@ -19,6 +20,19 @@ export default function FriendGroupList() {
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+    const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        const userIds = friendGroups.flatMap((group) => group.friends.map((friend) => friend.userId));
+        setFriendUserIds(userIds);
+    }
+        , [friendGroups]);
+
+    useEffect(() => {
+        storeUsersByIds(friendUserIds);
+    }
+        , [friendUserIds]);
 
     const handleRightClick = (event: MouseEvent<HTMLElement>, groupName: string) => {
         event.preventDefault();
