@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 import { updateRequest } from '@/lib/features/friend/friendSlice';
 import { patchFriendsRequests } from '@/lib/api';
+import { db } from '@/lib/db';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
@@ -12,7 +14,13 @@ interface FriendRequestDisplayCardProps {
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.auth.user.userId);
+    const myId = useAppSelector((state) => state.auth.user.userId);
+    const fromUserId = request.fromUserId;
+    const toUserId = request.toUserId;
+    const isSender = fromUserId === myId;
+    const isReceiver = toUserId === myId;
+    const fromUser = useLiveQuery(() => db.users.where('userId').equals(fromUserId).first());
+    const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first());
 
     const handleAccept = async () => {
         try {
@@ -79,11 +87,25 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
         }}>
             <CardContent>
                 <Stack direction="row" alignItems="center" spacing={2}>
-                    <Avatar alt={request.fromUserId} src={`/api/avatar/${request.fromUserId}`} />
+                    {
+                        isSender && fromUser && fromUser.avatarUrl &&
+                        <Avatar src={fromUser.avatarUrl} alt={fromUser.userName} />
+                    }
+                    {
+                        isReceiver && toUser && toUser.avatarUrl &&
+                        <Avatar src={toUser.avatarUrl} alt={toUser.userName} />
+                    }
                     <Box>
-                        <Typography variant="h6">
-                            {request.fromUserId === userId ? `To: ${request.toUserId}` : `From: ${request.fromUserId}`}
-                        </Typography>
+                        {isSender && toUser && (
+                            <Typography variant="h6">
+                                To: {toUser.userName}
+                            </Typography>
+                        )}
+                        {isReceiver && fromUser && (
+                            <Typography variant="h6">
+                                From: {fromUser.userName}
+                            </Typography>
+                        )}
                         <Typography variant="body2" color="text.secondary">
                             Status: {request.status}
                         </Typography>
@@ -91,7 +113,14 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
                 </Stack>
             </CardContent>
             <CardActions>
-                {request.fromUserId !== userId && request.status === FriendRequestStatus.Pending && (
+                {
+                    request.status === FriendRequestStatus.Pending && isSender &&
+                    <Button size="small" color="warning" onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                }
+                {
+                    request.status === FriendRequestStatus.Pending && isReceiver &&
                     <>
                         <Button size="small" color="primary" onClick={handleAccept}>
                             Accept
@@ -100,12 +129,19 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
                             Reject
                         </Button>
                     </>
-                )}
-                {request.fromUserId === userId && request.status === FriendRequestStatus.Pending && (
-                    <Button size="small" color="secondary" onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                )}
+                }
+                {
+                    request.status === FriendRequestStatus.Accepted &&
+                    <Typography variant="body2" color="text.secondary">
+                        You are now friends
+                    </Typography>
+                }
+                {
+                    request.status === FriendRequestStatus.Rejected &&
+                    <Typography variant="body2" color="text.secondary">
+                        Friend request rejected
+                    </Typography>
+                }
             </CardActions>
         </Card>
     );
