@@ -23,9 +23,8 @@ export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFrie
                     userId: userId,
                     friendId: friend.userId
                 });
-            if (response.code === 200) {
+            if (response.code === 0) {
                 dispatch(removeFriend(friend));
-
             }
             else {
                 console.log('Error deleting friend:', response.info);

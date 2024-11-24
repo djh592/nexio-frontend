@@ -23,7 +23,7 @@ export default function DeleteFriendGroupDialog(
                 userId: userId,
                 groupName: groupName
             });
-            if (response.code === 200) {
+            if (response.code === 0) {
                 dispatch(removeFriendGroup(groupName));
             }
             else {

@@ -224,60 +224,7 @@ export const getFriends = async (data: GetFriendsRequest): Promise<GetFriendsRes
 };
 
 
-// GET: /friends/requests
-export interface GetFriendRequestsRequest {
-    userId: string;
-}
-
-export interface GetFriendRequestsResponse {
-    code: number;
-    info: string;
-    sentRequests: FriendRequests;
-    receivedRequests: FriendRequests;
-}
-
-export const getFriendRequests = async (data: GetFriendRequestsRequest): Promise<GetFriendRequestsResponse> => {
-    const response = await apiClient.get<GetFriendRequestsResponse>('/friends/requests', { params: data });
-    return response.data;
-};
-
-
-// POST: /friends/requests
-export interface PostFriendRequestRequest {
-    fromUserId: string;
-    toUserId: string;
-}
-
-export interface PostFriendRequestResponse {
-    code: number;
-    info: string;
-    friendRequest: FriendRequest;
-}
-
-export const postFriendRequest = async (data: PostFriendRequestRequest): Promise<PostFriendRequestResponse> => {
-    const response = await apiClient.post<PostFriendRequestResponse>('/friends/requests', data);
-    return response.data;
-};
-
-
-// PATCH: /friends/requests
-export interface PatchFriendRequestRequest {
-    friendRequest: FriendRequest;
-}
-
-export interface PatchFriendRequestResponse {
-    code: number;
-    info: string;
-    friendRequest: FriendRequest;
-}
-
-export const patchFriendRequest = async (data: PatchFriendRequestRequest): Promise<PatchFriendRequestResponse> => {
-    const response = await apiClient.patch<PatchFriendRequestResponse>('/friends/requests', data);
-    return response.data;
-};
-
-
-// DELETE: /friends/{friendId}
+// DELETE: /friends
 export interface DeleteFriendsRequest {
     userId: string;
     friendId: string;
@@ -292,3 +239,58 @@ export const deleteFriends = async (data: DeleteFriendsRequest): Promise<DeleteF
     const response = await apiClient.delete<DeleteFriendsResponse>(`/friends`, { data });
     return response.data;
 };
+
+
+// GET: /friends/requests
+export interface GetFriendsRequestsRequest {
+    userId: string;
+}
+
+export interface GetFriendsRequestsResponse {
+    code: number;
+    info: string;
+    sentRequests: FriendRequests;
+    receivedRequests: FriendRequests;
+}
+
+export const getFriendsRequests = async (data: GetFriendsRequestsRequest): Promise<GetFriendsRequestsResponse> => {
+    const response = await apiClient.get<GetFriendsRequestsResponse>('/friends/requests', { params: data });
+    return response.data;
+};
+
+
+// POST: /friends/requests
+export interface PostFriendsRequestsRequest {
+    fromUserId: string;
+    toUserId: string;
+}
+
+export interface PostFriendsRequestsResponse {
+    code: number;
+    info: string;
+    friendRequest: FriendRequest;
+}
+
+export const postFriendsRequests = async (data: PostFriendsRequestsRequest): Promise<PostFriendsRequestsResponse> => {
+    const response = await apiClient.post<PostFriendsRequestsResponse>('/friends/requests', data);
+    return response.data;
+};
+
+
+// PATCH: /friends/requests
+export interface PatchFriendsRequestsRequest {
+    friendRequest: FriendRequest;
+}
+
+export interface PatchFriendsRequestsResponse {
+    code: number;
+    info: string;
+    friendRequest: FriendRequest;
+}
+
+export const patchFriendsRequests = async (data: PatchFriendsRequestsRequest): Promise<PatchFriendsRequestsResponse> => {
+    const response = await apiClient.patch<PatchFriendsRequestsResponse>('/friends/requests', data);
+    return response.data;
+};
+
+

@@ -3,7 +3,8 @@ import React from 'react';
 import { Box, Typography, Button, Card, CardContent, CardActions, Stack, Avatar } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
-import { updateRequest, removeSentRequest } from '@/lib/features/friend/friendSlice';
+import { updateRequest } from '@/lib/features/friend/friendSlice';
+import { patchFriendsRequests } from '@/lib/api';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
@@ -11,28 +12,21 @@ interface FriendRequestDisplayCardProps {
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
     const dispatch = useAppDispatch();
-    const token = useAppSelector((state) => state.auth.token);
     const userId = useAppSelector((state) => state.auth.user.userId);
 
     const handleAccept = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('api/friends/requests', {
-                method: 'PATCH',
-                headers: headers,
-                body: JSON.stringify({
-                    FriendRequest: {
-                        ...request,
-                        status: FriendRequestStatus.Accepted
-                    }
-                })
+            const response = await patchFriendsRequests({
+                friendRequest: {
+                    ...request,
+                    status: FriendRequestStatus.Accepted
+                }
             });
-            if (response.ok) {
-                const data = await response.json();
-                dispatch(updateRequest(data.friendRequest));
+            if (response.code === 0) {
+                const updatedRequest = response.friendRequest;
+                dispatch(updateRequest(updatedRequest));
             } else {
-                console.error('Failed to accept friend request');
+                console.log('Failed to accept friend request:', response.info);
             }
         } catch (error) {
             console.error('Error accepting friend request:', error);
@@ -41,23 +35,17 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleReject = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('api/friends/requests', {
-                method: 'PATCH',
-                headers: headers,
-                body: JSON.stringify({
-                    FriendRequest: {
-                        ...request,
-                        status: FriendRequestStatus.Rejected
-                    }
-                })
+            const response = await patchFriendsRequests({
+                friendRequest: {
+                    ...request,
+                    status: FriendRequestStatus.Rejected
+                }
             });
-            if (response.ok) {
-                const data = await response.json();
-                dispatch(updateRequest(data.friendRequest));
+            if (response.code === 0) {
+                const updatedRequest = response.friendRequest;
+                dispatch(updateRequest(updatedRequest));
             } else {
-                console.error('Failed to reject friend request');
+                console.log('Failed to reject friend request:', response.info);
             }
         } catch (error) {
             console.error('Error rejecting friend request:', error);
@@ -66,32 +54,20 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
 
     const handleCancel = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('api/friends/requests', {
-                method: 'PATCH',
-                headers: headers,
-                body: JSON.stringify({
-                    FriendRequest: {
-                        ...request,
-                        status: FriendRequestStatus.Canceled
-                    }
-                })
+            const response = await patchFriendsRequests({
+                friendRequest: {
+                    ...request,
+                    status: FriendRequestStatus.Canceled
+                }
             });
-            if (response.ok) {
-                const data = await response.json();
-                if (data.FriendRequest.status !== FriendRequestStatus.Canceled) {
-                    throw new Error('Failed to cancel friend request');
-                }
-                if (data.friendRequest.requestId !== request.requestId) {
-                    throw new Error('Invalid request');
-                }
-                dispatch(removeSentRequest(request.requestId));
+            if (response.code === 0) {
+                const updatedRequest = response.friendRequest;
+                dispatch(updateRequest(updatedRequest));
             } else {
-                console.error('Failed to cancel friend request');
+                console.log('Failed to cancel friend request:', response.info);
             }
         } catch (error) {
-            console.error('Error canceling friend request:', error);
+            console.error('Error cancelling friend request:', error);
         }
     };
 

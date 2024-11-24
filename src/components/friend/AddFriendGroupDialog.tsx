@@ -23,7 +23,7 @@ export default function AddFriendGroupDialog(
                 userId: userId,
                 groupName: newGroupName
             });
-            if (response.code === 200) {
+            if (response.code === 0) {
                 const newGroup = response.friendGroup;
                 dispatch(addFriendGroup(newGroup.groupName));
             }

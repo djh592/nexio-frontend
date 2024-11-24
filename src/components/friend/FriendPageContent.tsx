@@ -6,6 +6,7 @@ import FriendGroupList from "@/components/friend/FriendGroupList";
 import FriendSearch from '@/components/friend/FriendSearch';
 import FriendRequestNotificationButton from "@/components/friend/FriendRequestNotificationButton";
 import { setFriendGroups } from "@/lib/features/friend/friendSlice";
+import { getFriends } from "@/lib/api";
 
 export default function FriendPageContent() {
     const dispatch = useAppDispatch();
@@ -15,21 +16,16 @@ export default function FriendPageContent() {
     useEffect(() => {
         async function fetchFriendGroups() {
             try {
-                const headers = new Headers();
-                headers.append("Authorization", token);
-                const response = await fetch(
-                    '/api/friends',
-                    {
-                        method: 'GET',
-                        headers: headers,
-                        body: JSON.stringify({
-                            userId: userId,
-                        })
-                    }
-
-                );
-                const data = await response.json();
-                dispatch(setFriendGroups(data.friendGroups));
+                const response = await getFriends({
+                    userId: userId,
+                });
+                if (response.code === 0) {
+                    const friendGroups = response.friendGroups;
+                    dispatch(setFriendGroups(friendGroups));
+                }
+                else {
+                    console.log('Failed to fetch friend groups:', response.info);
+                }
             } catch (error) {
                 console.log('Failed to fetch friend groups:', error);
             }
