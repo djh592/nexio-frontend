@@ -123,6 +123,7 @@ export type ChatParticipantList = {
     participants: ChatParticipants;
 };
 
+
 // ChatNotification
 export type ChatNotification = {
     fromUserId: string;
@@ -137,6 +138,33 @@ export type ChatNotificationList = {
     chatNotificationListId: string;
     notifications: ChatNotifications;
 };
+
+
+// JoinChatRequest
+export enum JoinChatRequestStatus {
+    Pending = 'Pending',
+    Accepted = 'Accepted',
+    Rejected = 'Rejected',
+    Canceled = 'Canceled',
+    Failed = 'Failed'
+}
+
+export type JoinChatRequest = {
+    requestId: string;
+    createdAt: string;
+    fromUserId: string;
+    toChatId: string;
+    status: JoinChatRequestStatus;
+};
+
+export type JoinChatRequests = JoinChatRequest[];
+
+export type JoinChatRequestList = {
+    id?: number;
+    joinChatRequestListId: string;
+    requests: JoinChatRequests;
+};
+
 
 // Chat
 export enum ChatType {
@@ -165,6 +193,7 @@ export type Chat = {
     messageListId: string;
     participantListId: string;
     notificationListId: string;
+    joinRequestListId: string;
 
     unreadCount: number;
     settings: ChatSettings;
