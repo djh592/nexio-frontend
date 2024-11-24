@@ -12,8 +12,7 @@ export class AppDatabase extends Dexie {
     users!: Table<User>;
     // Friend
     friendGroups!: Table<FriendGroup>;
-    sentRequests!: Table<FriendRequest>;
-    receivedRequests!: Table<FriendRequest>;
+    friendRequests!: Table<FriendRequest>;
     // Chat
     chatMessageLists!: Table<ChatMessageList>;
     chatParticipantLists!: Table<ChatParticipantList>;
@@ -26,14 +25,12 @@ export class AppDatabase extends Dexie {
         this.version(1).stores({
             users: '++id, userId, userName, emailAddress, phoneNumber, avatarUrl',
             friendGroups: '++id, groupName, friends',
-            sentRequests: '++id, requestId, createdAt, fromUserId, toUserId, status',
-            receivedRequests: '++id, requestId, createdAt, fromUserId, toUserId, status',
+            friendRequests: '++id, requestId, createdAt, fromUserId, toUserId, status',
         });
 
         this.users = this.table('users');
         this.friendGroups = this.table('friendGroups');
-        this.sentRequests = this.table('sentRequests');
-        this.receivedRequests = this.table('receivedRequests');
+        this.friendRequests = this.table('friendRequests');
     }
 }
 

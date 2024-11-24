@@ -134,6 +134,22 @@ export const putUser = async (userId: string, data: PutUserRequest): Promise<Put
 };
 
 
+// GET: /users
+export interface GetUsersRequest {
+    userIds: string[];
+}
+export interface GetUsersResponse {
+    code: number;
+    info: string;
+    users: User[];
+}
+
+export const getUsers = async (data: GetUsersRequest): Promise<GetUsersResponse> => {
+    const response = await apiClient.get<GetUsersResponse>('/users', { params: data });
+    return response.data;
+};
+
+
 // GET: /users/search
 export interface GetUsersSearchRequest {
     searchText: string;

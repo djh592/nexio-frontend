@@ -1,21 +1,39 @@
 import { db } from '@/lib/db';
-import { User, FriendGroups, FriendRequest } from '@/lib/definitions';
+import { User, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
+import { getUsers as getUsersFromBackend } from '@/lib/api';
 
 export const clearDatabase = async (): Promise<void> => {
     await db.users.clear();
     await db.friendGroups.clear();
-    await db.sentRequests.clear();
-    await db.receivedRequests.clear();
+    await db.friendRequests.clear();
 }
 
 // User
-export const setUsers = async (users: User[]): Promise<void> => {
-    await db.users.bulkPut(users);
-}
+export const storeUsersByIds = async (userIds: string[]): Promise<void> => {
+    const missingUserIds: string[] = [];
 
-export const getUsers = async (): Promise<User[]> => {
-    return await db.users.toArray();
+    for (const userId of userIds) {
+        const user = await db.users.where('userId').equals(userId).first();
+        if (!user) {
+            missingUserIds.push(userId);
+        }
+    }
+
+    if (missingUserIds.length > 0) {
+        try {
+            const response = await getUsersFromBackend({ userIds: missingUserIds });
+            if (response.code === 0) {
+                const fetchedUsers = response.users;
+                await db.users.bulkPut(fetchedUsers);
+            }
+            else {
+                throw new Error(response.info);
+            }
+        } catch (error) {
+            throw new Error(`Failed to fetch users: ${error}`);
+        }
+    }
 };
 
 export const searchUsers = async (searchText: string): Promise<User[]> => {
@@ -128,46 +146,29 @@ export const removeFriendGroup = async (groupName: string): Promise<void> => {
     }
 };
 
-// Sent Requests
-export const setSentRequests = async (requests: FriendRequest[]): Promise<void> => {
-    await db.sentRequests.bulkPut(requests);
+
+// Friend Requests
+export const getSentRequests = async (userId: string): Promise<FriendRequests> => {
+    return await db.friendRequests.where('fromUserId').equals(userId).toArray();
 }
 
-export const getSentRequests = async (): Promise<FriendRequest[]> => {
-    return await db.sentRequests.toArray();
-};
+export const getReceivedRequests = async (userId: string): Promise<FriendRequests> => {
+    return await db.friendRequests.where('toUserId').equals(userId).toArray();
+}
 
-export const addSentRequest = async (request: FriendRequest): Promise<void> => {
-    await db.sentRequests.add(request);
-};
-
-export const removeSentRequest = async (requestId: string): Promise<void> => {
-    await db.sentRequests.where('requestId').equals(requestId).delete();
-};
-
-// Received Requests
-export const getReceivedRequests = async (): Promise<FriendRequest[]> => {
-    return await db.receivedRequests.toArray();
-};
-
-export const addReceivedRequest = async (request: FriendRequest): Promise<void> => {
-    await db.receivedRequests.add(request);
-};
-
-export const removeReceivedRequest = async (requestId: string): Promise<void> => {
-    await db.receivedRequests.where('requestId').equals(requestId).delete();
-};
-
-export const updateRequest = async (request: FriendRequest): Promise<void> => {
-    const existingRequest = await db.sentRequests.where('requestId').equals(request.requestId).first();
-    if (existingRequest) {
-        await db.sentRequests.put(request);
-    } else {
-        const receivedRequest = await db.receivedRequests.where('requestId').equals(request.requestId).first();
-        if (receivedRequest) {
-            await db.receivedRequests.put(request);
-        } else {
-            throw new Error(`Request not found: ${request.requestId}`);
-        }
+export const addFriendRequest = async (request: FriendRequest): Promise<void> => {
+    const requestExists = await db.friendRequests.where('requestId').equals(request.requestId).first();
+    if (requestExists) {
+        throw new Error(`Request with requestId ${request.requestId} already exists.`);
     }
-};
+    await db.friendRequests.add(request);
+}
+
+export const updateFriendRequest = async (request: FriendRequest): Promise<void> => {
+    const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
+    if (existingRequest) {
+        await db.friendRequests.put({ ...request, id: existingRequest.id });
+    } else {
+        throw new Error(`Request with requestId ${request.requestId} does not exist.`);
+    }
+}
