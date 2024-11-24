@@ -80,18 +80,27 @@ export type ChatMessageContent = {
     contentPayload: string;
 }
 
+export type ChatMessageMeta = {
+    withdrawn: boolean;
+    deleted: boolean;
+    readBy: string[]; // userIds
+    repliedBy: string[]; // userIds
+    replyMessageId?: string;
+}
+
+export const DEFAULT_CHAT_MESSAGE_META: ChatMessageMeta = {
+    withdrawn: false,
+    deleted: false,
+    readBy: [],
+    repliedBy: [],
+};
+
 export type ChatMessage = {
     messageId: string;
     createdAt: string;
     fromUserId: string;
     content: ChatMessageContent;
-
-    readBy: string[]; // userIds
-    withdrawn: boolean;
-    deleted: boolean;
-
-    replyMessageId?: string;
-    repliedMessageId?: string;
+    meta: ChatMessageMeta;
 }
 
 export type ChatMessages = ChatMessage[];
