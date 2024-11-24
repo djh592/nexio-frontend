@@ -140,7 +140,7 @@ export type ChatNotificationList = {
 };
 
 
-// JoinChatRequest
+// ChatJoinRequest
 export enum ChatJoinRequestStatus {
     Pending = 'Pending',
     Accepted = 'Accepted',
