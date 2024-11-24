@@ -1,7 +1,10 @@
 import { db } from '@/lib/db';
 import { User, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
-import { getUsers as getUsersFromBackend } from '@/lib/api';
+import {
+    getUsers as getUsersFromBackend,
+    getFriendsRequests as getFriendsRequestsFromBackend
+} from '@/lib/api';
 
 export const clearDatabase = async (): Promise<void> => {
     await db.users.clear();
@@ -148,6 +151,24 @@ export const removeFriendGroup = async (groupName: string): Promise<void> => {
 
 
 // Friend Requests
+export const updateFriendRequests = async (userId: string): Promise<void> => {
+    const response = await getFriendsRequestsFromBackend({ userId: userId });
+    if (response.code === 0) {
+        const fetchedRequests = [...response.sentRequests, ...response.receivedRequests];
+        for (const request of fetchedRequests) {
+            const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
+            if (existingRequest) {
+                await db.friendRequests.put({ ...request, id: existingRequest.id });
+            } else {
+                await db.friendRequests.add(request);
+            }
+        }
+    }
+    else {
+        throw new Error(response.info);
+    }
+}
+
 export const getSentRequests = async (userId: string): Promise<FriendRequests> => {
     return await db.friendRequests.where('fromUserId').equals(userId).toArray();
 }
