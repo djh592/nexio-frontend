@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { addFriendGroup } from "@/lib/features/friend/friendSlice";
+import { postFriendsGroups } from "@/lib/api";
 
 interface AddFriendGroupDialogProps {
     open: boolean;
@@ -12,30 +13,28 @@ interface AddFriendGroupDialogProps {
 export default function AddFriendGroupDialog(
     { open, onClose }: AddFriendGroupDialogProps
 ) {
-    const token = useAppSelector((state) => state.auth.token);
     const userId = useAppSelector((state) => state.auth.user.userId);
     const [newGroupName, setNewGroupName] = useState('');
     const dispatch = useAppDispatch();
 
     const handleConfirmAddGroup = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch('/api/friends/groups', {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify({ userId, groupName: newGroupName })
+            const response = await postFriendsGroups({
+                userId: userId,
+                groupName: newGroupName
             });
-            if (response.ok) {
-                dispatch(addFriendGroup(newGroupName));
-                setNewGroupName('');
-                onClose();
+            if (response.code === 200) {
+                const newGroup = response.friendGroup;
+                dispatch(addFriendGroup(newGroup.groupName));
             }
             else {
-                console.log('Failed to add new group:', response.statusText);
+                console.log(response.info);
             }
         } catch (error) {
-            console.log('Error adding new group:', error);
+            console.log(error);
+        } finally {
+            setNewGroupName('');
+            onClose();
         }
     };
 

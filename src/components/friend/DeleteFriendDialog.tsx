@@ -4,6 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { removeFriend } from '@/lib/features/friend/friendSlice';
 import { User } from '@/lib/definitions';
+import { deleteFriends } from '@/lib/api';
 
 interface DeleteFriendDialogProps {
     friend: User;
@@ -13,28 +14,26 @@ interface DeleteFriendDialogProps {
 
 export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFriendDialogProps) {
     const dispatch = useAppDispatch();
-    const token = useAppSelector((state) => state.auth.token);
     const userId = useAppSelector((state) => state.auth.user.userId);
 
     const handleDelete = async () => {
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch(`/api/friends/${friend.userId}`, {
-                method: 'DELETE',
-                headers: headers,
-                body: JSON.stringify({ userId: userId })
-            });
-            if (response.ok) {
+            const response = await deleteFriends(
+                {
+                    userId: userId,
+                    friendId: friend.userId
+                });
+            if (response.code === 200) {
                 dispatch(removeFriend(friend));
-                onClose();
+
             }
             else {
-                const data = await response.json();
-                alert("Delete failed: " + data.message);
+                console.log('Error deleting friend:', response.info);
             }
         } catch (error) {
             console.log('Error deleting friend:', error);
+        } finally {
+            onClose();
         }
     };
 

@@ -170,19 +170,19 @@ export const postFriendsGroups = async (data: PostFriendsGroupsRequest): Promise
 
 
 // DELETE: /friends/groups
-export interface DeleteFriendGroupRequest {
+export interface DeleteFriendsGroupsRequest {
     userId: string;
     groupName: string;
 }
 
-export interface DeleteFriendGroupResponse {
+export interface DeleteFriendsGroupsResponse {
     code: number;
     info: string;
     friendGroups: FriendGroups;
 }
 
-export const deleteFriendGroup = async (data: DeleteFriendGroupRequest): Promise<DeleteFriendGroupResponse> => {
-    const response = await apiClient.delete<DeleteFriendGroupResponse>('/friends/groups', { data });
+export const deleteFriendsGroups = async (data: DeleteFriendsGroupsRequest): Promise<DeleteFriendsGroupsResponse> => {
+    const response = await apiClient.delete<DeleteFriendsGroupsResponse>('/friends/groups', { data });
     return response.data;
 };
 
@@ -278,16 +278,17 @@ export const patchFriendRequest = async (data: PatchFriendRequestRequest): Promi
 
 
 // DELETE: /friends/{friendId}
-export interface DeleteFriendRequest {
+export interface DeleteFriendsRequest {
     userId: string;
+    friendId: string;
 }
 
-export interface DeleteFriendResponse {
+export interface DeleteFriendsResponse {
     code: number;
     info: string;
 }
 
-export const deleteFriend = async (data: DeleteFriendRequest): Promise<DeleteFriendResponse> => {
-    const response = await apiClient.delete<DeleteFriendResponse>(`/friends/${data.userId}`, { data });
+export const deleteFriends = async (data: DeleteFriendsRequest): Promise<DeleteFriendsResponse> => {
+    const response = await apiClient.delete<DeleteFriendsResponse>(`/friends`, { data });
     return response.data;
 };
