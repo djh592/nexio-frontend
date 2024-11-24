@@ -11,20 +11,26 @@ import UserDisplayCard from '@/components/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
 import { useAppSelector } from '@/lib/hooks';
-import { storeUsersByIds } from '@/lib/storage';
+import { db } from '@/lib/db';
+import { storeUsersByIds, updateFriendGroups } from '@/lib/storage';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 
 export default function FriendGroupList() {
-    const friendGroups = useAppSelector((state) => state.friend.friendGroups);
+    const myUserId = useAppSelector((state) => state.auth.user.userId);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+    useEffect(() => { updateFriendGroups(myUserId); }, [myUserId]);
+
+    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
+
     const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
 
     useEffect(() => {
-        const userIds = friendGroups.flatMap((group) => group.friends.map((friend) => friend.userId));
+        const userIds = (friendGroups ?? []).flatMap((group) => group.friends.map((friend) => friend.userId));
         setFriendUserIds(userIds);
     }, [friendGroups]);
 
@@ -52,7 +58,7 @@ export default function FriendGroupList() {
 
     return (
         <Box sx={{ width: '100%' }}>
-            {friendGroups.map((group) => (
+            {friendGroups && friendGroups.map((group) => (
                 <Accordion
                     key={group.groupName}
                     sx={{ boxShadow: 'none', border: 'none' }}
