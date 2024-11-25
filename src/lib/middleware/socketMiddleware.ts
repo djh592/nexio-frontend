@@ -2,12 +2,14 @@ import { Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
 import {
-    addReceivedRequest,
-    updateRequest,
+    updateUser,
+    deleteUser,
+    addFriendRequest,
+    updateFriendRequest,
     addFriend,
     removeFriend,
-    updateFriendProfile,
-} from '@/lib/features/friend/friendSlice';
+} from '@/lib/storage';
+import { incrementNewRequestCount } from '@/lib/features/friend/friendSlice';
 import { User, FriendRequest } from '../definitions';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
@@ -35,65 +37,68 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
             console.log('Connection error:', err);
         });
 
-        socket.on('friend_request_receive', (data) => {
+        socket.on('user_profile_update', (data) => {
+            try {
+                const user: User = data.user;
+                updateUser(user);
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+
+        socket.on('user_unregister', (data) => {
+            try {
+                const user: User = data.user;
+                deleteUser(user.userId);
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+
+        socket.on('friend_request_receive', async (data) => {
             try {
                 const request: FriendRequest = data.friendRequest;
-                store.dispatch(addReceivedRequest(request));
+                await addFriendRequest(request);
+                store.dispatch(incrementNewRequestCount());
             }
             catch (e) {
                 console.log(e);
             }
         });
 
-        socket.on('friend_request_update', (data) => {
+        socket.on('friend_request_update', async (data) => {
             try {
                 const request: FriendRequest = data.friendRequest;
-                store.dispatch(updateRequest(request));
+                await updateFriendRequest(request);
             }
             catch (e) {
                 console.log(e);
             }
         });
 
-        socket.on('friend_added', (data) => {
+        socket.on('friend_added', async (data) => {
             try {
                 const friend: User = data.user;
-                store.dispatch(addFriend(friend));
+                await addFriend(friend);
             }
             catch (e) {
                 console.log(e);
             }
         });
 
-        socket.on('friend_removed', (data) => {
+        socket.on('friend_removed', async (data) => {
             try {
                 const friend: User = data.user;
-                store.dispatch(removeFriend(friend));
+                await removeFriend(friend.userId);
             }
             catch (e) {
                 console.log(e);
             }
         });
 
-        socket.on('friend_profile_update', (data) => {
-            try {
-                const friend: User = data.user;
-                store.dispatch(updateFriendProfile(friend));
-            }
-            catch (e) {
-                console.log(e);
-            }
-        });
 
-        socket.on('friend_unregister', (data) => {
-            try {
-                const friend: User = data.user;
-                store.dispatch(removeFriend(friend));
-            }
-            catch (e) {
-                console.log(e);
-            }
-        });
     }
 
     if (resetAuth.match(action)) {
