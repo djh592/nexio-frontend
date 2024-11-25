@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { setUserName } from '@/lib/features/auth/authSlice';
+import { setUser } from '@/lib/features/auth/authSlice';
+import { putUser } from '@/lib/api';
 
 interface EditUserNameDialogProps {
     open: boolean;
@@ -10,7 +11,6 @@ interface EditUserNameDialogProps {
 }
 
 export default function EditUserNameDialog({ open, onClose }: EditUserNameDialogProps) {
-    const token = useAppSelector((state) => state.auth.token);
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
     const [newUserName, setNewUserName] = useState(user.userName);
@@ -19,24 +19,21 @@ export default function EditUserNameDialog({ open, onClose }: EditUserNameDialog
     const handleSave = async () => {
         setLoading(true);
         try {
-            const headers = new Headers();
-            headers.append("Authorization", token);
-            const response = await fetch(`/api/user/${user.userId}`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify({
-                    userName: newUserName,
-                }),
-            });
-            if (response.ok) {
-                dispatch(setUserName(newUserName));
-                onClose();
+            const response = await putUser(user.userId, { userName: newUserName });
+            if (response.code === 0) {
+                const newProfile = response.user;
+                dispatch(setUser({
+                    ...user,
+                    userName: newProfile.userName,
+                    phoneNumber: newProfile.phoneNumber,
+                    emailAddress: newProfile.emailAddress,
+                    avatarUrl: newProfile.avatarUrl,
+                }));
             } else {
-                const data = await response.json();
-                alert("Failed to update username: " + data.message);
+                throw new Error(response.info);
             }
         } catch (error) {
-            alert("Failed to update username: " + error);
+            console.log('Error updating profile:', error);
         } finally {
             setLoading(false);
         }
