@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Avatar,
     Badge,
@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 import { Chat } from "@/lib/definitions";
 import { useAppSelector } from "@/lib/hooks";
+import { db } from "@/lib/db";
+import { useLiveQuery } from "dexie-react-hooks";
+import { getUnreadMessageCount } from "@/lib/logic";
 
 type ChatItemProps = {
     chat: Chat;
@@ -19,22 +22,17 @@ export default function ChatItem(
     { chat }: ChatItemProps
 ) {
     const me = useAppSelector((state) => state.auth.user);
-    const others = chat.participants.filter((p) => p.userId !== me.userId);
-    const isFriendChat = others.length === 1;
-    const isGroupChat = others.length > 1;
-
-    const chatName = isFriendChat
-        ? others[0].userName
-        : isGroupChat
-            ? others.map((p) => p.userName).join(", ").slice(0, 16).concat("...")
-            : "Unknown";
-    const chatAvatarUrl = isFriendChat
-        ? others[0].avatarUrl
-        : isGroupChat
-            ? "/images/group.png"
-            : "/images/unknown.png";
-    const lastMessage = chat.messages.length > 0 ? chat.messages[0] : null;
+    const messageListId = chat.messageListId;
+    const messageList = useLiveQuery(() => db.chatMessageLists.get(messageListId), [messageListId]);
+    const lastMessage = messageList?.messages[0];
     const lastMessageTime = lastMessage ? lastMessage.createdAt : chat.createdAt;
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+        if (messageList) {
+            setUnreadCount(getUnreadMessageCount(messageList, me.userId));
+        }
+    }, [messageList, me.userId]);
 
     const handleOpenChat = (chatId: string) => {
         console.log("Open chat:", chatId);
@@ -52,7 +50,7 @@ export default function ChatItem(
             }}
         >
             <ListItemAvatar>
-                <Avatar alt={chatName} src={chatAvatarUrl} />
+                <Avatar alt={chat.chatName} src={chat.chatAvatarUrl} />
             </ListItemAvatar>
 
             <Box
@@ -71,7 +69,7 @@ export default function ChatItem(
                     }}
                 >
                     <Typography variant="subtitle1" noWrap>
-                        {chatName}
+                        {chat.chatName}
                     </Typography>
                     <Typography
                         variant="caption"
@@ -87,15 +85,15 @@ export default function ChatItem(
                     noWrap
                     sx={{ maxWidth: "100%" }}
                 >
-                    {lastMessage?.content || "No messages yet"}
+                    {lastMessage?.content.contentPayload || "No messages yet"}
                 </Typography>
             </Box>
 
             <Badge
-                badgeContent={chat.unreadCount}
+                badgeContent={unreadCount}
                 color="error"
                 sx={{ marginLeft: 2 }}
-                invisible={chat.unreadCount === 0}
+                invisible={unreadCount === 0}
             />
         </ListItem>
     );

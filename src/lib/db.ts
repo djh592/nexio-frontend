@@ -26,6 +26,11 @@ export class AppDatabase extends Dexie {
             users: '++id, userId, userName, emailAddress, phoneNumber, avatarUrl',
             friendGroups: '++id, groupName, friends',
             friendRequests: '++id, requestId, createdAt, fromUserId, toUserId, status',
+            chatMessageLists: '++id, messageListId, messages',
+            chatParticipantLists: '++id, participantListId, participants',
+            chatNotificationLists: '++id, notificationListId, notifications',
+            chatJoinRequestLists: '++id, joinRequestListId, joinRequests',
+            chats: '++id, chatId, createdAt, chatType, chatName, chatAvatarUrl, chatSettings, messageListId, participantListId,notificationListId, joinRequestListId'
         });
 
         this.users = this.table('users');

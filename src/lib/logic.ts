@@ -1,4 +1,4 @@
-import { FriendGroups } from "@/lib/definitions";
+import { FriendGroups, ChatMessageList } from "@/lib/definitions";
 
 // note: use try/catch block to handle errors
 export const addFriendGroup = (friendGroups: FriendGroups, newGroupName: string): FriendGroups => {
@@ -33,3 +33,10 @@ export const moveFriendToGroup = (
 
     return [...friendGroups];
 };
+
+
+export const getUnreadMessageCount = (messageList: ChatMessageList, userId: string): number => {
+    return messageList.messages.filter(
+        message => message.meta.readBy.includes(userId) === false
+    ).length;
+}

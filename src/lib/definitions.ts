@@ -128,7 +128,7 @@ export type ChatParticipants = ChatParticipant[];
 
 export type ChatParticipantList = {
     id?: number;
-    chatParticipantListId: string;
+    participantListId: string;
     participants: ChatParticipants;
 };
 
@@ -144,7 +144,7 @@ export type ChatNotifications = ChatNotification[];
 
 export type ChatNotificationList = {
     id?: number;
-    chatNotificationListId: string;
+    notificationListId: string;
     notifications: ChatNotifications;
 };
 
@@ -171,7 +171,7 @@ export type ChatJoinRequests = ChatJoinRequest[];
 export type ChatJoinRequestList = {
     id?: number;
     joinRequestListId: string;
-    requests: ChatJoinRequests;
+    joinRequests: ChatJoinRequests;
 };
 
 
