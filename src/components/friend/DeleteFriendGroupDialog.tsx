@@ -1,9 +1,9 @@
 'use client';
 import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { removeFriendGroup } from "@/lib/features/friend/friendSlice";
+import { useAppSelector } from "@/lib/hooks";
 import { deleteFriendsGroups } from "@/lib/api";
+import { removeFriendGroup } from "@/lib/storage";
 
 interface DeleteFriendGroupDialogProps {
     groupName: string;
@@ -15,7 +15,6 @@ export default function DeleteFriendGroupDialog(
     { groupName, open, onClose }: DeleteFriendGroupDialogProps
 ) {
     const userId = useAppSelector((state) => state.auth.user.userId);
-    const dispatch = useAppDispatch();
 
     const handleConfirmDeleteGroup = async () => {
         try {
@@ -24,13 +23,18 @@ export default function DeleteFriendGroupDialog(
                 groupName: groupName
             });
             if (response.code === 0) {
-                dispatch(removeFriendGroup(groupName));
+                try {
+                    await removeFriendGroup(groupName);
+                }
+                catch (error) {
+                    throw new Error(String(error));
+                }
             }
             else {
-                console.log(response.info);
+                throw new Error(response.info);
             }
         } catch (error) {
-            console.log(error);
+            console.log(`Failed to delete group: ${error}`);
         } finally {
             onClose();
         }

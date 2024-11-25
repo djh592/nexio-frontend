@@ -1,21 +1,40 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { useAppDispatch } from '@/lib/hooks';
-import { addSentRequest } from '@/lib/features/friend/friendSlice';
-import { User, FriendRequestStatus } from '@/lib/definitions';
+import { useAppSelector } from '@/lib/hooks';
+import { User } from '@/lib/definitions';
+import { postFriendsRequests } from '@/lib/api';
+import { addFriendRequest } from '@/lib/storage';
 
 interface SendFriendRequestDialogProps {
-    user: User;
+    toUser: User;
     open: boolean;
     onClose: () => void;
 }
 
-export default function SendFriendRequestDialog({ user, open, onClose }: SendFriendRequestDialogProps) {
-    const dispatch = useAppDispatch();
+export default function SendFriendRequestDialog({ toUser, open, onClose }: SendFriendRequestDialogProps) {
+    const myId = useAppSelector((state) => state.auth.user.userId);
 
-    const handleSendRequest = () => {
-        dispatch(addSentRequest({ requestId: '', createdAt: new Date().toISOString(), fromUserId: user.userId, toUserId: user.userId, status: FriendRequestStatus.Pending }));
-        onClose();
+    const handleSendRequest = async () => {
+        try {
+            const response = await postFriendsRequests({
+                fromUserId: myId,
+                toUserId: toUser.userId
+            });
+            if (response.code === 0) {
+                const newFriendRequest = response.friendRequest;
+                try {
+                    await addFriendRequest(newFriendRequest);
+                }
+                catch (err) {
+                    throw new Error(String(err));
+                }
+            }
+            else {
+                throw new Error(response.info);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -26,7 +45,7 @@ export default function SendFriendRequestDialog({ user, open, onClose }: SendFri
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to send a friend request to {user.userName}?
+                        Are you sure you want to send a friend request to {toUser.userName}?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

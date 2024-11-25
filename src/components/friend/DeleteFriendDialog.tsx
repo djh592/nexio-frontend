@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { removeFriend } from '@/lib/features/friend/friendSlice';
+import { useAppSelector } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
 import { deleteFriends } from '@/lib/api';
+import { removeFriend } from '@/lib/storage';
 
 interface DeleteFriendDialogProps {
     friend: User;
@@ -13,7 +13,6 @@ interface DeleteFriendDialogProps {
 }
 
 export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFriendDialogProps) {
-    const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.user.userId);
 
     const handleDelete = async () => {
@@ -24,10 +23,15 @@ export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFrie
                     friendId: friend.userId
                 });
             if (response.code === 0) {
-                dispatch(removeFriend(friend));
+                try {
+                    await removeFriend(friend.userId);
+                }
+                catch (err) {
+                    throw new Error(String(err));
+                }
             }
             else {
-                console.log('Error deleting friend:', response.info);
+                throw new Error(response.info);
             }
         } catch (error) {
             console.log('Error deleting friend:', error);

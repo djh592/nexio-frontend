@@ -86,12 +86,12 @@ export const addFriend = async (friend: User): Promise<void> => {
 }
 
 export const removeFriend = async (friendId: string): Promise<void> => {
-    const group = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
-    if (!group) {
-        throw new Error(`Default group does not exist.`);
+    const groupOfFriend = await db.friendGroups.where('friends.userId').equals(friendId).first();
+    if (!groupOfFriend) {
+        throw new Error(`Friend not found.`);
     }
-    group.friends = group.friends.filter(friend => friend.userId !== friendId);
-    await db.friendGroups.put(group);
+    groupOfFriend.friends = groupOfFriend.friends.filter(friend => friend.userId !== friendId);
+    await db.friendGroups.put(groupOfFriend);
 }
 
 export const moveFriendToGroup = async (friendId: string, fromGroupName: string, toGroupName: string): Promise<void> => {

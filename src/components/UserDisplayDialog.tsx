@@ -4,6 +4,8 @@ import { Box, Avatar, Typography, Button, DialogActions, DialogContent, DialogTi
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
+import { db } from '@/lib/db';
+import { useLiveQuery } from 'dexie-react-hooks';
 import DeleteFriendDialog from '@/components/friend/DeleteFriendDialog';
 import SendFriendRequestDialog from '@/components/friend/SendFriendRequestDialog';
 import FriendGroupSelect from '@/components/friend/FriendGroupSelect';

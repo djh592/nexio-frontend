@@ -1,20 +1,18 @@
 'use client';
 import React, { useEffect } from 'react';
 import { Box, Typography, Button, Card, CardContent, CardActions, Stack, Avatar } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
-import { updateRequest } from '@/lib/features/friend/friendSlice';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { storeUsersByIds } from '@/lib/storage';
+import { storeUsersByIds, updateFriendRequest } from '@/lib/storage';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
 }
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
-    const dispatch = useAppDispatch();
     const myId = useAppSelector((state) => state.auth.user.userId);
     const fromUserId = request.fromUserId;
     const toUserId = request.toUserId;
@@ -35,9 +33,14 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
-                dispatch(updateRequest(updatedRequest));
+                try {
+                    await updateFriendRequest(updatedRequest);
+                }
+                catch (err) {
+                    throw new Error(String(err));
+                }
             } else {
-                console.log('Failed to accept friend request:', response.info);
+                throw new Error(response.info);
             }
         } catch (error) {
             console.error('Error accepting friend request:', error);
@@ -54,9 +57,14 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
-                dispatch(updateRequest(updatedRequest));
+                try {
+                    await updateFriendRequest(updatedRequest);
+                }
+                catch (err) {
+                    throw new Error(String(err));
+                }
             } else {
-                console.log('Failed to reject friend request:', response.info);
+                throw new Error(response.info);
             }
         } catch (error) {
             console.error('Error rejecting friend request:', error);
@@ -73,9 +81,14 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             });
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
-                dispatch(updateRequest(updatedRequest));
+                try {
+                    await updateFriendRequest(updatedRequest);
+                }
+                catch (err) {
+                    throw new Error(String(err));
+                }
             } else {
-                console.log('Failed to cancel friend request:', response.info);
+                throw new Error(response.info);
             }
         } catch (error) {
             console.error('Error cancelling friend request:', error);

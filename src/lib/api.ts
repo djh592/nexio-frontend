@@ -204,21 +204,21 @@ export const deleteFriendsGroups = async (data: DeleteFriendsGroupsRequest): Pro
 
 
 // PATCH: /friends/groups
-export interface PatchFriendGroupRequest {
+export interface PatchFriendsGroupsRequest {
     userId: string;
     friendUserId: string;
     fromGroupName: string;
     toGroupName: string;
 }
 
-export interface PatchFriendGroupResponse {
+export interface PatchFriendsGroupsResponse {
     code: number;
     info: string;
     friendGroups: FriendGroups;
 }
 
-export const patchFriendGroup = async (data: PatchFriendGroupRequest): Promise<PatchFriendGroupResponse> => {
-    const response = await apiClient.patch<PatchFriendGroupResponse>('/friends/groups', data);
+export const patchFriendsGroups = async (data: PatchFriendsGroupsRequest): Promise<PatchFriendsGroupsResponse> => {
+    const response = await apiClient.patch<PatchFriendsGroupsResponse>('/friends/groups', data);
     return response.data;
 };
 
