@@ -18,12 +18,12 @@ interface UserDialogProps {
 
 export default function UserDialog({ user, open, onClose }: UserDialogProps) {
     const router = useRouter();
-    const currentUser = useAppSelector((state) => state.auth.user);
-    const friendGroups = useAppSelector((state) => state.friend.friendGroups);
-    const isMe = currentUser.userId === user.userId;
-    const isFriend = friendGroups.some((group) => group.friends.some((friend) => friend.userId === user.userId));
+    const me = useAppSelector((state) => state.auth.user);
+    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
+    const isMe = me.userId === user.userId;
+    const isFriend = friendGroups?.some((group) => group.friends.some((friend) => friend.userId === user.userId)) ?? false;
     const isOther = !isMe && !isFriend;
-    const groupName = isFriend ? friendGroups.find((group) => group.friends.some((friend) => friend.userId === user.userId))?.groupName : null;
+    const groupName = isFriend ? friendGroups?.find((group) => group.friends.some((friend) => friend.userId === user.userId))?.groupName : undefined;
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [sendRequestDialogOpen, setSendRequestDialogOpen] = useState(false);
@@ -107,7 +107,7 @@ export default function UserDialog({ user, open, onClose }: UserDialogProps) {
                             </Button>
                             <SendFriendRequestDialog
                                 open={sendRequestDialogOpen}
-                                user={user}
+                                toUser={user}
                                 onClose={() => setSendRequestDialogOpen(false)}
                             />
                         </>
