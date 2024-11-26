@@ -6,7 +6,7 @@ import { useAppSelector } from '@/lib/hooks';
 import LogoutDialog from '../auth/LogoutDialog';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-export default function AppbarUserAvatar() {
+export default function AppBarUserAvatar() {
     const router = useRouter();
     const user = useAppSelector((state) => state.auth.user);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);

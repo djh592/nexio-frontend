@@ -2,7 +2,7 @@
 import { AppBar, Box, Toolbar } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import AppbarUserAvatar from "./AppbarUserAvatar";
+import AppBarUserAvatar from "@/components/dashboard/AppBarUserAvatar";
 
 export default function DashboardAppBar() {
     return (
@@ -23,7 +23,7 @@ export default function DashboardAppBar() {
                         <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} priority/>
                     </Link>
                 </Box>
-                <AppbarUserAvatar />
+                <AppBarUserAvatar />
             </Toolbar>
         </AppBar>
     );
