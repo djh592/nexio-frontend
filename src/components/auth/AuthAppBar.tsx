@@ -8,7 +8,7 @@ export default function AuthAppBar() {
             <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                     <Link href="/">
-                        <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} />
+                        <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} priority/>
                     </Link>
                 </Box>
                 <Box>
