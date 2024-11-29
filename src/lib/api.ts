@@ -3,6 +3,7 @@ import {
     User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
     Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta,
     ChatParticipantList, ChatParticipant, ChatNotificationList, ChatNotification,
+    ChatJoinRequestList, ChatJoinRequest
 } from '@/lib/definitions';
 
 const apiClient = axios.create({
@@ -507,5 +508,58 @@ export interface PostNotificationsResponse {
 
 export const postNotifications = async (notificationListId: string, data: PostNotificationsRequest): Promise<PostNotificationsResponse> => {
     const response = await apiClient.post<PostNotificationsResponse>(`/notifications/${notificationListId}`, data);
+    return response.data;
+}
+
+
+// GET /joinRequests/{joinRequestListId}
+export interface GetJoinRequestsRequest {
+    fromUserId: string;
+}
+
+export interface GetJoinRequestsResponse {
+    code: number;
+    info: string;
+    chatJoinRequestList: ChatJoinRequestList;
+}
+
+export const getJoinRequests = async (joinRequestListId: string, data: GetJoinRequestsRequest): Promise<GetJoinRequestsResponse> => {
+    const response = await apiClient.get<GetJoinRequestsResponse>(`/joinRequests/${joinRequestListId}`, { params: data });
+    return response.data;
+}
+
+
+// POST /joinRequests/{joinRequestListId}
+export interface PostJoinRequestsRequest {
+    fromUserId: string;
+    chatJoinRequest: ChatJoinRequest;
+}
+
+export interface PostJoinRequestsResponse {
+    code: number;
+    info: string;
+    chatJoinRequest: ChatJoinRequest;
+}
+
+export const postJoinRequests = async (joinRequestListId: string, data: PostJoinRequestsRequest): Promise<PostJoinRequestsResponse> => {
+    const response = await apiClient.post<PostJoinRequestsResponse>(`/joinRequests/${joinRequestListId}`, data);
+    return response.data;
+}
+
+
+// PATCH /joinRequests/{joinRequestListId}
+export interface PatchJoinRequestsRequest {
+    fromUserId: string;
+    chatJoinRequest: ChatJoinRequest;
+}
+
+export interface PatchJoinRequestsResponse {
+    code: number;
+    info: string;
+    chatJoinRequest: ChatJoinRequest;
+}
+
+export const patchJoinRequests = async (joinRequestListId: string, data: PatchJoinRequestsRequest): Promise<PatchJoinRequestsResponse> => {
+    const response = await apiClient.patch<PatchJoinRequestsResponse>(`/joinRequests/${joinRequestListId}`, data);
     return response.data;
 }
