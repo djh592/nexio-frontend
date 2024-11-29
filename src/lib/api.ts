@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { User, FriendGroup, FriendGroups, FriendRequest, FriendRequests, Chat } from '@/lib/definitions';
+import {
+    User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
+    Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta
+} from '@/lib/definitions';
 
 const apiClient = axios.create({
     baseURL: 'https://nexio-backend-nexio.app.secoder.net',
@@ -382,3 +385,57 @@ export const deleteChats = async (chatId: string, data: DeleteChatsRequest): Pro
     const response = await apiClient.delete<DeleteChatsResponse>(`/chats/${chatId}`, { data });
     return response.data;
 }
+
+
+// GET /messages/{messageListId}
+export interface GetMessagesRequest {
+    userId: string;
+}
+
+export interface GetMessagesResponse {
+    code: number;
+    info: string;
+    chatMessageList: ChatMessageList;
+}
+
+export const getMessages = async (messageListId: string, data: GetMessagesRequest): Promise<GetMessagesResponse> => {
+    const response = await apiClient.get<GetMessagesResponse>(`/messages/${messageListId}`, { params: data });
+    return response.data;
+}
+
+
+// POST /messages/{messageListId}
+export interface PostMessagesRequest {
+    fromUserId: string;
+    chatMessageContent: ChatMessageContent;
+}
+
+export interface PostMessagesResponse {
+    code: number;
+    info: string;
+    chatMessage: ChatMessage;
+}
+
+export const postMessages = async (messageListId: string, data: PostMessagesRequest): Promise<PostMessagesResponse> => {
+    const response = await apiClient.post<PostMessagesResponse>(`/messages/${messageListId}`, data);
+    return response.data;
+}
+
+
+// PATCH /messages/{messageListId}
+export interface PatchMessagesRequest {
+    fromUserId: string;
+    chatMessageMeta: ChatMessageMeta;
+}
+
+export interface PatchMessagesResponse {
+    code: number;
+    info: string;
+    chatMessage: ChatMessage;
+}
+
+export const patchMessages = async (messageListId: string, data: PatchMessagesRequest): Promise<PatchMessagesResponse> => {
+    const response = await apiClient.patch<PatchMessagesResponse>(`/messages/${messageListId}`, data);
+    return response.data;
+}
+
