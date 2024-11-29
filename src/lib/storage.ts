@@ -1,44 +1,40 @@
 import { db } from '@/lib/db';
-import { User, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definitions';
+import { User, FriendGroups, FriendRequest, FriendRequests, Chat } from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
 import {
     getUsers as getUsersFromBackend,
     getFriends as getFriendsFromBackend,
-    getFriendsRequests as getFriendsRequestsFromBackend
+    getFriendsRequests as getFriendsRequestsFromBackend,
+    getChats as getChatsFromBackend,
 } from '@/lib/api';
 
 export const clearDatabase = async (): Promise<void> => {
     await db.users.clear();
     await db.friendGroups.clear();
     await db.friendRequests.clear();
+    await db.chats.clear();
+    await db.chatMessageLists.clear();
+    await db.chatParticipantLists.clear();
+    await db.chatNotificationLists.clear();
+    await db.chatMessageLists.clear();
 }
 
 // User
-export const storeUsersByIds = async (userIds: string[]): Promise<void> => {
-    const missingUserIds: string[] = [];
-
-    for (const userId of userIds) {
-        const user = await db.users.where('userId').equals(userId).first();
-        if (!user) {
-            missingUserIds.push(userId);
+export const updateUsers = async (userIds: string[]): Promise<void> => {
+    try {
+        const response = await getUsersFromBackend({ userIds: userIds });
+        if (response.code === 0) {
+            const fetchedUsers = response.users;
+            await upsertUsers(fetchedUsers);
+        }
+        else {
+            throw new Error(response.info);
         }
     }
-
-    if (missingUserIds.length > 0) {
-        try {
-            const response = await getUsersFromBackend({ userIds: missingUserIds });
-            if (response.code === 0) {
-                const fetchedUsers = response.users;
-                await db.users.bulkPut(fetchedUsers);
-            }
-            else {
-                throw new Error(response.info);
-            }
-        } catch (error) {
-            throw new Error(`Failed to fetch users: ${error}`);
-        }
+    catch (error) {
+        console.log(`Failed to fetch users: ${error}`);
     }
-};
+}
 
 export const searchUsers = async (searchText: string): Promise<User[]> => {
     const users = await db.users.toArray();
@@ -191,14 +187,7 @@ export const updateFriendRequests = async (userId: string): Promise<void> => {
         const response = await getFriendsRequestsFromBackend({ userId: userId });
         if (response.code === 0) {
             const fetchedRequests = [...response.sentRequests, ...response.receivedRequests];
-            for (const request of fetchedRequests) {
-                const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
-                if (existingRequest) {
-                    await db.friendRequests.put({ ...request, id: existingRequest.id });
-                } else {
-                    await db.friendRequests.add(request);
-                }
-            }
+            await upsertFriendRequests(fetchedRequests);
         }
         else {
             throw new Error(response.info);
@@ -248,4 +237,59 @@ export const deleteFriendRequest = async (requestId: string): Promise<void> => {
 
 export const deleteFriendRequests = async (requestIds: string[]): Promise<void> => {
     await db.friendRequests.where('requestId').anyOf(requestIds).delete();
+}
+
+
+// Chats
+export const updateChats = async (userId: string): Promise<void> => {
+    try {
+        const response = await getChatsFromBackend({ userId: userId });
+        if (response.code === 0) {
+            const fetchedChats = response.chats;
+            await upsertChats(fetchedChats);
+        }
+        else {
+            throw new Error(response.info);
+        }
+    }
+    catch (error) {
+        console.log(`Failed to fetch chats: ${error}`);
+    }
+}
+
+export const getChats = async (): Promise<Chat[]> => {
+    return await db.chats.toArray();
+}
+
+export const upsertChat = async (chat: Chat): Promise<void> => {
+    const existingChat = await db.chats.where('chatId').equals(chat.chatId).first();
+    if (existingChat) {
+        chat.id = existingChat.id; // combine existing chat with new chat
+    }
+    await db.chats.put(chat); // upsert chat
+}
+
+export const upsertChats = async (chats: Chat[]): Promise<void> => {
+    const existingChats = await db.chats
+        .where('chatId')
+        .anyOf(chats.map(c => c.chatId))
+        .toArray();
+
+    const chatMap = new Map(existingChats.map(c => [c.chatId, c]));
+
+    // combine existing chats with new chats
+    const chatsWithId = chats.map(chat => {
+        const existingChat = chatMap.get(chat.chatId);
+        return existingChat ? { ...chat, id: existingChat.id } : chat;
+    });
+
+    await db.chats.bulkPut(chatsWithId);
+}
+
+export const deleteChat = async (chatId: string): Promise<void> => {
+    await db.chats.where('chatId').equals(chatId).delete();
+}
+
+export const deleteChats = async (chatIds: string[]): Promise<void> => {
+    await db.chats.where('chatId').anyOf(chatIds).delete();
 }
