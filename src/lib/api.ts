@@ -329,6 +329,25 @@ export const getChats = async (data: GetChatsRequest): Promise<GetChatsResponse>
 }
 
 
+// POST /chats
+export interface PostChatsRequest {
+    fromUserId: string;
+    chatType: string;
+    participantIds: string[];
+}
+
+export interface PostChatsResponse {
+    code: number;
+    info: string;
+    chat: Chat;
+}
+
+export const postChats = async (data: PostChatsRequest): Promise<PostChatsResponse> => {
+    const response = await apiClient.post<PostChatsResponse>('/chats', data);
+    return response.data;
+}
+
+
 // PATCH /chats/{chatId}
 export interface PatchChatsRequest {
     fromUserId: string;
@@ -349,22 +368,17 @@ export const patchChats = async (chatId: string, data: PatchChatsRequest): Promi
 }
 
 
-// POST /chats
-export interface PostChatsRequest {
+// DELETE /chats/{chatId}
+export interface DeleteChatsRequest {
     fromUserId: string;
-    chatType: string;
-    participantIds: string[];
 }
 
-export interface PostChatsResponse {
+export interface DeleteChatsResponse {
     code: number;
     info: string;
-    chat: Chat;
 }
 
-export const postChats = async (data: PostChatsRequest): Promise<PostChatsResponse> => {
-    const response = await apiClient.post<PostChatsResponse>('/chats', data);
+export const deleteChats = async (chatId: string, data: DeleteChatsRequest): Promise<DeleteChatsResponse> => {
+    const response = await apiClient.delete<DeleteChatsResponse>(`/chats/${chatId}`, { data });
     return response.data;
 }
-
-
