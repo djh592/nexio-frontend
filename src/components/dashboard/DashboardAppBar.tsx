@@ -20,7 +20,7 @@ export default function DashboardAppBar() {
             <Toolbar>
                 <Box sx={{ flexGrow: 1 }}>
                     <Link href="/">
-                        <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} priority/>
+                        <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} priority />
                     </Link>
                 </Box>
                 <AppBarUserAvatar />

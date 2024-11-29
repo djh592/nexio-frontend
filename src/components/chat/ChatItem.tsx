@@ -1,13 +1,7 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import {
-    Avatar,
-    Badge,
-    Box,
-    ListItem,
-    ListItemAvatar,
-    Typography,
-} from "@mui/material";
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import {Avatar,Badge,Box,ListItem,ListItemAvatar,Typography,} from "@mui/material";
 import { Chat } from "@/lib/definitions";
 import { useAppSelector } from "@/lib/hooks";
 import { db } from "@/lib/db";
@@ -21,6 +15,9 @@ type ChatItemProps = {
 export default function ChatItem(
     { chat }: ChatItemProps
 ) {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
     const me = useAppSelector((state) => state.auth.user);
     const messageListId = chat.messageListId;
     const messageList = useLiveQuery(() => db.chatMessageLists.get(messageListId), [messageListId]);
@@ -35,8 +32,9 @@ export default function ChatItem(
     }, [messageList, me.userId]);
 
     const handleOpenChat = (chatId: string) => {
-        console.log("Open chat:", chatId);
-        // to be implemented
+        const params = new URLSearchParams(searchParams);
+        params.set("chat", chatId);
+        replace(`${pathname}?${params.toString()}`);
     };
 
     return (
