@@ -6,7 +6,7 @@ import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { storeUsersByIds, updateFriendRequest } from '@/lib/storage';
+import { storeUsersByIds, upsertFriendRequest } from '@/lib/storage';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
@@ -34,7 +34,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
                 try {
-                    await updateFriendRequest(updatedRequest);
+                    await upsertFriendRequest(updatedRequest);
                 }
                 catch (err) {
                     throw new Error(String(err));
@@ -58,7 +58,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
                 try {
-                    await updateFriendRequest(updatedRequest);
+                    await upsertFriendRequest(updatedRequest);
                 }
                 catch (err) {
                     throw new Error(String(err));
@@ -82,7 +82,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
             if (response.code === 0) {
                 const updatedRequest = response.friendRequest;
                 try {
-                    await updateFriendRequest(updatedRequest);
+                    await upsertFriendRequest(updatedRequest);
                 }
                 catch (err) {
                     throw new Error(String(err));

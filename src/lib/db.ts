@@ -14,28 +14,33 @@ export class AppDatabase extends Dexie {
     friendGroups!: Table<FriendGroup>;
     friendRequests!: Table<FriendRequest>;
     // Chat
+    chats!: Table<Chat>;
     chatMessageLists!: Table<ChatMessageList>;
     chatParticipantLists!: Table<ChatParticipantList>;
     chatNotificationLists!: Table<ChatNotificationList>;
     chatJoinRequestLists!: Table<ChatJoinRequestList>;
-    chats!: Table<Chat>;
 
     constructor() {
         super('AppDatabase');
         this.version(1).stores({
-            users: '++id, userId, userName, emailAddress, phoneNumber, avatarUrl',
+            users: '++id, &userId, userName, emailAddress, phoneNumber, avatarUrl',
             friendGroups: '++id, groupName, friends',
-            friendRequests: '++id, requestId, createdAt, fromUserId, toUserId, status',
-            chatMessageLists: '++id, messageListId, messages',
-            chatParticipantLists: '++id, participantListId, participants',
-            chatNotificationLists: '++id, notificationListId, notifications',
-            chatJoinRequestLists: '++id, joinRequestListId, joinRequests',
-            chats: '++id, chatId, createdAt, chatType, chatName, chatAvatarUrl, chatSettings, messageListId, participantListId,notificationListId, joinRequestListId'
+            friendRequests: '++id, &requestId, createdAt, fromUserId, toUserId, status',
+            chats: '++id, &chatId, createdAt, chatType, chatName, chatAvatarUrl, chatSettings, messageListId, participantListId,notificationListId, joinRequestListId',
+            chatMessageLists: '++id, &messageListId, messages',
+            chatParticipantLists: '++id, &participantListId, participants',
+            chatNotificationLists: '++id, &notificationListId, notifications',
+            chatJoinRequestLists: '++id, &joinRequestListId, joinRequests'
         });
 
         this.users = this.table('users');
         this.friendGroups = this.table('friendGroups');
         this.friendRequests = this.table('friendRequests');
+        this.chats = this.table('chats');
+        this.chatMessageLists = this.table('chatMessageLists');
+        this.chatParticipantLists = this.table('chatParticipantLists');
+        this.chatNotificationLists = this.table('chatNotificationLists');
+        this.chatJoinRequestLists = this.table('chatJoinRequestLists');
     }
 }
 

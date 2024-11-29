@@ -3,7 +3,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { useAppSelector } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
 import { postFriendsRequests } from '@/lib/api';
-import { addFriendRequest } from '@/lib/storage';
+import { upsertFriendRequest } from '@/lib/storage';
 
 interface SendFriendRequestDialogProps {
     toUser: User;
@@ -23,7 +23,7 @@ export default function SendFriendRequestDialog({ toUser, open, onClose }: SendF
             if (response.code === 0) {
                 const newFriendRequest = response.friendRequest;
                 try {
-                    await addFriendRequest(newFriendRequest);
+                    await upsertFriendRequest(newFriendRequest);
                 }
                 catch (err) {
                     throw new Error(String(err));

@@ -49,30 +49,42 @@ export const getUser = async (userId: string): Promise<User | undefined> => {
     return await db.users.where('userId').equals(userId).first();
 };
 
-export const addUser = async (user: User): Promise<void> => {
-    const userExists = await db.users.where('userId').equals(user.userId).first();
-    if (userExists) {
-        // if user already exists, throw an error
-        // must use updateUser to update an existing user
-        throw new Error(`User with userId ${user.userId} already exists.`);
-    } else {
-        await db.users.add(user);
-    }
+export const getUsers = async (): Promise<User[]> => {
+    return await db.users.toArray();
 };
 
-export const updateUser = async (user: User): Promise<void> => {
+export const upsertUser = async (user: User): Promise<void> => {
     const existingUser = await db.users.where('userId').equals(user.userId).first();
     if (existingUser) {
-        await db.users.put({ ...user, id: existingUser.id });
-    } else {
-        // if user does not exist, throw an error
-        // must use addUser to add a new user
-        throw new Error(`User with userId ${user.userId} does not exist.`);
+        user.id = existingUser.id; // combine existing user with new user
     }
+    await db.users.put(user); // upsert user
 };
+
+export const upsertUsers = async (users: User[]): Promise<void> => {
+    const existingUsers = await db.users
+        .where('userId')
+        .anyOf(users.map(u => u.userId))
+        .toArray();
+
+    const userMap = new Map(existingUsers.map(u => [u.userId, u]));
+
+    // combine existing users with new users
+    const usersWithId = users.map(user => {
+        const existingUser = userMap.get(user.userId);
+        return existingUser ? { ...user, id: existingUser.id } : user;
+    });
+
+    await db.users.bulkPut(usersWithId);
+};
+
 
 export const deleteUser = async (userId: string): Promise<void> => {
     await db.users.where('userId').equals(userId).delete();
+};
+
+export const deleteUsers = async (userIds: string[]): Promise<void> => {
+    await db.users.where('userId').anyOf(userIds).delete();
 };
 
 // Friend
@@ -205,19 +217,35 @@ export const getReceivedRequests = async (userId: string): Promise<FriendRequest
     return await db.friendRequests.where('toUserId').equals(userId).toArray();
 }
 
-export const addFriendRequest = async (request: FriendRequest): Promise<void> => {
-    const requestExists = await db.friendRequests.where('requestId').equals(request.requestId).first();
-    if (requestExists) {
-        throw new Error(`Request with requestId ${request.requestId} already exists.`);
-    }
-    await db.friendRequests.add(request);
-}
-
-export const updateFriendRequest = async (request: FriendRequest): Promise<void> => {
+export const upsertFriendRequest = async (request: FriendRequest): Promise<void> => {
     const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
     if (existingRequest) {
-        await db.friendRequests.put({ ...request, id: existingRequest.id });
-    } else {
-        throw new Error(`Request with requestId ${request.requestId} does not exist.`);
+        request.id = existingRequest.id; // combine existing request with new request
     }
+    await db.friendRequests.put(request); // upsert request
+}
+
+export const upsertFriendRequests = async (requests: FriendRequest[]): Promise<void> => {
+    const existingRequests = await db.friendRequests
+        .where('requestId')
+        .anyOf(requests.map(r => r.requestId))
+        .toArray();
+
+    const requestMap = new Map(existingRequests.map(r => [r.requestId, r]));
+
+    // combine existing requests with new requests
+    const requestsWithId = requests.map(request => {
+        const existingRequest = requestMap.get(request.requestId);
+        return existingRequest ? { ...request, id: existingRequest.id } : request;
+    });
+
+    await db.friendRequests.bulkPut(requestsWithId);
+}
+
+export const deleteFriendRequest = async (requestId: string): Promise<void> => {
+    await db.friendRequests.where('requestId').equals(requestId).delete();
+}
+
+export const deleteFriendRequests = async (requestIds: string[]): Promise<void> => {
+    await db.friendRequests.where('requestId').anyOf(requestIds).delete();
 }

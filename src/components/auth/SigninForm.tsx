@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/lib/hooks';
 import { setToken, setUserId, setUserName, setUserEmail, setUserPhone, setUserAvatar } from '@/lib/features/auth/authSlice';
 import { postLogin } from '@/lib/api';
+import { upsertUser } from '@/lib/storage';
 
 export default function SigninForm() {
     const theme = useTheme();
@@ -58,13 +59,16 @@ export default function SigninForm() {
         })
             .then((res) => {
                 if (Number(res.code) === 0) {
-                    dispatch(setToken(res.token));
-                    dispatch(setUserId(res.user.userId));
-                    dispatch(setUserName(res.user.userName));
-                    dispatch(setUserPhone(res.user.phoneNumber));
-                    dispatch(setUserEmail(res.user.emailAddress));
-                    dispatch(setUserAvatar(res.user.avatarUrl));
+                    const token = res.token;
+                    const user = res.user;
+                    dispatch(setToken(token));
+                    dispatch(setUserId(user.userId));
+                    dispatch(setUserName(user.userName));
+                    dispatch(setUserPhone(user.phoneNumber));
+                    dispatch(setUserEmail(user.emailAddress));
+                    dispatch(setUserAvatar(user.avatarUrl));
                     setSuccessAlert({ open: true, message: 'Login successful!' });
+                    upsertUser(user);
                     router.push('/chats');
                 }
                 else {
