@@ -3,6 +3,7 @@ import { useAppSelector } from '@/lib/hooks';
 import { Box } from '@mui/material';
 import { ChatMessage } from "@/lib/definitions";
 import ChatBubbleContent from '@/components/chat/ChatBubbleContent';
+import ChatUserAvatar from '@/components/chat/ChatUserAvatar';
 
 interface ChatBubbleProps {
     message: ChatMessage;
@@ -29,16 +30,19 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message }: ChatBubbleProps) => 
         },
         bubbleContainer: {
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: isMe ? 'flex-end' : 'flex-start',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: isMe ? 'flex-end' : 'flex-start',
         },
     };
 
     return (
         <Box sx={styles.bubbleContainer}>
+            {!isMe && <ChatUserAvatar userId={message.fromUserId} />}
             <Box sx={styles.bubble}>
                 <ChatBubbleContent content={message.content} />
             </Box>
+            {isMe && <ChatUserAvatar userId={message.fromUserId} />}
         </Box>
     );
 };

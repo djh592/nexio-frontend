@@ -16,7 +16,7 @@ interface UserDialogProps {
     onClose: () => void;
 }
 
-export default function UserDialog({ user, open, onClose }: UserDialogProps) {
+export default function UserDisplayDialog({ user, open, onClose }: UserDialogProps) {
     const router = useRouter();
     const me = useAppSelector((state) => state.auth.user);
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
