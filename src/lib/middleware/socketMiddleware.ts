@@ -2,10 +2,9 @@ import { Middleware } from '@reduxjs/toolkit';
 import { io, Socket } from 'socket.io-client';
 import { setToken, resetAuth } from '@/lib/features/auth/authSlice';
 import {
-    updateUser,
+    upsertUser,
     deleteUser,
-    addFriendRequest,
-    updateFriendRequest,
+    upsertFriendRequest,
     addFriend,
     removeFriend,
 } from '@/lib/storage';
@@ -37,10 +36,10 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
             console.log('Connection error:', err);
         });
 
-        socket.on('user_profile_update', (data) => {
+        socket.on('user_profile_update', async (data) => {
             try {
                 const user: User = data.user;
-                updateUser(user);
+                await upsertUser(user);
             }
             catch (e) {
                 console.log(e);
@@ -60,7 +59,7 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         socket.on('friend_request_receive', async (data) => {
             try {
                 const request: FriendRequest = data.friendRequest;
-                await addFriendRequest(request);
+                await upsertFriendRequest(request);
                 store.dispatch(incrementNewRequestCount());
             }
             catch (e) {
@@ -71,7 +70,7 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         socket.on('friend_request_update', async (data) => {
             try {
                 const request: FriendRequest = data.friendRequest;
-                await updateFriendRequest(request);
+                await upsertFriendRequest(request);
             }
             catch (e) {
                 console.log(e);

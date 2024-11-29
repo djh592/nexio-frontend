@@ -12,7 +12,7 @@ import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
 import { useAppSelector } from '@/lib/hooks';
 import { db } from '@/lib/db';
-import { storeUsersByIds, updateFriendGroups } from '@/lib/storage';
+import { updateUsers, updateFriendGroups } from '@/lib/storage';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 
@@ -34,7 +34,7 @@ export default function FriendGroupList() {
         setFriendUserIds(userIds);
     }, [friendGroups]);
 
-    useEffect(() => { storeUsersByIds(friendUserIds) }, [friendUserIds]);
+    useEffect(() => { updateUsers(friendUserIds) }, [friendUserIds]);
 
     const handleRightClick = (event: MouseEvent<HTMLElement>, groupName: string) => {
         event.preventDefault();

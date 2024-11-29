@@ -6,7 +6,7 @@ import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { storeUsersByIds, upsertFriendRequest } from '@/lib/storage';
+import { updateUsers, upsertFriendRequest } from '@/lib/storage';
 
 interface FriendRequestDisplayCardProps {
     request: FriendRequest;
@@ -21,7 +21,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
     const fromUser = useLiveQuery(() => db.users.where('userId').equals(fromUserId).first());
     const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first());
 
-    useEffect(() => { storeUsersByIds([fromUserId, toUserId]); }, [fromUserId, toUserId]);
+    useEffect(() => { updateUsers([fromUserId, toUserId]); }, [fromUserId, toUserId]);
 
     const handleAccept = async () => {
         try {
