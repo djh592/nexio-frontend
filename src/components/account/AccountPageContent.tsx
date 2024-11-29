@@ -88,7 +88,6 @@ export default function AccountPageContent() {
         setLoading(true);
         try {
             const response = await putUser(user.userId, {
-                userName: formValues.username,
                 phoneNumber: formValues.phone,
                 emailAddress: formValues.email,
             });
