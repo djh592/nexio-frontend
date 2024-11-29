@@ -1,11 +1,19 @@
 import { db } from '@/lib/db';
-import { User, FriendGroups, FriendRequest, FriendRequests, Chat } from '@/lib/definitions';
+import {
+    User, FriendGroups, FriendRequest, FriendRequests,
+    Chat, ChatMessageList, ChatParticipantList, ChatNotificationList,
+    ChatJoinRequestList,
+} from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
 import {
     getUsers as getUsersFromBackend,
     getFriends as getFriendsFromBackend,
     getFriendsRequests as getFriendsRequestsFromBackend,
     getChats as getChatsFromBackend,
+    getMessages as getMessagesFromBackend,
+    getParticipants as getParticipantsFromBackend,
+    getNotifications as getNotificationsFromBackend,
+    getJoinRequests as getJoinRequestsFromBackend,
 } from '@/lib/api';
 
 export const clearDatabase = async (): Promise<void> => {
@@ -292,4 +300,120 @@ export const deleteChat = async (chatId: string): Promise<void> => {
 
 export const deleteChats = async (chatIds: string[]): Promise<void> => {
     await db.chats.where('chatId').anyOf(chatIds).delete();
+}
+
+
+// Messages
+export const updateChatMessageList = async (messageListId: string, fromUserId: string): Promise<void> => {
+    try {
+        const response = await getMessagesFromBackend(messageListId, { fromUserId: fromUserId });
+        if (response.code === 0) {
+            const fetchedMessages = response.chatMessageList;
+            await upsertChatMessageList(fetchedMessages);
+        }
+    }
+    catch (error) {
+        console.log(`Failed to fetch chat message list: ${error}`);
+    }
+}
+
+export const getChatMessageList = async (messageListId: string): Promise<ChatMessageList | undefined> => {
+    return await db.chatMessageLists.where('messageListId').equals(messageListId).first();
+}
+
+export const upsertChatMessageList = async (chatMessageList: ChatMessageList): Promise<void> => {
+    const existingChatMessageList = await db.chatMessageLists.where('messageListId').equals(chatMessageList.messageListId).first();
+    if (existingChatMessageList) {
+        chatMessageList.id = existingChatMessageList.id; // combine existing chatMessageList with new chatMessageList
+    }
+    await db.chatMessageLists.put(chatMessageList); // upsert chatMessageList
+}
+
+export const deleteChatMessageList = async (messageListId: string): Promise<void> => {
+    await db.chatMessageLists.where('messageListId').equals(messageListId).delete();
+}
+
+
+// Participants
+export const updateChatParticipantList = async (participantListId: string, fromUserId: string): Promise<void> => {
+    try {
+        const response = await getParticipantsFromBackend(participantListId, { fromUserId: fromUserId });
+        if (response.code === 0) {
+            const fetchedParticipants = response.chatParticipantList;
+            await upsertChatParticipantList(fetchedParticipants);
+        }
+    }
+    catch (error) {
+        console.log(`Failed to fetch chat participant list: ${error}`);
+    }
+}
+
+export const getChatParticipantList = async (participantListId: string): Promise<ChatParticipantList | undefined> => {
+    return await db.chatParticipantLists.where('participantListId').equals(participantListId).first();
+}
+
+export const upsertChatParticipantList = async (chatParticipantList: ChatParticipantList): Promise<void> => {
+    const existingChatParticipantList = await db.chatParticipantLists.where('participantListId').equals(chatParticipantList.participantListId).first();
+    if (existingChatParticipantList) {
+        chatParticipantList.id = existingChatParticipantList.id; // combine existing chatParticipantList with new chatParticipantList
+    }
+    await db.chatParticipantLists.put(chatParticipantList); // upsert chatParticipantList
+}
+
+
+// Notifications
+export const updateChatNotificationList = async (notificationListId: string, fromUserId: string): Promise<void> => {
+    try {
+        const response = await getNotificationsFromBackend(notificationListId, { fromUserId: fromUserId });
+        if (response.code === 0) {
+            const fetchedNotifications = response.chatNotificationList;
+            await upsertChatNotificationList(fetchedNotifications);
+        }
+    }
+    catch (error) {
+        console.log(`Failed to fetch chat notification list: ${error}`);
+    }
+}
+
+export const getChatNotificationList = async (notificationListId: string): Promise<ChatNotificationList | undefined> => {
+    return await db.chatNotificationLists.where('notificationListId').equals(notificationListId).first();
+}
+
+export const upsertChatNotificationList = async (chatNotificationList: ChatNotificationList): Promise<void> => {
+    const existingChatNotificationList = await db.chatNotificationLists.where('notificationListId').equals(chatNotificationList.notificationListId).first();
+    if (existingChatNotificationList) {
+        chatNotificationList.id = existingChatNotificationList.id; // combine existing chatNotificationList with new chatNotificationList
+    }
+    await db.chatNotificationLists.put(chatNotificationList); // upsert chatNotificationList
+}
+
+
+// Join Requests
+export const updateChatJoinRequestList = async (joinRequestListId: string, fromUserId: string): Promise<void> => {
+    try {
+        const response = await getJoinRequestsFromBackend(joinRequestListId, { fromUserId: fromUserId });
+        if (response.code === 0) {
+            const fetchedJoinRequests = response.chatJoinRequestList;
+            await upsertChatJoinRequestList(fetchedJoinRequests);
+        }
+    }
+    catch (error) {
+        console.log(`Failed to fetch chat join request list: ${error}`);
+    }
+}
+
+export const getChatJoinRequestList = async (joinRequestListId: string): Promise<ChatJoinRequestList | undefined> => {
+    return await db.chatJoinRequestLists.where('joinRequestListId').equals(joinRequestListId).first();
+}
+
+export const upsertChatJoinRequestList = async (chatJoinRequestList: ChatJoinRequestList): Promise<void> => {
+    const existingChatJoinRequestList = await db.chatJoinRequestLists.where('joinRequestListId').equals(chatJoinRequestList.joinRequestListId).first();
+    if (existingChatJoinRequestList) {
+        chatJoinRequestList.id = existingChatJoinRequestList.id; // combine existing chatJoinRequestList with new chatJoinRequestList
+    }
+    await db.chatJoinRequestLists.put(chatJoinRequestList); // upsert chatJoinRequestList
+}
+
+export const deleteChatJoinRequestList = async (joinRequestListId: string): Promise<void> => {
+    await db.chatJoinRequestLists.where('joinRequestListId').equals(joinRequestListId).delete();
 }
