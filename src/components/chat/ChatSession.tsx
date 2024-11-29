@@ -2,8 +2,13 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import ChatSessionContent from '@/components/chat/ChatSessionContent';
 
-const ChatSessionContent = () => {
+const ChatSessionLoading = () => {
+    return <div>Loading...</div>;
+}
+
+const ChatSessionWithContent = () => {
     const searchParams = useSearchParams();
     const [chatId, setChatId] = useState<null | string>(null);
 
@@ -16,16 +21,15 @@ const ChatSessionContent = () => {
 
     return (
         <>
-            <h1>Chat Session</h1>
-            <p>Chat ID: {chatId}</p>
+            {chatId && <ChatSessionContent chatId={chatId} />}
         </>
     );
 };
 
 export default function ChatSession() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <ChatSessionContent />
+        <Suspense fallback={<ChatSessionLoading />}>
+            <ChatSessionWithContent />
         </Suspense>
     );
 }
