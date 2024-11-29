@@ -4,6 +4,7 @@ import { IconButton, Popover, Paper, Stack, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import UserDisplayCard from '@/components/UserDisplayCard';
 import { User } from '@/lib/definitions';
+import { getUsersSearch } from '@/lib/api';
 
 export default function FriendSearch() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -13,78 +14,20 @@ export default function FriendSearch() {
 
     const handleSearch = async () => {
         setAnchorEl(paperRef.current);
-        setSearchResults([
-            {
-                userId: '1',
-                userName: 'User1',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '2',
-                userName: 'User2',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '3',
-                userName: 'User3',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '4',
-                userName: 'User4',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '5',
-                userName: 'User5',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '6',
-                userName: 'User6',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '7',
-                userName: 'User7',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '8',
-                userName: 'User8',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '9',
-                userName: 'User9',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-            {
-                userId: '10',
-                userName: 'User10',
-                emailAddress: '',
-                phoneNumber: '',
-                avatarUrl: '',
-            },
-        ]);
+        if (searchTerm) {
+            try {
+                const response = await getUsersSearch({ searchText: searchTerm });
+                if (response.code === 0) {
+                    setSearchResults(response.users);
+                }
+                else {
+                    throw new Error(response.info);
+                }
+            }
+            catch (error) {
+                console.log('Error searching users:', error);
+            }
+        }
     };
 
     const handleClose = () => {
@@ -99,7 +42,7 @@ export default function FriendSearch() {
         <>
             <Paper
                 component="form"
-                sx={{ width: '100%', display: 'flex', alignItems: 'center'}}
+                sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
                 ref={paperRef}
             >
                 <InputBase
