@@ -74,11 +74,13 @@ export default function FriendSearch() {
                     vertical: 'top',
                     horizontal: 'left',
                 }}
-                PaperProps={{
-                    style: {
-                        width: paperRef.current ? paperRef.current.clientWidth : undefined,
-                        maxHeight: '300px',
-                        overflowY: 'auto',
+                slotProps={{
+                    paper: {
+                        style: {
+                            width: paperRef.current ? paperRef.current.clientWidth : undefined,
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                        },
                     },
                 }}
             >
