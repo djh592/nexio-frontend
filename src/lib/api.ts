@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User, FriendGroup, FriendGroups, FriendRequest, FriendRequests } from '@/lib/definitions';
+import { User, FriendGroup, FriendGroups, FriendRequest, FriendRequests, Chat } from '@/lib/definitions';
 
 const apiClient = axios.create({
     baseURL: 'https://nexio-backend-nexio.app.secoder.net',
@@ -15,6 +15,8 @@ apiClient.interceptors.request.use((config) => {
     }
     return config;
 });
+
+export default apiClient;
 
 
 // POST: /register
@@ -308,5 +310,61 @@ export const patchFriendsRequests = async (data: PatchFriendsRequestsRequest): P
     const response = await apiClient.patch<PatchFriendsRequestsResponse>('/friends/requests', data);
     return response.data;
 };
+
+
+// GET /chats
+export interface GetChatsRequest {
+    userId: string;
+}
+
+export interface GetChatsResponse {
+    code: number;
+    info: string;
+    chats: Chat[];
+}
+
+export const getChats = async (data: GetChatsRequest): Promise<GetChatsResponse> => {
+    const response = await apiClient.get<GetChatsResponse>('/chats', { params: data });
+    return response.data;
+}
+
+
+// PATCH /chats/{chatId}
+export interface PatchChatsRequest {
+    fromUserId: string;
+    chatName?: string;
+    chatAvatarImage?: string;
+    chatSettings?: string;
+}
+
+export interface PatchChatsResponse {
+    code: number;
+    info: string;
+    chat: Chat;
+}
+
+export const patchChats = async (chatId: string, data: PatchChatsRequest): Promise<PatchChatsResponse> => {
+    const response = await apiClient.patch<PatchChatsResponse>(`/chats/${chatId}`, data);
+    return response.data;
+}
+
+
+// POST /chats
+export interface PostChatsRequest {
+    fromUserId: string;
+    chatType: string;
+    participantIds: string[];
+}
+
+export interface PostChatsResponse {
+    code: number;
+    info: string;
+    chat: Chat;
+}
+
+export const postChats = async (data: PostChatsRequest): Promise<PostChatsResponse> => {
+    const response = await apiClient.post<PostChatsResponse>('/chats', data);
+    return response.data;
+}
 
 
