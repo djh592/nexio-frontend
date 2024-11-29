@@ -6,7 +6,7 @@ import {
 } from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
 import {
-    getUsers as getUsersFromBackend,
+    postUsersBatch as getUsersFromBackend,
     getFriends as getFriendsFromBackend,
     getFriendsRequests as getFriendsRequestsFromBackend,
     getChats as getChatsFromBackend,

@@ -141,18 +141,19 @@ export const putUser = async (userId: string, data: PutUserRequest): Promise<Put
 };
 
 
-// GET: /users
-export interface GetUsersRequest {
+// POST: /users/batch
+export interface PostUsersBatchRequest {
     userIds: string[];
 }
-export interface GetUsersResponse {
+
+export interface PostUsersBatchResponse {
     code: number;
     info: string;
     users: User[];
 }
 
-export const getUsers = async (data: GetUsersRequest): Promise<GetUsersResponse> => {
-    const response = await apiClient.get<GetUsersResponse>('/users', { params: data });
+export const postUsersBatch = async (data: PostUsersBatchRequest): Promise<PostUsersBatchResponse> => {
+    const response = await apiClient.post<PostUsersBatchResponse>('/users/batch', data);
     return response.data;
 };
 
