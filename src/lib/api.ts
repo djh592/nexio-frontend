@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {
     User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
-    Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta
+    Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta,
+    ChatParticipantList, ChatParticipant
 } from '@/lib/definitions';
 
 const apiClient = axios.create({
@@ -389,7 +390,7 @@ export const deleteChats = async (chatId: string, data: DeleteChatsRequest): Pro
 
 // GET /messages/{messageListId}
 export interface GetMessagesRequest {
-    userId: string;
+    fromUserId: string;
 }
 
 export interface GetMessagesResponse {
@@ -439,3 +440,37 @@ export const patchMessages = async (messageListId: string, data: PatchMessagesRe
     return response.data;
 }
 
+
+// GET /participants/{participantListId}
+export interface GetParticipantsRequest {
+    fromUserId: string;
+}
+
+export interface GetParticipantsResponse {
+    code: number;
+    info: string;
+    chatParticipantList: ChatParticipantList;
+}
+
+export const getParticipants = async (participantListId: string, data: GetParticipantsRequest): Promise<GetParticipantsResponse> => {
+    const response = await apiClient.get<GetParticipantsResponse>(`/participants/${participantListId}`, { params: data });
+    return response.data;
+}
+
+
+// PATCH /participants/{participantListId}/
+export interface PatchParticipantsRequest {
+    fromUserId: string;
+    chatParticipant: ChatParticipant;
+}
+
+export interface PatchParticipantsResponse {
+    code: number;
+    info: string;
+    chatParticipant: ChatParticipant;
+}
+
+export const patchParticipants = async (participantListId: string, data: PatchParticipantsRequest): Promise<PatchParticipantsResponse> => {
+    const response = await apiClient.patch<PatchParticipantsResponse>(`/participants/${participantListId}`, data);
+    return response.data;
+}
