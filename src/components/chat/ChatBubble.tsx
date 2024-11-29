@@ -11,22 +11,34 @@ interface ChatBubbleProps {
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message }: ChatBubbleProps) => {
     const me = useAppSelector((state) => state.auth.user);
     const isMe = message.fromUserId === me.userId;
+
     const styles = {
         bubble: {
             display: 'inline-block',
             maxWidth: '70%',
-            padding: '10px',
-            borderRadius: '10px',
-            margin: '5px 0',
-            backgroundColor: isMe ? '#dcf8c6' : '#ffffff',
+            padding: '12px 16px',
+            borderRadius: '12px',
+            margin: '8px 0',
             alignSelf: isMe ? 'flex-end' : 'flex-start',
-            boxShadow: '0px 2px 5px rgba(0,0,0,0.1)',
+            background: isMe
+                ? 'linear-gradient(135deg, #308ae9, #eef4f7)' // blue
+                : 'linear-gradient(135deg, #eef4f7, #976edb)', // purple
+            color: '#133953', // dark blue
+            boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
+            wordWrap: 'break-word',
+        },
+        bubbleContainer: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: isMe ? 'flex-end' : 'flex-start',
         },
     };
 
     return (
-        <Box sx={styles.bubble}>
-            <ChatBubbleContent content={message.content} />
+        <Box sx={styles.bubbleContainer}>
+            <Box sx={styles.bubble}>
+                <ChatBubbleContent content={message.content} />
+            </Box>
         </Box>
     );
 };

@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import ChatBubble from '@/components/chat/ChatBubble';
+import { ChatMessageContentType } from '@/lib/definitions';
 
 interface ChatSessionContentProps {
     chatId: string;
@@ -31,6 +33,15 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
             <p>{participantListId}</p>
             <p>{notificationListId}</p>
             <p>{joinRequestListId}</p>
+            <ChatBubble message={
+                {
+                    messageId: "0",
+                    createdAt: '2021-10-01T00:00:00Z',
+                    fromUserId: '2',
+                    content: { contentType: ChatMessageContentType.Text, contentPayload: btoa('Hello, World!') },
+                    meta: { withdrawn: false, deleted: false, readBy: [], repliedBy: [] }
+                }}
+            />
         </>
     );
 }
