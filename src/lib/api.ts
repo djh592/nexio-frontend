@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
     User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
     Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta,
-    ChatParticipantList, ChatParticipant
+    ChatParticipantList, ChatParticipant, ChatNotificationList, ChatNotification,
 } from '@/lib/definitions';
 
 const apiClient = axios.create({
@@ -472,5 +472,40 @@ export interface PatchParticipantsResponse {
 
 export const patchParticipants = async (participantListId: string, data: PatchParticipantsRequest): Promise<PatchParticipantsResponse> => {
     const response = await apiClient.patch<PatchParticipantsResponse>(`/participants/${participantListId}`, data);
+    return response.data;
+}
+
+
+// GET /notifications/{notificationListId}
+export interface GetNotificationsRequest {
+    fromUserId: string;
+}
+
+export interface GetNotificationsResponse {
+    code: number;
+    info: string;
+    chatNotificationList: ChatNotificationList;
+}
+
+export const getNotifications = async (notificationListId: string, data: GetNotificationsRequest): Promise<GetNotificationsResponse> => {
+    const response = await apiClient.get<GetNotificationsResponse>(`/notifications/${notificationListId}`, { params: data });
+    return response.data;
+}
+
+
+// POST /notifications/{notificationListId}
+export interface PostNotificationsRequest {
+    fromUserId: string;
+    chatNotification: ChatNotification;
+}
+
+export interface PostNotificationsResponse {
+    code: number;
+    info: string;
+    chatNotification: ChatNotification;
+}
+
+export const postNotifications = async (notificationListId: string, data: PostNotificationsRequest): Promise<PostNotificationsResponse> => {
+    const response = await apiClient.post<PostNotificationsResponse>(`/notifications/${notificationListId}`, data);
     return response.data;
 }
