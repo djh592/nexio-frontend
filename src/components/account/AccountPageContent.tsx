@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase, FormControl, FormHelperText } from '@mui/material';
 import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { setUser } from '@/lib/features/auth/authSlice';
+import { setToken, setUser } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
@@ -71,10 +71,8 @@ export default function AccountPageContent() {
                     setLoading(true);
                     const response = await putUser(myId, data);
                     if (response.code === 0) {
-                        dispatch(setUser({
-                            ...me,
-                            avatarUrl: response.user.avatarUrl,
-                        }));
+                        dispatch(setToken(response.token));
+                        dispatch(setUser(response.user));
                     } else {
                         throw new Error(response.info);
                     }
@@ -96,14 +94,8 @@ export default function AccountPageContent() {
                 emailAddress: formValues.email,
             });
             if (response.code === 0) {
-                const newProfile = response.user;
-                dispatch(setUser({
-                    ...me,
-                    userName: newProfile.userName,
-                    phoneNumber: newProfile.phoneNumber,
-                    emailAddress: newProfile.emailAddress,
-                    avatarUrl: newProfile.avatarUrl,
-                }));
+                dispatch(setToken(response.token));
+                dispatch(setUser(response.user));
                 setEditableFields({ username: false, phone: false, email: false });
             } else {
                 throw new Error(response.info);
@@ -123,14 +115,8 @@ export default function AccountPageContent() {
                 newPassword: formValues.newPassword,
             });
             if (response.code === 0) {
-                const newProfile = response.user;
-                dispatch(setUser({
-                    ...me,
-                    userName: newProfile.userName,
-                    phoneNumber: newProfile.phoneNumber,
-                    emailAddress: newProfile.emailAddress,
-                    avatarUrl: newProfile.avatarUrl,
-                }));
+                dispatch(setToken(response.token));
+                dispatch(setUser(response.user));
             } else {
                 throw new Error(response.info);
             }

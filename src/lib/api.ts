@@ -129,6 +129,7 @@ function checkUpdateUserRequest(request: PutUserRequest): boolean {
 export interface PutUserResponse {
     code: number;
     info: string;
+    token: string;
     user: User;
 }
 
