@@ -8,7 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function AppBarUserAvatar() {
     const router = useRouter();
-    const me = useCurrentUser();
+    const { currentUser } = useCurrentUser();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
@@ -24,8 +24,8 @@ export default function AppBarUserAvatar() {
         <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                    alt={me.userName}
-                    src={me.avatarUrl}
+                    alt={currentUser.userName}
+                    src={currentUser.avatarUrl}
                     sx={{ width: 40, height: 40 }}
                 />
             </IconButton>

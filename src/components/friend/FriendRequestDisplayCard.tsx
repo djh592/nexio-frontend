@@ -13,12 +13,11 @@ interface FriendRequestDisplayCardProps {
 }
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
     const fromUserId = request.fromUserId;
     const toUserId = request.toUserId;
-    const isSender = fromUserId === myId;
-    const isReceiver = toUserId === myId;
+    const isSender = fromUserId === currentUser.userId;
+    const isReceiver = toUserId === currentUser.userId;
     const fromUser = useLiveQuery(() => db.users.where('userId').equals(fromUserId).first());
     const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first());
 

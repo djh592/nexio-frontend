@@ -8,11 +8,11 @@ import { useCurrentUser } from '@/lib/hooks';
 export default function LetsChatButton() {
     const router = useRouter();
     const theme = useTheme();
-    const user = useCurrentUser();
+    const { currentUser } = useCurrentUser();
 
     const handleClick = () => {
-        if (user?.userId) {
-            router.push('/chat');
+        if (currentUser.userId) {
+            router.push('/chats');
         } else {
             router.push('/signin');
         }

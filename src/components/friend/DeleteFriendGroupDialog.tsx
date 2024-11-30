@@ -12,13 +12,12 @@ interface DeleteFriendGroupDialogProps {
 }
 
 export default function DeleteFriendGroupDialog({ groupName, open, onClose }: DeleteFriendGroupDialogProps) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
 
     const handleConfirmDeleteGroup = async () => {
         try {
             const response = await deleteFriendsGroups({
-                userId: myId,
+                userId: currentUser.userId,
                 groupName: groupName
             });
             if (response.code === 0) {

@@ -12,13 +12,12 @@ interface SendFriendRequestDialogProps {
 }
 
 export default function SendFriendRequestDialog({ toUser, open, onClose }: SendFriendRequestDialogProps) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
 
     const handleSendRequest = async () => {
         try {
             const response = await postFriendsRequests({
-                fromUserId: myId,
+                fromUserId: currentUser.userId,
                 toUserId: toUser.userId
             });
             if (response.code === 0) {

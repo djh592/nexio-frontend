@@ -16,7 +16,7 @@ export default function ChatItemContent(  { chat }: ChatItemContentProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    const me = useCurrentUser();
+    const { currentUser } = useCurrentUser();
     const messageListId = chat.messageListId;
     const messageList = useLiveQuery(() => db.chatMessageLists.get(messageListId), [messageListId]);
     const lastMessage = messageList?.messages[0];
@@ -25,9 +25,9 @@ export default function ChatItemContent(  { chat }: ChatItemContentProps) {
 
     useEffect(() => {
         if (messageList) {
-            setUnreadCount(getUnreadMessageCount(messageList, me.userId));
+            setUnreadCount(getUnreadMessageCount(messageList, currentUser.userId));
         }
-    }, [messageList, me.userId]);
+    }, [messageList, currentUser.userId]);
 
     const handleOpenChat = (chatId: string) => {
         const params = new URLSearchParams(searchParams);

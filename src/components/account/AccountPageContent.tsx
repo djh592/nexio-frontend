@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase, FormControl, FormHelperText } from '@mui/material';
 import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { setToken, setUser } from '@/lib/features/auth/authSlice';
+import { setToken } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
@@ -22,13 +22,12 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function AccountPageContent() {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser, setCurrentUser } = useCurrentUser();
     const dispatch = useAppDispatch();
     const [formValues, setFormValues] = useState({
-        username: me.userName,
-        phone: me.phoneNumber,
-        email: me.emailAddress,
+        username: currentUser.userName,
+        phone: currentUser.phoneNumber,
+        email: currentUser.emailAddress,
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -63,16 +62,14 @@ export default function AccountPageContent() {
             const reader = new FileReader();
             reader.onloadend = async () => {
                 const base64String = reader.result as string;
-                const data = {
-                    userId: myId,
-                    avatarImage: base64String
-                };
                 try {
                     setLoading(true);
-                    const response = await putUser(myId, data);
+                    const response = await putUser(currentUser.userId, {
+                        avatarImage: base64String
+                    });
                     if (response.code === 0) {
                         dispatch(setToken(response.token));
-                        dispatch(setUser(response.user));
+                        setCurrentUser(response.user);
                     } else {
                         throw new Error(response.info);
                     }
@@ -89,13 +86,13 @@ export default function AccountPageContent() {
     const saveProfileChanges = async () => {
         setLoading(true);
         try {
-            const response = await putUser(myId, {
+            const response = await putUser(currentUser.userId, {
                 phoneNumber: formValues.phone,
                 emailAddress: formValues.email,
             });
             if (response.code === 0) {
                 dispatch(setToken(response.token));
-                dispatch(setUser(response.user));
+                setCurrentUser(response.user);
                 setEditableFields({ username: false, phone: false, email: false });
             } else {
                 throw new Error(response.info);
@@ -110,13 +107,13 @@ export default function AccountPageContent() {
     const savePasswordChanges = async () => {
         setLoading(true);
         try {
-            const response = await putUser(myId, {
+            const response = await putUser(currentUser.userId, {
                 oldPassword: formValues.oldPassword,
                 newPassword: formValues.newPassword,
             });
             if (response.code === 0) {
                 dispatch(setToken(response.token));
-                dispatch(setUser(response.user));
+                setCurrentUser(response.user);
             } else {
                 throw new Error(response.info);
             }
@@ -138,8 +135,8 @@ export default function AccountPageContent() {
                 }}
             >
                 <Avatar
-                    alt={me.userName}
-                    src={me.avatarUrl}
+                    alt={currentUser.userName}
+                    src={currentUser.avatarUrl}
                     sx={{
                         width: 80,
                         height: 80,
@@ -174,7 +171,7 @@ export default function AccountPageContent() {
                 </Avatar>
                 <Box sx={{ marginLeft: 3 }}>
                     <Typography variant="h4">
-                        {me.userName || 'User Name'}
+                        {currentUser.userName || 'User Name'}
                     </Typography>
                 </Box>
                 <IconButton
@@ -194,7 +191,7 @@ export default function AccountPageContent() {
                     <Typography variant="body1" sx={{ width: '40%' }}>Phone:</Typography>
                     <OutlinedInput
                         fullWidth
-                        defaultValue={formValues.phone || me.phoneNumber || 'Phone Number'}
+                        defaultValue={formValues.phone || currentUser.phoneNumber || 'Phone Number'}
                         onChange={handleChange('phone')}
                         endAdornment={
                             <InputAdornment position="end">
@@ -211,7 +208,7 @@ export default function AccountPageContent() {
                     <Typography variant="body1" sx={{ width: '40%' }}>Email:</Typography>
                     <OutlinedInput
                         fullWidth
-                        defaultValue={formValues.email || me.emailAddress || 'Email Address'}
+                        defaultValue={formValues.email || currentUser.emailAddress || 'Email Address'}
                         onChange={handleChange('email')}
                         endAdornment={
                             <InputAdornment position="end">

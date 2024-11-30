@@ -13,14 +13,13 @@ interface DeleteFriendDialogProps {
 }
 
 export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFriendDialogProps) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
 
     const handleDelete = async () => {
         try {
             const response = await deleteFriends(
                 {
-                    userId: myId,
+                    userId: currentUser.userId,
                     friendId: friend.userId
                 });
             if (response.code === 0) {

@@ -12,13 +12,12 @@ import { updateFriendRequests } from '@/lib/storage';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function FriendRequestList() {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
 
-    useEffect(() => { updateFriendRequests(myId); }, [myId]);
+    useEffect(() => { updateFriendRequests(currentUser.userId) }, [currentUser.userId]);    
 
-    const sentRequests = useLiveQuery(() => db.friendRequests.where('fromUserId').equals(myId).toArray(), [myId]);
-    const receivedRequests = useLiveQuery(() => db.friendRequests.where('toUserId').equals(myId).toArray(), [myId]);
+    const sentRequests = useLiveQuery(() => db.friendRequests.where('fromUserId').equals(currentUser.userId).toArray(), [currentUser.userId]);
+    const receivedRequests = useLiveQuery(() => db.friendRequests.where('toUserId').equals(currentUser.userId).toArray(), [currentUser.userId]);
 
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>

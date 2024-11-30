@@ -17,17 +17,16 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 
 export default function FriendGroupList() {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    useEffect(() => { updateFriendGroups(myId); }, [myId]);
+    useEffect(() => { updateFriendGroups(currentUser.userId) } , [currentUser.userId]);
 
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(),
-        [myId, addDialogOpen, deleteDialogOpen, selectedGroup]);
+        [currentUser, addDialogOpen, deleteDialogOpen, selectedGroup]);
 
     const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
 

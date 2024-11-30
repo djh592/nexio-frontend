@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme';
 import StoreProvider from './StoreProvider';
+import { UserProvider } from '@/context/UserContext';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -30,10 +31,12 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <StoreProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              {children}
-            </ThemeProvider>
+            <UserProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                {children}
+              </ThemeProvider>
+            </UserProvider>
           </StoreProvider>
         </AppRouterCacheProvider>
       </body>

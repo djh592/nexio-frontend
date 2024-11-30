@@ -18,7 +18,7 @@ export const drawerWidth = 200;
 export default function DashboardSideNavContent() {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
-    const me = useCurrentUser();
+    const { currentUser } = useCurrentUser();
     const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
     const handleNavigation = (path: string) => {
@@ -43,7 +43,7 @@ export default function DashboardSideNavContent() {
             }}
         >
             <Toolbar />
-            <UserStack user={me} />
+            <UserStack user={currentUser} />
             <Divider
                 sx={{
                     mb: 2,

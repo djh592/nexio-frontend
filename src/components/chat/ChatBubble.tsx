@@ -10,8 +10,8 @@ interface ChatBubbleProps {
 }
 
 export default function ChatBubble({ message }: ChatBubbleProps) {
-    const me = useCurrentUser();
-    const isMe = message.fromUserId === me.userId;
+    const { currentUser } = useCurrentUser();
+    const isMe = message.fromUserId === currentUser.userId;
 
     const styles = {
         bubble: {

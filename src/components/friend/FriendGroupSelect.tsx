@@ -16,8 +16,7 @@ interface FriendGroupSelectProps {
 }
 
 export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
     const [dialogOpen, setDialogOpen] = useState(false);
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), [dialogOpen]);
     const [currentGroupName, setCurrentGroupName] = useState<string>('');
@@ -35,7 +34,7 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
         } else {
             try {
                 const response = await patchFriendsGroups({
-                    userId: myId,
+                    userId: currentUser.userId,
                     friendUserId: friend.userId,
                     fromGroupName: currentGroupName,
                     toGroupName: newGroupName

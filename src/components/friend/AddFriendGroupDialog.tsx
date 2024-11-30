@@ -13,14 +13,13 @@ interface AddFriendGroupDialogProps {
 export default function AddFriendGroupDialog(
     { open, onClose }: AddFriendGroupDialogProps
 ) {
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
     const [newGroupName, setNewGroupName] = useState('');
 
     const handleConfirmAddGroup = async () => {
         try {
             const response = await postFriendsGroups({
-                userId: myId,
+                userId: currentUser.userId,
                 groupName: newGroupName
             });
             if (response.code === 0) {

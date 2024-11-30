@@ -14,14 +14,13 @@ interface LogoutDialogProps {
 
 export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
     const dispatch = useAppDispatch();
-    const me = useCurrentUser();
-    const myId = me.userId;
+    const { currentUser } = useCurrentUser();
     const router = useRouter();
 
 
     const handleLogout = async () => {
         try {
-            const response = await deleteLogout({ userId: myId });
+            const response = await deleteLogout({ userId: currentUser.userId });
             if (response.code === 0) {
                 dispatch(resetAuth());
                 await clearDatabase();
