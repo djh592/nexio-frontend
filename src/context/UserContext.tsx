@@ -2,22 +2,28 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { User, INITIAL_USER } from '@/lib/definitions';
 
-
 export const UserContext = createContext<{
     currentUser: User;
     setCurrentUser: (user: User) => void;
 } | null>(null);
 
-
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User>(() => {
-        const storedUser = localStorage.getItem("user");
-        return storedUser ? JSON.parse(storedUser) : INITIAL_USER;
-    });
+    const [user, setUser] = useState<User>(INITIAL_USER);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        }
+    }, []);
 
     const updateUser = (newUser: User) => {
         setUser(newUser);
-        localStorage.setItem("user", JSON.stringify(newUser));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem("user", JSON.stringify(newUser));
+        }
     };
 
     useEffect(() => {
@@ -26,9 +32,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(storedUser ? JSON.parse(storedUser) : INITIAL_USER);
         };
 
-        window.addEventListener("storage", handleStorageChange);
+        if (typeof window !== 'undefined') {
+            window.addEventListener("storage", handleStorageChange);
+        }
         return () => {
-            window.removeEventListener("storage", handleStorageChange);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener("storage", handleStorageChange);
+            }
         };
     }, []);
 
