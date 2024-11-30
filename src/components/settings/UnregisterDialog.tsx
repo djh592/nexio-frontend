@@ -1,7 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppDispatch } from '@/lib/hooks';
+import { User } from '@/lib/definitions';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
 import { deleteUnregister } from '@/lib/api';
@@ -14,7 +15,7 @@ interface UnregisterDialogLogoutDialogProps {
 export default function UnregisterDialog(
     { open, onClose }: UnregisterDialogLogoutDialogProps
 ) {
-    const user = useAppSelector((state) => state.auth.user);
+    const user = JSON.parse(localStorage.getItem('user') as string) as User;
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [password, setPassword] = useState('');

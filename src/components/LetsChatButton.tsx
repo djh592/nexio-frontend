@@ -2,16 +2,16 @@
 import React from 'react';
 import { Button, useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useCurrentUser } from '@/lib/hooks';
 
 export default function LetsChatButton() {
     const router = useRouter();
-    const user = useAppSelector((state) => state.auth.user);
     const theme = useTheme();
+    const user = useCurrentUser();
 
     const handleClick = () => {
-        if (user.userId) {
+        if (user?.userId) {
             router.push('/chat');
         } else {
             router.push('/signin');

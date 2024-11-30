@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
 import { deleteFriends } from '@/lib/api';
 import { removeFriend } from '@/lib/storage';
@@ -13,13 +13,14 @@ interface DeleteFriendDialogProps {
 }
 
 export default function DeleteFriendDialog({ friend, open, onClose }: DeleteFriendDialogProps) {
-    const userId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
 
     const handleDelete = async () => {
         try {
             const response = await deleteFriends(
                 {
-                    userId: userId,
+                    userId: myId,
                     friendId: friend.userId
                 });
             if (response.code === 0) {

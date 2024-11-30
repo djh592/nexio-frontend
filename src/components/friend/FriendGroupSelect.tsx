@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
 import AddIcon from '@mui/icons-material/Add';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
@@ -16,14 +16,17 @@ interface FriendGroupSelectProps {
 }
 
 export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
-    const myId = useAppSelector((state) => state.auth.user.userId);
-    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
-    const [selectedGroup, setSelectedGroup] = useState(() => {
-        if (!friendGroups) return '';
-        const group = friendGroups.find((group) => group.friends.some((f) => f.userId === friend.userId));
-        return group ? group.groupName : '';
-    });
+    const me = useCurrentUser();
+    const myId = me.userId;
     const [dialogOpen, setDialogOpen] = useState(false);
+    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), [dialogOpen]);
+    const [currentGroupName, setCurrentGroupName] = useState<string>('');
+
+    useEffect(() => {
+        if (!friendGroups) return;
+        const group = friendGroups.find((group) => group.friends.some((f) => f.userId === friend.userId));
+        setCurrentGroupName(group ? group.groupName : '');
+    }, [friendGroups, friend.userId]);
 
     const handleChange = async (event: SelectChangeEvent) => {
         const newGroupName = event.target.value as string;
@@ -34,13 +37,13 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
                 const response = await patchFriendsGroups({
                     userId: myId,
                     friendUserId: friend.userId,
-                    fromGroupName: selectedGroup,
+                    fromGroupName: currentGroupName,
                     toGroupName: newGroupName
                 });
                 if (response.code === 0) {
-                    setSelectedGroup(newGroupName);
                     try {
-                        await moveFriendToGroup(friend.userId, selectedGroup, newGroupName);
+                        await moveFriendToGroup(friend.userId, currentGroupName, newGroupName);
+                        setCurrentGroupName(newGroupName);
                     }
                     catch (err) {
                         throw new Error(String(err));
@@ -58,7 +61,7 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
 
     return (
         <>
-            <Select value={selectedGroup} onChange={handleChange} variant="standard" sx={{ width: "30%" }}>
+            <Select value={currentGroupName} onChange={handleChange} variant="standard" sx={{ width: "30%" }}>
                 {friendGroups && friendGroups.map((group) => (
                     <MenuItem key={group.groupName} value={group.groupName}>
                         {group.groupName}

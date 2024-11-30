@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { Box, Typography, Button, Card, CardContent, CardActions, Stack, Avatar } from '@mui/material';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser} from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
@@ -13,7 +13,8 @@ interface FriendRequestDisplayCardProps {
 }
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
-    const myId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
     const fromUserId = request.fromUserId;
     const toUserId = request.toUserId;
     const isSender = fromUserId === myId;

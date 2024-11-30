@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { useAppSelector } from "@/lib/hooks";
+import { useCurrentUser } from "@/lib/hooks";
 import { postFriendsGroups } from "@/lib/api";
 import { addFriendGroup } from "@/lib/storage";
 
@@ -13,17 +13,19 @@ interface AddFriendGroupDialogProps {
 export default function AddFriendGroupDialog(
     { open, onClose }: AddFriendGroupDialogProps
 ) {
-    const userId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
     const [newGroupName, setNewGroupName] = useState('');
 
     const handleConfirmAddGroup = async () => {
         try {
             const response = await postFriendsGroups({
-                userId: userId,
+                userId: myId,
                 groupName: newGroupName
             });
             if (response.code === 0) {
                 const newGroup = response.friendGroup;
+                console.log('New group:', newGroup);
                 try {
                     await addFriendGroup(newGroup.groupName);
                 }

@@ -4,7 +4,7 @@ import {
     Box, Typography, Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import FriendRequestDisplayCard from './FriendRequestDisplayCard';
 import { FriendRequest } from '@/lib/definitions';
 import { db } from '@/lib/db';
@@ -12,12 +12,13 @@ import { updateFriendRequests } from '@/lib/storage';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function FriendRequestList() {
-    const myUserId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
 
-    useEffect(() => { updateFriendRequests(myUserId); }, [myUserId]);
+    useEffect(() => { updateFriendRequests(myId); }, [myId]);
 
-    const sentRequests = useLiveQuery(() => db.friendRequests.where('fromUserId').equals(myUserId).toArray(), [myUserId]);
-    const receivedRequests = useLiveQuery(() => db.friendRequests.where('toUserId').equals(myUserId).toArray(), [myUserId]);
+    const sentRequests = useLiveQuery(() => db.friendRequests.where('fromUserId').equals(myId).toArray(), [myId]);
+    const receivedRequests = useLiveQuery(() => db.friendRequests.where('toUserId').equals(myId).toArray(), [myId]);
 
     return (
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>

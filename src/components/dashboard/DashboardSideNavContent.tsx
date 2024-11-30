@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
@@ -18,7 +18,7 @@ export const drawerWidth = 200;
 export default function DashboardSideNavContent() {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
-    const user = useAppSelector((state) => state.auth.user);
+    const me = useCurrentUser();
     const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
     const handleNavigation = (path: string) => {
@@ -43,7 +43,7 @@ export default function DashboardSideNavContent() {
             }}
         >
             <Toolbar />
-            <UserStack user={user} />
+            <UserStack user={me} />
             <Divider
                 sx={{
                     mb: 2,

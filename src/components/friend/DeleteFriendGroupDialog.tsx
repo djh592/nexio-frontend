@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import { useAppSelector } from "@/lib/hooks";
+import { useCurrentUser } from "@/lib/hooks";
 import { deleteFriendsGroups } from "@/lib/api";
 import { removeFriendGroup } from "@/lib/storage";
 
@@ -11,15 +11,14 @@ interface DeleteFriendGroupDialogProps {
     onClose: () => void;
 }
 
-export default function DeleteFriendGroupDialog(
-    { groupName, open, onClose }: DeleteFriendGroupDialogProps
-) {
-    const userId = useAppSelector((state) => state.auth.user.userId);
+export default function DeleteFriendGroupDialog({ groupName, open, onClose }: DeleteFriendGroupDialogProps) {
+    const me = useCurrentUser();
+    const myId = me.userId;
 
     const handleConfirmDeleteGroup = async () => {
         try {
             const response = await deleteFriendsGroups({
-                userId: userId,
+                userId: myId,
                 groupName: groupName
             });
             if (response.code === 0) {

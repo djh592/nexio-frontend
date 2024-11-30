@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {Avatar,Badge,Box,ListItem,ListItemAvatar,Typography,} from "@mui/material";
 import { Chat } from "@/lib/definitions";
-import { useAppSelector } from "@/lib/hooks";
+import { useCurrentUser } from "@/lib/hooks";
 import { db } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { getUnreadMessageCount } from "@/lib/logic";
@@ -16,7 +16,7 @@ export default function ChatItemContent(  { chat }: ChatItemContentProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    const me = useAppSelector((state) => state.auth.user);
+    const me = useCurrentUser();
     const messageListId = chat.messageListId;
     const messageList = useLiveQuery(() => db.chatMessageLists.get(messageListId), [messageListId]);
     const lastMessage = messageList?.messages[0];

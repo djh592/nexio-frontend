@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { User } from '@/lib/definitions';
 import { postFriendsRequests } from '@/lib/api';
 import { upsertFriendRequest } from '@/lib/storage';
@@ -12,7 +12,8 @@ interface SendFriendRequestDialogProps {
 }
 
 export default function SendFriendRequestDialog({ toUser, open, onClose }: SendFriendRequestDialogProps) {
-    const myId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
 
     const handleSendRequest = async () => {
         try {

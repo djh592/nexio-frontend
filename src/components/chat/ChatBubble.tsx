@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { Box } from '@mui/material';
 import { ChatMessage } from "@/lib/definitions";
 import ChatBubbleContent from '@/components/chat/ChatBubbleContent';
@@ -9,8 +9,8 @@ interface ChatBubbleProps {
     message: ChatMessage;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ message }: ChatBubbleProps) => {
-    const me = useAppSelector((state) => state.auth.user);
+export default function ChatBubble({ message }: ChatBubbleProps) {
+    const me = useCurrentUser();
     const isMe = message.fromUserId === me.userId;
 
     const styles = {
@@ -46,5 +46,3 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message }: ChatBubbleProps) => 
         </Box>
     );
 };
-
-export default ChatBubble;

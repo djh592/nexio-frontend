@@ -10,22 +10,24 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import UserDisplayCard from '@/components/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { db } from '@/lib/db';
 import { updateUsers, updateFriendGroups } from '@/lib/storage';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 
 export default function FriendGroupList() {
-    const myUserId = useAppSelector((state) => state.auth.user.userId);
+    const me = useCurrentUser();
+    const myId = me.userId;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    useEffect(() => { updateFriendGroups(myUserId); }, [myUserId]);
+    useEffect(() => { updateFriendGroups(myId); }, [myId]);
 
-    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
+    const friendGroups = useLiveQuery(() => db.friendGroups.toArray(),
+        [myId, addDialogOpen, deleteDialogOpen, selectedGroup]);
 
     const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
 

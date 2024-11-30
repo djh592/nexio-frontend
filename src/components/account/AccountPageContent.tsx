@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase, FormControl, FormHelperText } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { setUser, setUserAvatar } from '@/lib/features/auth/authSlice';
+import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
+import { setUser } from '@/lib/features/auth/authSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
@@ -22,12 +22,13 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function AccountPageContent() {
-    const user = useAppSelector((state) => state.auth.user);
+    const me = useCurrentUser();
+    const myId = me.userId;
     const dispatch = useAppDispatch();
     const [formValues, setFormValues] = useState({
-        username: user.userName,
-        phone: user.phoneNumber,
-        email: user.emailAddress,
+        username: me.userName,
+        phone: me.phoneNumber,
+        email: me.emailAddress,
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -63,14 +64,17 @@ export default function AccountPageContent() {
             reader.onloadend = async () => {
                 const base64String = reader.result as string;
                 const data = {
-                    userId: user.userId,
+                    userId: myId,
                     avatarImage: base64String
                 };
                 try {
                     setLoading(true);
-                    const response = await putUser(user.userId, data);
+                    const response = await putUser(myId, data);
                     if (response.code === 0) {
-                        dispatch(setUserAvatar(response.user.avatarUrl));
+                        dispatch(setUser({
+                            ...me,
+                            avatarUrl: response.user.avatarUrl,
+                        }));
                     } else {
                         throw new Error(response.info);
                     }
@@ -87,14 +91,14 @@ export default function AccountPageContent() {
     const saveProfileChanges = async () => {
         setLoading(true);
         try {
-            const response = await putUser(user.userId, {
+            const response = await putUser(myId, {
                 phoneNumber: formValues.phone,
                 emailAddress: formValues.email,
             });
             if (response.code === 0) {
                 const newProfile = response.user;
                 dispatch(setUser({
-                    ...user,
+                    ...me,
                     userName: newProfile.userName,
                     phoneNumber: newProfile.phoneNumber,
                     emailAddress: newProfile.emailAddress,
@@ -114,14 +118,14 @@ export default function AccountPageContent() {
     const savePasswordChanges = async () => {
         setLoading(true);
         try {
-            const response = await putUser(user.userId, {
+            const response = await putUser(myId, {
                 oldPassword: formValues.oldPassword,
                 newPassword: formValues.newPassword,
             });
             if (response.code === 0) {
                 const newProfile = response.user;
                 dispatch(setUser({
-                    ...user,
+                    ...me,
                     userName: newProfile.userName,
                     phoneNumber: newProfile.phoneNumber,
                     emailAddress: newProfile.emailAddress,
@@ -148,8 +152,8 @@ export default function AccountPageContent() {
                 }}
             >
                 <Avatar
-                    alt={user.userName}
-                    src={user.avatarUrl}
+                    alt={me.userName}
+                    src={me.avatarUrl}
                     sx={{
                         width: 80,
                         height: 80,
@@ -184,7 +188,7 @@ export default function AccountPageContent() {
                 </Avatar>
                 <Box sx={{ marginLeft: 3 }}>
                     <Typography variant="h4">
-                        {user.userName || 'User Name'}
+                        {me.userName || 'User Name'}
                     </Typography>
                 </Box>
                 <IconButton
@@ -204,7 +208,7 @@ export default function AccountPageContent() {
                     <Typography variant="body1" sx={{ width: '40%' }}>Phone:</Typography>
                     <OutlinedInput
                         fullWidth
-                        defaultValue={formValues.phone || user.phoneNumber || 'Phone Number'}
+                        defaultValue={formValues.phone || me.phoneNumber || 'Phone Number'}
                         onChange={handleChange('phone')}
                         endAdornment={
                             <InputAdornment position="end">
@@ -221,7 +225,7 @@ export default function AccountPageContent() {
                     <Typography variant="body1" sx={{ width: '40%' }}>Email:</Typography>
                     <OutlinedInput
                         fullWidth
-                        defaultValue={formValues.email || user.emailAddress || 'Email Address'}
+                        defaultValue={formValues.email || me.emailAddress || 'Email Address'}
                         onChange={handleChange('email')}
                         endAdornment={
                             <InputAdornment position="end">

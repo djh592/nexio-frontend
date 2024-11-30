@@ -1,13 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/lib/definitions";
-import { INITIAL_USER } from "@/lib/definitions";
 
 interface AuthState {
-    user: User;
+    isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
-    user: INITIAL_USER,
+    isAuthenticated: false,
 };
 
 export const authSlice = createSlice({
@@ -16,37 +15,17 @@ export const authSlice = createSlice({
     reducers: {
         setToken: (state, action: PayloadAction<string>) => {
             localStorage.setItem("token", action.payload);
+            state.isAuthenticated = true;
         },
         setUser: (state, action: PayloadAction<User>) => {
-            state.user = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload));
         },
-        setUserId: (state, action: PayloadAction<string>) => {
-            state.user.userId = action.payload;
-        },
-        setUserName: (state, action: PayloadAction<string>) => {
-            state.user.userName = action.payload;
-        },
-        setUserPhone: (state, action: PayloadAction<string>) => {
-            state.user.phoneNumber = action.payload;
-        },
-        setUserEmail: (state, action: PayloadAction<string>) => {
-            state.user.emailAddress = action.payload;
-        },
-        setUserAvatar: (state, action: PayloadAction<string>) => {
-            state.user.avatarUrl = action.payload;
-        },
-        resetAuth: (state) => {
+        resetAuth: () => {
             localStorage.removeItem("token");
-            state.user = {
-                userId: "",
-                userName: "",
-                phoneNumber: "",
-                emailAddress: "",
-                avatarUrl: "",
-            };
+            localStorage.removeItem("user");
         },
     },
 });
 
-export const { setToken, setUser, setUserId, setUserName, setUserPhone, setUserEmail, setUserAvatar, resetAuth } = authSlice.actions;
+export const { setToken, setUser, resetAuth } = authSlice.actions;
 export default authSlice.reducer;

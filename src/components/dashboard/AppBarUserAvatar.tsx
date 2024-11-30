@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Avatar, Menu, MenuItem, Typography, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import LogoutDialog from '../auth/LogoutDialog';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function AppBarUserAvatar() {
     const router = useRouter();
-    const user = useAppSelector((state) => state.auth.user);
+    const me = useCurrentUser();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
@@ -24,8 +24,8 @@ export default function AppBarUserAvatar() {
         <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                    alt={user.userName}
-                    src={user.avatarUrl}
+                    alt={me.userName}
+                    src={me.avatarUrl}
                     sx={{ width: 40, height: 40 }}
                 />
             </IconButton>
