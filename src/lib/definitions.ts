@@ -23,23 +23,25 @@ export type Users = User[];
 
 
 // FriendGroup
-export type FriendGroup = {
+export type ResponseFriendGroup = {
     id?: number;
+    groupId: string;
     groupName: string;
     friends: Users;
+};
+
+export type ResponseFriendGroups = ResponseFriendGroup[];
+
+export type FriendGroup = {
+    id?: number;
+    groupId: string;
+    groupName: string;
+    friends: string[]; // userIds
 };
 
 export type FriendGroups = FriendGroup[];
 
 export const DEFAULT_FRIEND_GROUP_NAME = "My Friends";
-
-export const INITIAL_FRIEND_GROUPS: FriendGroups = [
-    {
-        groupName: DEFAULT_FRIEND_GROUP_NAME,
-        friends: [],
-    },
-];
-
 
 // FriendRequest
 export enum FriendRequestStatus {

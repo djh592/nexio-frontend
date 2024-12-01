@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-    User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
+    User, ResponseFriendGroup, ResponseFriendGroups, FriendRequest, FriendRequests,
     Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta,
     ChatParticipantList, ChatParticipant, ChatNotificationList, ChatNotification,
     ChatJoinRequestList, ChatJoinRequest
@@ -185,7 +185,7 @@ export interface PostFriendsGroupsRequest {
 export interface PostFriendsGroupsResponse {
     code: number;
     info: string;
-    friendGroup: FriendGroup;
+    friendGroup: ResponseFriendGroup;
 }
 
 export const postFriendsGroups = async (data: PostFriendsGroupsRequest): Promise<PostFriendsGroupsResponse> => {
@@ -203,7 +203,7 @@ export interface DeleteFriendsGroupsRequest {
 export interface DeleteFriendsGroupsResponse {
     code: number;
     info: string;
-    friendGroups: FriendGroups;
+    friendGroups: ResponseFriendGroups;
 }
 
 export const deleteFriendsGroups = async (data: DeleteFriendsGroupsRequest): Promise<DeleteFriendsGroupsResponse> => {
@@ -223,7 +223,7 @@ export interface PatchFriendsGroupsRequest {
 export interface PatchFriendsGroupsResponse {
     code: number;
     info: string;
-    friendGroups: FriendGroups;
+    friendGroups: ResponseFriendGroups;
 }
 
 export const patchFriendsGroups = async (data: PatchFriendsGroupsRequest): Promise<PatchFriendsGroupsResponse> => {
@@ -240,7 +240,7 @@ export interface GetFriendsRequest {
 export interface GetFriendsResponse {
     code: number;
     info: string;
-    friendGroups: FriendGroups;
+    friendGroups: ResponseFriendGroups;
 }
 
 export const getFriends = async (data: GetFriendsRequest): Promise<GetFriendsResponse> => {

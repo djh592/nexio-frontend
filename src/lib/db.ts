@@ -24,7 +24,7 @@ export class AppDatabase extends Dexie {
         super('AppDatabase');
         this.version(1).stores({
             users: '++id, &userId, userName, emailAddress, phoneNumber, avatarUrl',
-            friendGroups: '++id, groupName, friends',
+            friendGroups: '++id, &groupId, groupName, friends',
             friendRequests: '++id, &requestId, createdAt, fromUserId, toUserId, status',
             chats: '++id, &chatId, createdAt, chatType, chatName, chatAvatarUrl, chatSettings, messageListId, participantListId,notificationListId, joinRequestListId',
             chatMessageLists: '++id, &messageListId, messages',

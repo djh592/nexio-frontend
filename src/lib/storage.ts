@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import {
-    User, FriendGroups, FriendRequest, FriendRequests,
+    User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
     Chat, ChatMessageList, ChatParticipantList, ChatNotificationList,
     ChatJoinRequestList,
 } from '@/lib/definitions';
@@ -16,6 +16,8 @@ import {
     getNotifications as getNotificationsFromBackend,
     getJoinRequests as getJoinRequestsFromBackend,
 } from '@/lib/api';
+import { decomposeResponseFriendGroups } from '@/lib/logic';
+
 
 export const clearDatabase = async (): Promise<void> => {
     await db.users.clear();
@@ -27,6 +29,7 @@ export const clearDatabase = async (): Promise<void> => {
     await db.chatNotificationLists.clear();
     await db.chatMessageLists.clear();
 }
+
 
 // User
 export const updateUsers = async (userIds: string[]): Promise<void> => {
@@ -108,26 +111,27 @@ export const deleteUsers = async (userIds: string[]): Promise<void> => {
     await db.users.where('userId').anyOf(userIds).delete();
 };
 
+
 // Friend
 export const addFriend = async (friend: User): Promise<void> => {
     const group = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
     if (!group) {
         throw new Error(`Default group does not exist.`);
     }
-    group.friends = [...group.friends, friend];
+    group.friends = [...group.friends, friend.userId];
     await db.friendGroups.put(group);
 }
 
-export const removeFriend = async (friendId: string): Promise<void> => {
-    const groupOfFriend = await db.friendGroups.where('friends.userId').equals(friendId).first();
+export const removeFriend = async (friendUserId: string): Promise<void> => {
+    const groupOfFriend = await db.friendGroups.where('friends').equals(friendUserId).first();
     if (!groupOfFriend) {
-        throw new Error(`Friend not found.`);
+        throw new Error(`Friend ${friendUserId} not found.`);
     }
-    groupOfFriend.friends = groupOfFriend.friends.filter(friend => friend.userId !== friendId);
+    groupOfFriend.friends = groupOfFriend.friends.filter(friend => friend !== friendUserId);
     await db.friendGroups.put(groupOfFriend);
 }
 
-export const moveFriendToGroup = async (friendId: string, fromGroupName: string, toGroupName: string): Promise<void> => {
+export const moveFriendToGroup = async (friendUserId: string, fromGroupName: string, toGroupName: string): Promise<void> => {
     const fromGroup = await db.friendGroups.where('groupName').equals(fromGroupName).first();
     const toGroup = await db.friendGroups.where('groupName').equals(toGroupName).first();
 
@@ -138,13 +142,13 @@ export const moveFriendToGroup = async (friendId: string, fromGroupName: string,
         throw new Error(`Target group ${toGroupName} not found.`);
     }
 
-    const friendIndex = fromGroup.friends.findIndex(friend => friend.userId === friendId);
+    const friendIndex = fromGroup.friends.findIndex(userId => userId === friendUserId);
     if (friendIndex === -1) {
         throw new Error("Friend not found in the source group.");
     }
 
     const friend = fromGroup.friends[friendIndex];
-    fromGroup.friends = fromGroup.friends.filter(f => f.userId !== friendId);
+    fromGroup.friends = fromGroup.friends.filter(userId => userId !== friendUserId);
     toGroup.friends = [...toGroup.friends, friend];
 
     await db.friendGroups.put(fromGroup);
@@ -157,17 +161,9 @@ export const updateFriendGroups = async (userId: string): Promise<void> => {
         const response = await getFriendsFromBackend({ userId: userId });
         if (response.code === 0) {
             const fetchedGroups = response.friendGroups;
-            for (const group of fetchedGroups) {
-                const existingGroup = await db.friendGroups.where('groupName').equals(group.groupName).first();
-                if (existingGroup) {
-                    await db.friendGroups.put({ ...group, id: existingGroup.id });
-                } else {
-                    await db.friendGroups.add(group);
-                    for (const friend of group.friends) {
-                        await upsertUser(friend);
-                    }
-                }
-            }
+            const { friendGroups, users } = decomposeResponseFriendGroups(fetchedGroups);
+            await upsertFriendGroups(friendGroups);
+            await upsertUsers(users);
         }
         else {
             throw new Error(response.info);
@@ -181,13 +177,30 @@ export const getFriendGroups = async (): Promise<FriendGroups> => {
     return await db.friendGroups.toArray();
 };
 
-export const addFriendGroup = async (groupName: string): Promise<void> => {
-    const groupAlreadyExists = await db.friendGroups.where('groupName').equals(groupName).first();
-    if (groupAlreadyExists) {
-        throw new Error(`Group ${groupName} already exists.`);
+export const upsertFriendGroup = async (group: FriendGroup): Promise<void> => {
+    const existingGroup = await db.friendGroups.where('groupId').equals(group.groupId).first();
+    if (existingGroup) {
+        group.id = existingGroup.id; // combine existing group with new group
     }
-    await db.friendGroups.add({ groupName, friends: [] });
-};
+    await db.friendGroups.put(group); // upsert group
+}
+
+export const upsertFriendGroups = async (groups: FriendGroups): Promise<void> => {
+    const existingGroups = await db.friendGroups
+        .where('groupId')
+        .anyOf(groups.map(g => g.groupId))
+        .toArray();
+
+    const groupMap = new Map(existingGroups.map(g => [g.groupId, g]));
+
+    // combine existing groups with new groups
+    const groupsWithId = groups.map(group => {
+        const existingGroup = groupMap.get(group.groupId);
+        return existingGroup ? { ...group, id: existingGroup.id } : group;
+    });
+
+    await db.friendGroups.bulkPut(groupsWithId);
+}
 
 export const removeFriendGroup = async (groupName: string): Promise<void> => {
     const defaultGroup = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
