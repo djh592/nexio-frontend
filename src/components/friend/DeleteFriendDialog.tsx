@@ -14,7 +14,7 @@ interface DeleteFriendDialogProps {
 }
 
 export default function DeleteFriendDialog({ friendUserId, open, onClose }: DeleteFriendDialogProps) {
-    const friend = useLiveQuery(() => db.users.get(friendUserId), [friendUserId]);
+    const friend = useLiveQuery(() => db.users.where('userId').equals(friendUserId).first(), [friendUserId]);
     const { currentUser } = useCurrentUser();
 
     const handleDelete = async () => {

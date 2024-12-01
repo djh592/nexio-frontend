@@ -10,7 +10,7 @@ interface UserDisplayCardProps {
 }
 
 export default function UserDisplayCard({ userId }: UserDisplayCardProps) {
-    const user = useLiveQuery(() => db.users.get(userId), [userId]);
+    const user = useLiveQuery(() => db.users.where('userId').equals(userId).first(), [userId]);
 
     const [open, setOpen] = useState(false);
 

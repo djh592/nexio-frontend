@@ -12,7 +12,7 @@ interface ChatBubbleProps {
 export default function ChatBubble({ message }: ChatBubbleProps) {
     const { currentUser } = useCurrentUser();
     const [isMe, setIsMe] = useState<boolean>(false);
-    
+
     useEffect(() => {
         setIsMe(currentUser.userId === message.fromUserId);
     }, [currentUser.userId, message.fromUserId]);

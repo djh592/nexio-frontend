@@ -17,7 +17,7 @@ interface UserDialogProps {
 
 export default function UserDisplayDialog({ userId, open, onClose }: UserDialogProps) {
     const router = useRouter();
-    const user = useLiveQuery(() => db.users.get(userId), [userId]);
+    const user = useLiveQuery(() => db.users.where('userId').equals(userId).first(), [userId]);
     const { currentUser } = useCurrentUser();
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
 

@@ -1,7 +1,7 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Card, CardContent, CardActions, Stack, Avatar } from '@mui/material';
-import { useCurrentUser} from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { FriendRequest, FriendRequestStatus } from '@/lib/definitions';
 import { patchFriendsRequests } from '@/lib/api';
 import { db } from '@/lib/db';
@@ -14,10 +14,19 @@ interface FriendRequestDisplayCardProps {
 
 export default function FriendRequestDisplayCard({ request }: FriendRequestDisplayCardProps) {
     const { currentUser } = useCurrentUser();
-    const fromUserId = request.fromUserId;
-    const toUserId = request.toUserId;
-    const isSender = fromUserId === currentUser.userId;
-    const isReceiver = toUserId === currentUser.userId;
+    const [fromUserId, setFromUserId] = useState(request.fromUserId);
+    const [toUserId, setToUserId] = useState(request.toUserId);
+    const [isSender, setIsSender] = useState(fromUserId === currentUser.userId);
+    const [isReceiver, setIsReceiver] = useState(toUserId === currentUser.userId);
+
+    useEffect(() => {
+        setFromUserId(request.fromUserId);
+        setToUserId(request.toUserId);
+        setIsSender(fromUserId === currentUser.userId);
+        setIsReceiver(toUserId === currentUser.userId);
+    }
+        , [request, currentUser, fromUserId, toUserId]);
+
     const fromUser = useLiveQuery(() => db.users.where('userId').equals(fromUserId).first());
     const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first());
 

@@ -70,8 +70,8 @@ export default function SignupForm() {
                     const user = res.user;
                     dispatch(setToken(token));
                     setCurrentUser(user);
-                    setSuccessAlert({ open: true, message: 'Signup successful!' });
                     upsertUser(user);
+                    setSuccessAlert({ open: true, message: 'Signup successful!' });
                     router.push('/chats');
                 } else {
                     setErrorAlert({ open: true, message: 'Signup failed: ' + res.info });

@@ -13,7 +13,7 @@ interface SendFriendRequestDialogProps {
 }
 
 export default function SendFriendRequestDialog({ toUserId, open, onClose }: SendFriendRequestDialogProps) {
-    const toUser = useLiveQuery(() => db.users.get(toUserId), [toUserId]);
+    const toUser = useLiveQuery(() => db.users.where('userId').equals(toUserId).first(), [toUserId]);
     const { currentUser } = useCurrentUser();
 
     const handleSendRequest = async () => {

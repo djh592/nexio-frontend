@@ -64,8 +64,8 @@ export default function SigninForm() {
                     const user = res.user;
                     dispatch(setToken(token));
                     setCurrentUser(user);
-                    setSuccessAlert({ open: true, message: 'Login successful!' });
                     upsertUser(user);
+                    setSuccessAlert({ open: true, message: 'Login successful!' });
                     router.push('/chats');
                 }
                 else {

@@ -16,9 +16,9 @@ import UserStack from '@/components/UserDisplayCard';
 export const drawerWidth = 200;
 
 export default function DashboardSideNavContent() {
+    const { currentUser } = useCurrentUser();
     const searchParams = useSearchParams();
     const { replace } = useRouter();
-    const { currentUser } = useCurrentUser();
     const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
     const handleNavigation = (path: string) => {

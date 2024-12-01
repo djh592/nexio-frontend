@@ -1,3 +1,4 @@
+'use client';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, Box, Skeleton } from '@mui/material';
 
 export const drawerWidth = 200;

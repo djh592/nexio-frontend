@@ -15,7 +15,7 @@ interface FriendGroupSelectProps {
 }
 
 export default function FriendGroupSelect({ friendUserId }: FriendGroupSelectProps) {
-    const friend = useLiveQuery(() => db.users.get(friendUserId), [friendUserId]);
+    const friend = useLiveQuery(() => db.users.where('userId').equals(friendUserId).first(), [friendUserId]);
     const { currentUser } = useCurrentUser();
     const [dialogOpen, setDialogOpen] = useState(false);
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), [dialogOpen]);

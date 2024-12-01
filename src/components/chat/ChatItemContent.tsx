@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import {Avatar,Badge,Box,ListItem,ListItemAvatar,Typography,} from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemAvatar, Typography, } from "@mui/material";
 import { Chat } from "@/lib/definitions";
 import { useCurrentUser } from "@/lib/hooks";
 import { db } from "@/lib/db";
@@ -12,15 +12,26 @@ type ChatItemContentProps = {
     chat: Chat;
 };
 
-export default function ChatItemContent(  { chat }: ChatItemContentProps) {
+export default function ChatItemContent({ chat }: ChatItemContentProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
     const { currentUser } = useCurrentUser();
-    const messageListId = chat.messageListId;
+
+    const [messageListId, setMessageListId] = useState(chat.messageListId);
+    useEffect(() => {
+        setMessageListId(chat.messageListId);
+    }
+        , [chat.messageListId]);
     const messageList = useLiveQuery(() => db.chatMessageLists.get(messageListId), [messageListId]);
-    const lastMessage = messageList?.messages[0];
-    const lastMessageTime = lastMessage ? lastMessage.createdAt : chat.createdAt;
+
+    const [lastMessage, setLastMessage] = useState(messageList?.messages[0]);
+    const [lastMessageTime, setLastMessageTime] = useState(chat.createdAt);
+    useEffect(() => {
+        setLastMessage(messageList?.messages[0]);
+        setLastMessageTime(lastMessage ? lastMessage.createdAt : chat.createdAt);
+    }
+        , [chat, lastMessage, messageList]);
     const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
