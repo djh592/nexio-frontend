@@ -43,7 +43,7 @@ export default function DashboardSideNavContent() {
             }}
         >
             <Toolbar />
-            <UserStack user={currentUser} />
+            <UserStack userId={currentUser.userId} />
             <Divider
                 sx={{
                     mb: 2,

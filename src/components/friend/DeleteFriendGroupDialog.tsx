@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useCurrentUser } from "@/lib/hooks";
 import { deleteFriendsGroups } from "@/lib/api";
-import { removeFriendGroup } from "@/lib/storage";
+import { deleteFriendGroup } from "@/lib/storage";
 
 interface DeleteFriendGroupDialogProps {
     groupName: string;
@@ -22,7 +22,7 @@ export default function DeleteFriendGroupDialog({ groupName, open, onClose }: De
             });
             if (response.code === 0) {
                 try {
-                    await removeFriendGroup(groupName);
+                    await deleteFriendGroup(groupName);
                 }
                 catch (error) {
                     throw new Error(String(error));

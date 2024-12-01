@@ -80,7 +80,7 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
         socket.on('friend_added', async (data) => {
             try {
                 const friend: User = data.user;
-                await addFriend(friend);
+                await addFriend(friend.userId);
             }
             catch (e) {
                 console.log(e);

@@ -207,7 +207,7 @@ export const upsertFriendGroups = async (groups: FriendGroups): Promise<void> =>
     await db.friendGroups.bulkPut(groupsWithId);
 }
 
-export const removeFriendGroup = async (groupName: string): Promise<void> => {
+export const deleteFriendGroup = async (groupName: string): Promise<void> => {
     const defaultGroup = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
     const group = await db.friendGroups.where('groupName').equals(groupName).first();
     if (!defaultGroup) {

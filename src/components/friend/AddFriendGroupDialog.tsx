@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useCurrentUser } from "@/lib/hooks";
 import { postFriendsGroups } from "@/lib/api";
-import { addFriendGroup } from "@/lib/storage";
+import { upsertFriendGroup } from "@/lib/storage";
+import { decomposeResponseFriendGroup } from "@/lib/logic";
 
 interface AddFriendGroupDialogProps {
     open: boolean;
@@ -23,10 +24,10 @@ export default function AddFriendGroupDialog(
                 groupName: newGroupName
             });
             if (response.code === 0) {
-                const newGroup = response.friendGroup;
-                console.log('New group:', newGroup);
+                const responseGroup = response.friendGroup;
+                const newGroup = decomposeResponseFriendGroup(responseGroup).friendGroup;
                 try {
-                    await addFriendGroup(newGroup.groupName);
+                    await upsertFriendGroup(newGroup);
                 }
                 catch (err) {
                     throw new Error(String(err));

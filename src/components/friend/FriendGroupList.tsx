@@ -23,7 +23,7 @@ export default function FriendGroupList() {
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    useEffect(() => { updateFriendGroups(currentUser.userId) } , [currentUser.userId]);
+    useEffect(() => { updateFriendGroups(currentUser.userId) }, [currentUser.userId]);
 
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(),
         [currentUser, addDialogOpen, deleteDialogOpen, selectedGroup]);
@@ -31,7 +31,10 @@ export default function FriendGroupList() {
     const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
 
     useEffect(() => {
-        const userIds = (friendGroups ?? []).flatMap((group) => group.friends.map((friend) => friend.userId));
+        const userIds: string[] = [];
+        friendGroups?.forEach((group) => {
+            userIds.push(...group.friends);
+        });
         setFriendUserIds(userIds);
     }, [friendGroups]);
 
@@ -73,9 +76,9 @@ export default function FriendGroupList() {
                         {group.groupName}
                     </AccordionSummary>
                     <AccordionDetails sx={{ padding: 0 }}>
-                        {group.friends.map((friend) => (
-                            <Box key={friend.userId} sx={{ width: '100%' }}>
-                                <UserDisplayCard user={friend} />
+                        {group.friends.map((friendUserId) => (
+                            <Box key={friendUserId} sx={{ width: '100%' }}>
+                                <UserDisplayCard userId={friendUserId} />
                             </Box>
                         ))}
                     </AccordionDetails>

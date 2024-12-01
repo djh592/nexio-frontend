@@ -1,4 +1,13 @@
-import { ResponseFriendGroups, FriendGroups, Users, ChatMessageList } from "@/lib/definitions";
+import { Users, ResponseFriendGroup, ResponseFriendGroups, FriendGroup, FriendGroups, ChatMessageList } from "@/lib/definitions";
+
+export const decomposeResponseFriendGroup = (responseFriendGroup: ResponseFriendGroup): { friendGroup: FriendGroup, users: Users } => {
+    const groupId = responseFriendGroup.groupId;
+    const groupName = responseFriendGroup.groupName;
+    const groupUsers = responseFriendGroup.friends;
+    const groupUserIds = groupUsers.map(user => user.userId);
+    const friendGroup = { groupId, groupName, friends: groupUserIds };
+    return { friendGroup, users: groupUsers };
+}
 
 export const decomposeResponseFriendGroups = (responseFriendGroups: ResponseFriendGroups): { friendGroups: FriendGroups, users: Users } => {
     const friendGroups: FriendGroups = [];

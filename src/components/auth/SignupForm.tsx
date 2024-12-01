@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch } from '@/lib/hooks';
-import { setToken, setUser } from '@/lib/features/auth/authSlice';
+import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
+import { setToken } from '@/lib/features/auth/authSlice';
 import { postRegister } from '@/lib/api';
 import { upsertUser } from '@/lib/storage';
 
 export default function SignupForm() {
     const theme = useTheme();
     const dispatch = useAppDispatch();
+    const { setCurrentUser } = useCurrentUser();
     const router = useRouter();
 
     const [formValues, setFormValues] = useState({
@@ -68,7 +69,7 @@ export default function SignupForm() {
                     const token = res.token;
                     const user = res.user;
                     dispatch(setToken(token));
-                    dispatch(setUser(user));
+                    setCurrentUser(user);
                     setSuccessAlert({ open: true, message: 'Signup successful!' });
                     upsertUser(user);
                     router.push('/chats');

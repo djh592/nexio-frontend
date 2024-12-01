@@ -86,7 +86,7 @@ export default function FriendSearch() {
             >
                 <Stack sx={{ px: 1, py: 2 }}>
                     {searchResults.map((user) => (
-                        <UserDisplayCard key={user.userId} user={user} />
+                        <UserDisplayCard key={user.userId} userId={user.userId} />
                     ))}
                 </Stack>
             </Popover>

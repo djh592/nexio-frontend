@@ -2,13 +2,16 @@
 import React, { useState } from 'react';
 import { Box, Avatar, Stack, Typography } from "@mui/material";
 import UserDisplayDialog from '@/components/UserDisplayDialog';
-import { User } from "@/lib/definitions";
+import { db } from '@/lib/db';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 interface UserDisplayCardProps {
-    user: User;
+    userId: string;
 }
 
-export default function UserDisplayCard({ user }: UserDisplayCardProps) {
+export default function UserDisplayCard({ userId }: UserDisplayCardProps) {
+    const user = useLiveQuery(() => db.users.get(userId), [userId]);
+
     const [open, setOpen] = useState(false);
 
     return (
@@ -29,21 +32,21 @@ export default function UserDisplayCard({ user }: UserDisplayCardProps) {
             >
                 <Avatar
                     sizes="small"
-                    alt={user.userName}
-                    src={user.avatarUrl}
+                    alt={user?.userName}
+                    src={user?.avatarUrl}
                     sx={{ width: 40, height: 40 }}
                 />
                 <Box sx={{ mr: 'auto' }}>
                     <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                        {user.userName || 'UserName'}
+                        {user?.userName || 'UserName'}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        {user.emailAddress || 'EmailAddress'}
+                        {user?.emailAddress || 'EmailAddress'}
                     </Typography>
                 </Box>
             </Stack>
             <UserDisplayDialog
-                user={user}
+                userId={userId}
                 open={open}
                 onClose={() => setOpen(false)}
             />

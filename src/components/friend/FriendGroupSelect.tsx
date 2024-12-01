@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useCurrentUser } from '@/lib/hooks';
-import { User } from '@/lib/definitions';
 import AddIcon from '@mui/icons-material/Add';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import { patchFriendsGroups } from '@/lib/api';
@@ -12,10 +11,11 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { moveFriendToGroup } from '@/lib/storage';
 
 interface FriendGroupSelectProps {
-    friend: User;
+    friendUserId: string;
 }
 
-export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
+export default function FriendGroupSelect({ friendUserId }: FriendGroupSelectProps) {
+    const friend = useLiveQuery(() => db.users.get(friendUserId), [friendUserId]);
     const { currentUser } = useCurrentUser();
     const [dialogOpen, setDialogOpen] = useState(false);
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), [dialogOpen]);
@@ -23,15 +23,17 @@ export default function FriendGroupSelect({ friend }: FriendGroupSelectProps) {
 
     useEffect(() => {
         if (!friendGroups) return;
-        const group = friendGroups.find((group) => group.friends.some((f) => f.userId === friend.userId));
+        if (!friend) return;
+        const group = friendGroups.find((group) => group.friends.some((friendUserId) => friendUserId === friend.userId));
         setCurrentGroupName(group ? group.groupName : '');
-    }, [friendGroups, friend.userId]);
+    }, [friendGroups, friend]);
 
     const handleChange = async (event: SelectChangeEvent) => {
         const newGroupName = event.target.value as string;
         if (newGroupName === 'addGroup') {
             setDialogOpen(true);
         } else {
+            if (!friend) return;
             try {
                 const response = await patchFriendsGroups({
                     userId: currentUser.userId,

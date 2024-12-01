@@ -86,7 +86,7 @@ export type ChatMessageMeta = {
     withdrawn: boolean;
     deleted: boolean;
     readBy: string[]; // userIds
-    repliedBy: string[]; // userIds
+    repliedBy: string[]; // messageIds
     replyMessageId?: string;
 }
 

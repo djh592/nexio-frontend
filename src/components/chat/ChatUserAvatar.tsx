@@ -32,7 +32,7 @@ export default function ChatUserAvatar({ userId }: ChatUserAvatarProps) {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', mx: 1 }} onClick={handleOpen}>
             <Avatar alt={user?.userName} src={user?.avatarUrl} sx={{ width: 40, height: 40, mt: 0.5 }} />
             {user && (
-                <UserDisplayDialog user={user} open={open} onClose={handleClose} />
+                <UserDisplayDialog userId={userId} open={open} onClose={handleClose} />
             )}
         </Box>
     );
