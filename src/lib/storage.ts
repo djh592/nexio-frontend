@@ -113,13 +113,18 @@ export const deleteUsers = async (userIds: string[]): Promise<void> => {
 
 
 // Friend
-export const addFriend = async (friend: User): Promise<void> => {
-    const group = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
-    if (!group) {
+export const addFriend = async (friendUserId: string): Promise<void> => {
+    const groupOfFriend = await db.friendGroups.where('friends').equals(friendUserId).first();
+    if (groupOfFriend) {
+        throw new Error(`Friend ${friendUserId} already exists.`);
+    }
+
+    const defaultGroup = await db.friendGroups.where('groupName').equals(DEFAULT_FRIEND_GROUP_NAME).first();
+    if (!defaultGroup) {
         throw new Error(`Default group does not exist.`);
     }
-    group.friends = [...group.friends, friend.userId];
-    await db.friendGroups.put(group);
+    defaultGroup.friends = [...defaultGroup.friends, friendUserId];
+    await db.friendGroups.put(defaultGroup);
 }
 
 export const removeFriend = async (friendUserId: string): Promise<void> => {
