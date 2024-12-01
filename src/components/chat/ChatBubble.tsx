@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCurrentUser } from '@/lib/hooks';
 import { Box } from '@mui/material';
 import { ChatMessage } from "@/lib/definitions";
@@ -11,7 +11,11 @@ interface ChatBubbleProps {
 
 export default function ChatBubble({ message }: ChatBubbleProps) {
     const { currentUser } = useCurrentUser();
-    const isMe = message.fromUserId === currentUser.userId;
+    const [isMe, setIsMe] = useState<boolean>(false);
+    
+    useEffect(() => {
+        setIsMe(currentUser.userId === message.fromUserId);
+    }, [currentUser.userId, message.fromUserId]);
 
     const styles = {
         bubble: {
