@@ -2,11 +2,11 @@ import React from "react";
 import { ChatMessageContent, ChatMessageContentType, ChatMessage } from "@/lib/definitions";
 import { Typography, Card, CardMedia, CardContent, Link, Box } from "@mui/material";
 
-interface ChatBubbleContentProps {
+interface ChatMessageBubbleContentProps {
     content: ChatMessageContent;
 }
 
-export default function ChatBubbleContent({ content }: ChatBubbleContentProps) {
+export default function ChatMessageBubbleContent({ content }: ChatMessageBubbleContentProps) {
     const contentType = content.contentType;
     const contentPayload = atob(content.contentPayload); // Decode base64 payload
 
@@ -88,7 +88,7 @@ function ChatBubbleContentPayloadForwarded({ message }: ChatBubbleContentPayload
                 <Typography variant="subtitle2" color="textSecondary">
                     Forwarded Message:
                 </Typography>
-                <ChatBubbleContent content={message.content} />
+                <ChatMessageBubbleContent content={message.content} />
             </CardContent>
         </Card>
     );
