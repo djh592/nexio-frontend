@@ -1,10 +1,11 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { IconButton, Popover, Paper, Stack, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import UserDisplayCard from '@/components/UserDisplayCard';
 import { User } from '@/lib/definitions';
 import { getUsersSearch } from '@/lib/api';
+import { upsertUsers } from '@/lib/storage';
 
 export default function FriendSearch() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -19,6 +20,7 @@ export default function FriendSearch() {
                 const response = await getUsersSearch({ searchText: searchTerm });
                 if (response.code === 0) {
                     setSearchResults(response.users);
+                    upsertUsers(response.users);
                 }
                 else {
                     throw new Error(response.info);
@@ -35,8 +37,14 @@ export default function FriendSearch() {
         setSearchResults([]);
     };
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'search-popover' : undefined;
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState(open ? 'search-popover' : undefined);
+
+    useEffect(() => {
+        setOpen(Boolean(anchorEl));
+        setId(open ? 'search-popover' : undefined);
+    }
+        , [anchorEl, open]);
 
     return (
         <>

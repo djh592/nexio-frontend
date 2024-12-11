@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
 import { putUser } from '@/lib/api';
+import { upsertUser } from '@/lib/storage';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -70,6 +71,7 @@ export default function AccountPageContent() {
                     if (response.code === 0) {
                         dispatch(setToken(response.token));
                         setCurrentUser(response.user);
+                        upsertUser(response.user);
                     } else {
                         throw new Error(response.info);
                     }
@@ -93,6 +95,7 @@ export default function AccountPageContent() {
             if (response.code === 0) {
                 dispatch(setToken(response.token));
                 setCurrentUser(response.user);
+                upsertUser(response.user);
                 setEditableFields({ username: false, phone: false, email: false });
             } else {
                 throw new Error(response.info);
@@ -114,6 +117,7 @@ export default function AccountPageContent() {
             if (response.code === 0) {
                 dispatch(setToken(response.token));
                 setCurrentUser(response.user);
+                upsertUser(response.user);
             } else {
                 throw new Error(response.info);
             }

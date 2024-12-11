@@ -38,6 +38,9 @@ export default function SendFriendRequestDialog({ toUserId, open, onClose }: Sen
         } catch (error) {
             console.log(error);
         }
+        finally {
+            onClose();
+        }
     };
 
     return (

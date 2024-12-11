@@ -137,6 +137,7 @@ export type ChatParticipantList = {
 
 // ChatNotification
 export type ChatNotification = {
+    notificationId: string;
     fromUserId: string;
     createdAt: string;
     notification: string;
@@ -161,10 +162,10 @@ export enum ChatJoinRequestStatus {
 }
 
 export type ChatJoinRequest = {
-    requestId: string;
-    createdAt: string;
+    joinRequestId: string;
     fromUserId: string;
     toChatId: string;
+    createdAt: string;
     status: ChatJoinRequestStatus;
 };
 

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Avatar, Typography, Button, DialogActions, DialogContent, DialogTitle, Dialog, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useCurrentUser } from '@/lib/hooks';
+import { useCurrentUser} from '@/lib/hooks';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import DeleteFriendDialog from '@/components/friend/DeleteFriendDialog';
@@ -17,8 +17,8 @@ interface UserDialogProps {
 
 export default function UserDisplayDialog({ userId, open, onClose }: UserDialogProps) {
     const router = useRouter();
-    const user = useLiveQuery(() => db.users.where('userId').equals(userId).first(), [userId]);
     const { currentUser } = useCurrentUser();
+    const user = useLiveQuery(() => db.users.where('userId').equals(userId).first(), [userId]);
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
 
     const [isMe, setIsMe] = useState(false);

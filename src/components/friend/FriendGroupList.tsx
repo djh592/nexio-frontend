@@ -12,7 +12,7 @@ import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
 import { useCurrentUser } from '@/lib/hooks';
 import { db } from '@/lib/db';
-import { updateUsers, updateFriendGroups } from '@/lib/storage';
+import { updateFriendGroups } from '@/lib/storage';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 
@@ -28,18 +28,6 @@ export default function FriendGroupList() {
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(),
         [currentUser, addDialogOpen, deleteDialogOpen, selectedGroup]);
 
-    const [friendUserIds, setFriendUserIds] = useState<string[]>([]);
-
-    useEffect(() => {
-        const userIds: string[] = [];
-        friendGroups?.forEach((group) => {
-            userIds.push(...group.friends);
-        });
-        setFriendUserIds(userIds);
-    }, [friendGroups]);
-
-    useEffect(() => { updateUsers(friendUserIds) }, [friendUserIds]);
-
     const handleRightClick = (event: MouseEvent<HTMLElement>, groupName: string) => {
         event.preventDefault();
         setAnchorEl(event.currentTarget);
@@ -47,15 +35,18 @@ export default function FriendGroupList() {
     };
 
     const handleCloseMenu = () => {
+        if(!anchorEl) return;
         setAnchorEl(null);
     };
 
     const handleAddGroup = () => {
+        if(!friendGroups) return;
         setAddDialogOpen(true);
         handleCloseMenu();
     };
 
     const handleDeleteGroup = () => {
+        if(!friendGroups) return;
         setDeleteDialogOpen(true);
         handleCloseMenu();
     };
@@ -64,7 +55,7 @@ export default function FriendGroupList() {
         <Box sx={{ width: '100%' }}>
             {friendGroups && friendGroups.map((group) => (
                 <Accordion
-                    key={group.groupName}
+                    key={group.groupId}
                     sx={{ boxShadow: 'none', border: 'none' }}
                     onContextMenu={(event) => handleRightClick(event, group.groupName)}
                 >

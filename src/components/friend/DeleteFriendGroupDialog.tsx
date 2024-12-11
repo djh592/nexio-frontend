@@ -29,6 +29,7 @@ export default function DeleteFriendGroupDialog({ groupName, open, onClose }: De
                 }
             }
             else {
+                console.log(response);
                 throw new Error(response.info);
             }
         } catch (error) {
