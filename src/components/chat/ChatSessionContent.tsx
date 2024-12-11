@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import ChatMessageBubble from '@/components/chat/ChatMessageBubble';
+import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import { ChatMessageContentType } from '@/lib/definitions';
 
 interface ChatSessionContentProps {
@@ -33,7 +33,7 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
             <p>{participantListId}</p>
             <p>{notificationListId}</p>
             <p>{joinRequestListId}</p>
-            <ChatMessageBubble message={
+            <ChatMessageItem message={
                 {
                     messageId: "0",
                     createdAt: '2021-10-01T00:00:00Z',

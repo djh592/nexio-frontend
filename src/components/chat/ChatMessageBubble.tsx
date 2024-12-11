@@ -4,7 +4,6 @@ import { useCurrentUser } from '@/lib/hooks';
 import { Box } from '@mui/material';
 import { ChatMessage } from "@/lib/definitions";
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
-import ChatUserAvatar from '@/components/chat/ChatUserAvatar';
 import MessageContextMenu from '@/components/chat/MessageContextMenu';
 
 interface ChatMessageBubbleProps {
@@ -28,9 +27,9 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
         setContextMenu(
             contextMenu === null
                 ? {
-                      mouseX: event.clientX - 2,
-                      mouseY: event.clientY - 4,
-                  }
+                    mouseX: event.clientX - 2,
+                    mouseY: event.clientY - 4,
+                }
                 : null,
         );
     };
@@ -74,21 +73,11 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
             boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
             wordWrap: 'break-word',
         },
-        bubbleContainer: {
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: isMe ? 'flex-end' : 'flex-start',
-        },
     };
 
     return (
-        <Box sx={styles.bubbleContainer} onContextMenu={handleContextMenu}>
-            {!isMe && <ChatUserAvatar userId={message.fromUserId} />}
-            <Box sx={styles.bubble}>
-                <ChatMessageBubbleContent content={message.content} />
-            </Box>
-            {isMe && <ChatUserAvatar userId={message.fromUserId} />}
+        <Box sx={styles.bubble} onContextMenu={handleContextMenu}>
+            <ChatMessageBubbleContent content={message.content} />
             <MessageContextMenu
                 anchorReference="anchorPosition"
                 anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
