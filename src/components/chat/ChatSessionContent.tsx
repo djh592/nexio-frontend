@@ -40,6 +40,17 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                         messageId: "0",
                         createdAt: '2021-10-01T00:00:00Z',
                         fromUserId: '2',
+                        content: { contentType: ChatMessageContentType.Text, contentPayload: btoa('Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!') },
+                        meta: { withdrawn: false, deleted: false, readBy: [], repliedBy: [] }
+                    }}
+                chatType={ChatType.Group}
+            />
+            <ChatMessageItem
+                message={
+                    {
+                        messageId: "0",
+                        createdAt: '2021-10-01T00:00:00Z',
+                        fromUserId: '1',
                         content: { contentType: ChatMessageContentType.Text, contentPayload: btoa('Hello, World!') },
                         meta: { withdrawn: false, deleted: false, readBy: [], repliedBy: [] }
                     }}

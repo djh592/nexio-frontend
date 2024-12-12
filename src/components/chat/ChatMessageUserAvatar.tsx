@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { updateUser } from '@/lib/storage';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, } from '@mui/material';
 import UserDisplayDialog from '@/components/UserDisplayDialog';
 
 interface ChatMessageUserAvatarProps {
@@ -23,10 +23,13 @@ export default function ChatMessageUserAvatar({ userId }: ChatMessageUserAvatarP
     return (
         <>
             <Box
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', mx: 1 }}
+                sx={{
+                    cursor: 'pointer',
+                    mx: 1,
+                }}
                 onClick={() => setOpen(true)}
             >
-                <Avatar alt={user?.userName} src={user?.avatarUrl} sx={{ width: 40, height: 40, mt: 0.5 }} />
+                <Avatar alt={user?.userName} src={user?.avatarUrl} sx={{ width: 45, height: 45, mt: 0.5 }} />
             </Box>
             <UserDisplayDialog
                 userId={userId}

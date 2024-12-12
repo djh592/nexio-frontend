@@ -7,10 +7,9 @@ import ChatMessageUserAvatar from '@/components/chat/ChatMessageUserAvatar';
 import ChatMessageBubble from '@/components/chat/ChatMessageBubble';
 import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
 
-
 interface ChatMessageItemProps {
-    chatType: ChatType;
     message: ChatMessage;
+    chatType: ChatType;
 }
 
 export default function ChatMessageItem({ chatType, message }: ChatMessageItemProps) {
@@ -23,28 +22,36 @@ export default function ChatMessageItem({ chatType, message }: ChatMessageItemPr
 
     const styles = {
         bubbleContainer: {
+            width: '100%',
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
             justifyContent: isMe ? 'flex-end' : 'flex-start',
+        },
+        readByContainer: {
+            display: 'flex',
+            alignItems: 'flex-end',
         },
     };
 
     return (
         <Box sx={styles.bubbleContainer}>
-            {isMe ?
+            {isMe ? (
                 <>
-                    <ChatMessageUserAvatar userId={message.fromUserId} />
-                    <ChatMessageBubble message={message} />
-                    <ChatMessageReadBy meta={message.meta} chatType={chatType} />
-                </>
-                :
-                <>
-                    <ChatMessageReadBy meta={message.meta} chatType={chatType} />
-                    <ChatMessageBubble message={message} />
+                    <Box sx={styles.readByContainer}>
+                        <ChatMessageReadBy meta={message.meta} chatType={chatType} />
+                    </Box>
+                    <ChatMessageBubble message={message} chatType={chatType} />
                     <ChatMessageUserAvatar userId={message.fromUserId} />
                 </>
-            }
+            ) : (
+                <>
+                    <ChatMessageUserAvatar userId={message.fromUserId} />
+                    <ChatMessageBubble message={message} chatType={chatType} />
+                    <Box sx={styles.readByContainer}>
+                        <ChatMessageReadBy meta={message.meta} chatType={chatType} />
+                    </Box>
+                </>
+            )}
         </Box>
     );
 }

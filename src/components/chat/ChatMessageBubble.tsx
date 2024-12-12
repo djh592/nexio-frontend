@@ -1,16 +1,17 @@
 'use client';
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { useCurrentUser } from '@/lib/hooks';
-import { Box } from '@mui/material';
-import { ChatMessage } from "@/lib/definitions";
+import { Box, Typography } from '@mui/material';
+import { ChatMessage, ChatType } from "@/lib/definitions";
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
 import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
 
 interface ChatMessageBubbleProps {
     message: ChatMessage;
+    chatType: ChatType;
 }
 
-export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
+export default function ChatMessageBubble({ message, chatType }: ChatMessageBubbleProps) {
     const { currentUser } = useCurrentUser();
     const [isMe, setIsMe] = useState<boolean>(false);
     const [contextMenu, setContextMenu] = useState<{
@@ -59,12 +60,16 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
     };
 
     const styles = {
+        bubbleContainer: {
+            display: 'flex',
+            maxWidth: '70%',
+            flexDirection: 'column',
+            alignItems: isMe ? 'flex-end' : 'flex-start',
+        },
         bubble: {
             display: 'inline-block',
-            maxWidth: '70%',
             padding: '12px 16px',
             borderRadius: '12px',
-            margin: '8px 0',
             alignSelf: isMe ? 'flex-end' : 'flex-start',
             background: isMe
                 ? 'linear-gradient(135deg, #308ae9, #eef4f7)' // blue
@@ -73,21 +78,33 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
             boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
             wordWrap: 'break-word',
         },
+        userName: {
+            alignSelf: isMe ? 'flex-end' : 'flex-start',
+            marginBottom: '4px',
+            color: '#888',
+        },
     };
 
     return (
-        <Box sx={styles.bubble} onContextMenu={handleContextMenu}>
-            <ChatMessageBubbleContent content={message.content} />
-            <ChatMessageContextMenu
-                anchorReference="anchorPosition"
-                anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
-                open={Boolean(contextMenu)}
-                onClose={handleClose}
-                onWithdraw={handleWithdraw}
-                onDelete={handleDelete}
-                onReply={handleReply}
-                onForward={handleForward}
-            />
+        <Box sx={styles.bubbleContainer}>
+            {chatType === ChatType.Group && !isMe && (
+                <Typography variant="caption" sx={styles.userName}>
+                    {message.fromUserId}
+                </Typography>
+            )}
+            <Box sx={styles.bubble} onContextMenu={handleContextMenu}>
+                <ChatMessageBubbleContent content={message.content} />
+                <ChatMessageContextMenu
+                    anchorReference="anchorPosition"
+                    anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+                    open={Boolean(contextMenu)}
+                    onClose={handleClose}
+                    onWithdraw={handleWithdraw}
+                    onDelete={handleDelete}
+                    onReply={handleReply}
+                    onForward={handleForward}
+                />
+            </Box>
         </Box>
     );
 }
