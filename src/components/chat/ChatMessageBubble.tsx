@@ -4,7 +4,7 @@ import { useCurrentUser } from '@/lib/hooks';
 import { Box } from '@mui/material';
 import { ChatMessage } from "@/lib/definitions";
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
-import MessageContextMenu from '@/components/chat/MessageContextMenu';
+import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
 
 interface ChatMessageBubbleProps {
     message: ChatMessage;
@@ -78,7 +78,7 @@ export default function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
     return (
         <Box sx={styles.bubble} onContextMenu={handleContextMenu}>
             <ChatMessageBubbleContent content={message.content} />
-            <MessageContextMenu
+            <ChatMessageContextMenu
                 anchorReference="anchorPosition"
                 anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
                 open={Boolean(contextMenu)}

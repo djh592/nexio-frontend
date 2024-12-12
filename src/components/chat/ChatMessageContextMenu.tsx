@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ReplyIcon from '@mui/icons-material/Reply';
 import ForwardIcon from '@mui/icons-material/Forward';
 
-interface MessageContextMenuProps {
+interface ChatMessageContextMenuProps {
     anchorReference: 'anchorPosition';
     anchorPosition: { top: number; left: number } | undefined;
     open: boolean;
@@ -17,7 +17,7 @@ interface MessageContextMenuProps {
     onForward: () => void;
 }
 
-export default function MessageContextMenu({
+export default function ChatMessageContextMenu({
     anchorReference,
     anchorPosition,
     open,
@@ -26,7 +26,7 @@ export default function MessageContextMenu({
     onDelete,
     onReply,
     onForward,
-}: MessageContextMenuProps) {
+}: ChatMessageContextMenuProps) {
     return (
         <Menu
             anchorReference={anchorReference}
