@@ -10,8 +10,8 @@ export default function ChatPageContent() {
                 variant="h4"
                 sx={{
                     fontWeight: 'bold',
-                    mb: 1,
-                    ml: 1
+                    marginLeft: 1,
+                    marginBottom: 1
                 }}
             >
                 Chats
