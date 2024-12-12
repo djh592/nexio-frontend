@@ -1,18 +1,23 @@
-import { Box } from "@mui/material";
-import ChatItem from "./ChatItem";
+import { Box, Typography } from "@mui/material";
 import { ChatType } from "@/lib/definitions";
-
+import ChatItem from "./ChatItem";
+import ChatItemList from "./ChatItemList";
 
 export default function ChatPageContent() {
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-            }}
-        >
-            <ChatItem 
+        <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: 2 }}>
+            <Typography
+                variant="h4"
+                sx={{
+                    fontWeight: 'bold',
+                    mb: 1,
+                    ml: 1
+                }}
+            >
+                Chats
+            </Typography>
+            <ChatItemList />
+            <ChatItem
                 chat={{
                     chatId: "1",
                     createdAt: new Date().toISOString(),
