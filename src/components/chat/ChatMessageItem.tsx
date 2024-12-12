@@ -23,6 +23,7 @@ export default function ChatMessageItem({ chatType, message }: ChatMessageItemPr
     const styles = {
         bubbleContainer: {
             width: '100%',
+            my: 4,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: isMe ? 'flex-end' : 'flex-start',
