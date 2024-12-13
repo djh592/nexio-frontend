@@ -1,13 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { Box, Divider, Typography } from '@mui/material';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { ChatType, ChatMessageContentType } from '@/lib/definitions';
-import ChatMessageItem from '@/components/chat/ChatMessageItem';
-import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
+import { ChatType } from '@/lib/definitions';
 import ChatMessageInput from "@/components/chat/ChatMessageInput";
-import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
-import ChatMessageWithdrawn from '@/components/chat/ChatMessageWithdrawn';
+import ChatMessageItemList from '@/components/chat/ChatMessageItemList';
 
 interface ChatSessionContentProps {
     chatId: string;
@@ -30,54 +28,24 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
     }, [chat]);
 
     return (
-        <>
-            <h1>Chat Session</h1>
-            <p>Chat ID: {chatId}</p>
-            <p>{messageListId}</p>
-            <p>{participantListId}</p>
-            <p>{notificationListId}</p>
-            <p>{joinRequestListId}</p>
-            <ChatMessageItem
-                messageListId='1'
-                message={
-                    {
-                        messageId: "0",
-                        createdAt: '2021-10-01T00:00:00Z',
-                        fromUserId: '2',
-                        content: { contentType: ChatMessageContentType.Text, contentPayload: btoa('Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!Hello, World!') },
-                        meta: { withdrawn: false, deleted: false, readBy: [], repliedBy: [] }
-                    }}
-                chatType={ChatType.Group}
-            />
-            <ChatMessageItem
-                messageListId='1'
-                message={
-                    {
-                        messageId: "0",
-                        createdAt: '2021-10-01T00:00:00Z',
-                        fromUserId: '1',
-                        content: { contentType: ChatMessageContentType.Text, contentPayload: btoa('Hello, World!') },
-                        meta: { withdrawn: false, deleted: false, readBy: [], repliedBy: [] }
-                    }}
-                chatType={ChatType.Group}
-            />
-            <ChatMessageTimestamp
-                timestamp='2021-10-01T00:00:00Z'
-            />
-            <ChatMessageWithdrawn
-                fromUserId='1'
-            />
-            <ChatMessageReadBy
-                meta={{
-                    withdrawn: false, deleted: false, readBy: [
-                        '2'
-                    ], repliedBy: []
-                }}
-                chatType={ChatType.Private}
-            />
-            <ChatMessageInput
-                messageListId={messageListId? messageListId : ''}
-            />
-        </>
+        <Box sx={{ p: 1, height: '100%', width: '100%' }}>
+            <Box sx={{ height: '10%', width: '100%' }}>
+                <Typography variant="h5">
+                    {`Chat chatId: ${chatId}; messageListId: ${messageListId}; participantListId: ${participantListId}; notificationListId: ${notificationListId}; joinRequestListId: ${joinRequestListId}`}
+                </Typography>
+            </Box>
+            <Divider />
+            <Box sx={{ height: '70%', width: '100%' }}>
+                <ChatMessageItemList
+                    chatType={ChatType.Group}
+                    messageListId={messageListId ? messageListId : ''}
+                />
+            </Box>
+            <Box sx={{ height: '20%', width: '100%' }}>
+                <ChatMessageInput
+                    messageListId={messageListId ? messageListId : ''}
+                />
+            </Box>
+        </Box>
     );
 }
