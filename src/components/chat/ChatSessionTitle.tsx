@@ -2,9 +2,9 @@
 import React from 'react';
 import { Box, Avatar, Typography, IconButton } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import ChatSettingButton from '@/components/chat/ChatSettingButton';
 
 interface ChatSessionTitleProps {
     chatId: string;
@@ -25,9 +25,7 @@ export default function ChatSessionTitle({ chatId }: ChatSessionTitleProps) {
                 <IconButton>
                     <NotificationsIcon />
                 </IconButton>
-                <IconButton>
-                    <MoreVertIcon />
-                </IconButton>
+                <ChatSettingButton chatId={chatId} />
             </Box>
         </Box>
     );

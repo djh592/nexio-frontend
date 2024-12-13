@@ -1,9 +1,8 @@
 import axios from 'axios';
 import {
     User, ResponseFriendGroup, ResponseFriendGroups, FriendRequest, FriendRequests,
-    Chat, ChatMessageList, ChatMessageContent, ChatMessage,
-    ChatParticipantList, ChatParticipant, ChatNotificationList, ChatNotification,
-    ChatJoinRequestList, ChatJoinRequest
+    Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatParticipantList, ChatParticipant,
+    ChatNotificationList, ChatNotification, ChatJoinRequestList, ChatJoinRequest,
 } from '@/lib/definitions';
 
 const apiClient = axios.create({
@@ -358,9 +357,7 @@ export const postChats = async (data: PostChatsRequest): Promise<PostChatsRespon
 // PATCH /chats/{chatId}
 export interface PatchChatsRequest {
     fromUserId: string;
-    chatName?: string;
-    chatAvatarImage?: string;
-    chatSettings?: string;
+    chat: Chat;
 }
 
 export interface PatchChatsResponse {
