@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import AuthAppBar from '@/components/auth/AuthAppBar';
+import DashboardAppBar from '@/components/dashboard/DashboardAppBar';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <AuthAppBar />
+            <DashboardAppBar />
             <Box
                 sx={{
                     height: '100%',

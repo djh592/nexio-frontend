@@ -1,10 +1,13 @@
 'use client';
-import { AppBar, Box, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 import AppBarUserAvatar from "@/components/dashboard/AppBarUserAvatar";
+import { useCurrentUser } from "@/lib/hooks";
 
 export default function DashboardAppBar() {
+    const { currentUser } = useCurrentUser();
+
     return (
         <AppBar
             position="fixed"
@@ -22,8 +25,23 @@ export default function DashboardAppBar() {
                     <Link href="/">
                         <Image src="/nexio_trans_bg.png" alt="Nexio" width={125} height={50} priority />
                     </Link>
-                </Box>
-                <AppBarUserAvatar />
+                </Box>{
+                    currentUser.userId !== '' ?
+                        <AppBarUserAvatar />
+                        :
+                        <Box>
+                            <Link href="/signin" passHref>
+                                <Button color="primary" variant="outlined" sx={{ mr: 2 }}>
+                                    Sign In
+                                </Button>
+                            </Link>
+                            <Link href="/signup" passHref>
+                                <Button color="primary" variant="contained">
+                                    Sign Up
+                                </Button>
+                            </Link>
+                        </Box>
+                }
             </Toolbar>
         </AppBar>
     );

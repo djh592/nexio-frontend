@@ -18,6 +18,7 @@ export const authSlice = createSlice({
         },
         resetAuth: () => {
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
         },
     },
 });
