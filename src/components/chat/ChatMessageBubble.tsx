@@ -6,6 +6,9 @@ import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { ChatType, ChatMessage, ChatMessageMeta } from "@/lib/definitions";
 import { patchMessages } from '@/lib/api';
+import { upsertChatMessage } from '@/lib/storage';
+import { useAppDispatch } from '@/lib/hooks';
+import { setReplyMessageId } from '@/lib/features/chat/chatSlice';
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
 import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
 
@@ -18,6 +21,7 @@ interface ChatMessageBubbleProps {
 export default function ChatMessageBubble({ messageListId, chatType, message }: ChatMessageBubbleProps) {
     const { currentUser } = useCurrentUser();
     const fromUser = useLiveQuery(() => db.users.where('userId').equals(message.fromUserId).first(), [message.fromUserId]);
+    const dispatch = useAppDispatch();
     const [isMe, setIsMe] = useState<boolean>(false);
     const [contextMenu, setContextMenu] = useState<{
         mouseX: number;
@@ -56,8 +60,11 @@ export default function ChatMessageBubble({ messageListId, chatType, message }: 
                 fromUserId: currentUser.userId,
                 chatMessage: newChatMessage,
             });
-            if (response.code ===0) {
-                console.log('Withdraw message successfully');
+            if (response.code === 0) {
+                await upsertChatMessage(messageListId, newChatMessage);
+            }
+            else {
+                throw new Error(response.info);
             }
         }
         catch (error) {
@@ -68,13 +75,35 @@ export default function ChatMessageBubble({ messageListId, chatType, message }: 
         }
     };
 
-    const handleDelete = () => {
-        // 删除消息的逻辑
-        handleClose();
-    }
+    const handleDelete = async () => {
+        try {
+            const newChatMessage = { ...message };
+            const newChatMessageMeta: ChatMessageMeta = {
+                ...newChatMessage.meta,
+                deleted: true,
+            };
+            newChatMessage.meta = newChatMessageMeta;
+            const response = await patchMessages(messageListId, {
+                fromUserId: currentUser.userId,
+                chatMessage: newChatMessage,
+            });
+            if (response.code === 0) {
+                await upsertChatMessage(messageListId, newChatMessage);
+            }
+            else {
+                throw new Error(response.info);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            handleClose();
+        }
+    };
 
     const handleReply = () => {
-        // 回复消息的逻辑
+        dispatch(setReplyMessageId(message.messageId));
         handleClose();
     };
 

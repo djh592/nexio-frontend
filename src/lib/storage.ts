@@ -3,6 +3,7 @@ import {
     User, FriendGroup, FriendGroups, FriendRequest, FriendRequests,
     Chat, ChatMessageList, ChatParticipantList, ChatNotificationList,
     ChatJoinRequestList,
+    ChatMessage,
 } from '@/lib/definitions';
 import { DEFAULT_FRIEND_GROUP_NAME } from '@/lib/definitions';
 import {
@@ -371,6 +372,23 @@ export const upsertChatMessageList = async (chatMessageList: ChatMessageList): P
 
 export const deleteChatMessageList = async (messageListId: string): Promise<void> => {
     await db.chatMessageLists.where('messageListId').equals(messageListId).delete();
+}
+
+export const upsertChatMessage = async (chatMessageListId: string, chatMessage: ChatMessage): Promise<void> => {
+    const chatMessageList = await db.chatMessageLists.where('messageListId').equals(chatMessageListId).first();
+    if (!chatMessageList) {
+        throw new Error(`Chat message list ${chatMessageListId} does not exist.`);
+    }
+
+    const existingChatMessageIdx = chatMessageList.messages.findIndex(m => m.messageId === chatMessage.messageId);
+    if (existingChatMessageIdx !== -1) {
+        chatMessageList.messages[existingChatMessageIdx] = chatMessage; // update existing chat message
+    }
+    else {
+        chatMessageList.messages.push(chatMessage); // add new chat message
+    }
+
+    await db.chatMessageLists.put(chatMessageList); // upsert chatMessageList
 }
 
 
