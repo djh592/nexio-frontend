@@ -8,7 +8,7 @@ import { ChatType, ChatMessage, ChatMessageMeta } from "@/lib/definitions";
 import { patchMessages } from '@/lib/api';
 import { upsertChatMessage } from '@/lib/storage';
 import { useAppDispatch } from '@/lib/hooks';
-import { setReplyMessageId } from '@/lib/features/chat/chatSlice';
+import { setReplyMessageId, setIsForwarding } from '@/lib/features/chat/chatSlice';
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
 import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
 
@@ -108,7 +108,7 @@ export default function ChatMessageBubble({ messageListId, chatType, message }: 
     };
 
     const handleForward = () => {
-        // 转发消息的逻辑
+        dispatch(setIsForwarding(true));
         handleClose();
     };
 
