@@ -5,13 +5,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     return (
         <>
             <DashboardAppBar />
+            <Box sx={{ height: '60px', width: '100%', }} />
             <Box
                 sx={{
-                    height: '100%',
+                    height: '90%',
                     width: '100%',
                     marginTop: '2%',
                     display: 'flex',
-                    flexDirection: 'cloumn',
+                    flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}

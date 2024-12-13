@@ -37,7 +37,7 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
             const currentTimestamp = new Date(message.createdAt).getTime();
             const timeDiff = currentTimestamp - lastTimestamp;
 
-            if (timeDiff > 5 * 60 * 1000) { // 5 minutes
+            if (timeDiff > 5 * 60 * 1000) {
                 renderedMessages.push(
                     <ChatMessageTimestamp key={`timestamp-${message.messageId}`} timestamp={message.createdAt} />
                 );
