@@ -6,6 +6,7 @@ import { ChatType, ChatMessageContentType } from '@/lib/definitions';
 import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
 import ChatMessageInput from "@/components/chat/ChatMessageInput";
+import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
 
 interface ChatSessionContentProps {
     chatId: string;
@@ -57,13 +58,8 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                     }}
                 chatType={ChatType.Group}
             />
-            <ChatMessageReadBy
-                meta={{
-                    withdrawn: false, deleted: false, readBy: [
-                        '1', '2', '3'
-                    ], repliedBy: []
-                }}
-                chatType={ChatType.Group}
+            <ChatMessageTimestamp
+                timestamp='2021-10-01T00:00:00Z'
             />
             <ChatMessageReadBy
                 meta={{
