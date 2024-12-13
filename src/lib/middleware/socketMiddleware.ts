@@ -8,14 +8,13 @@ import {
     addFriend,
     removeFriend,
 } from '@/lib/storage';
-import { incrementNewRequestCount } from '@/lib/features/friend/friendSlice';
 import { User, FriendRequest } from '../definitions';
 
 const SOCKET_URL = 'https://nexio-backend-nexio.app.secoder.net';
 
 let socket: Socket;
 
-const socketMiddleware: Middleware = (store) => (next) => (action) => {
+const socketMiddleware: Middleware = () => (next) => (action) => {
     if (setToken.match(action)) {
         const token = action.payload;
         socket = io(SOCKET_URL, {
@@ -60,7 +59,6 @@ const socketMiddleware: Middleware = (store) => (next) => (action) => {
             try {
                 const request: FriendRequest = data.friendRequest;
                 await upsertFriendRequest(request);
-                store.dispatch(incrementNewRequestCount());
             }
             catch (e) {
                 console.log(e);
