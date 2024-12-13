@@ -8,11 +8,13 @@ import ChatMessageBubble from '@/components/chat/ChatMessageBubble';
 import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
 
 interface ChatMessageItemProps {
-    message: ChatMessage;
+    messageListId: string;
     chatType: ChatType;
+    message: ChatMessage;
+
 }
 
-export default function ChatMessageItem({ chatType, message }: ChatMessageItemProps) {
+export default function ChatMessageItem({ messageListId, chatType, message }: ChatMessageItemProps) {
     const { currentUser } = useCurrentUser();
     const [isMe, setIsMe] = useState<boolean>(false);
 
@@ -41,13 +43,13 @@ export default function ChatMessageItem({ chatType, message }: ChatMessageItemPr
                     <Box sx={styles.readByContainer}>
                         <ChatMessageReadBy meta={message.meta} chatType={chatType} />
                     </Box>
-                    <ChatMessageBubble message={message} chatType={chatType} />
+                    <ChatMessageBubble messageListId={messageListId} chatType={chatType} message={message} />
                     <ChatMessageUserAvatar userId={message.fromUserId} />
                 </>
             ) : (
                 <>
                     <ChatMessageUserAvatar userId={message.fromUserId} />
-                    <ChatMessageBubble message={message} chatType={chatType} />
+                    <ChatMessageBubble messageListId={messageListId} chatType={chatType} message={message} />
                     <Box sx={styles.readByContainer}>
                         <ChatMessageReadBy meta={message.meta} chatType={chatType} />
                     </Box>

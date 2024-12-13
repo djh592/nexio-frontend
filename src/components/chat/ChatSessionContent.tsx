@@ -37,6 +37,7 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
             <p>{notificationListId}</p>
             <p>{joinRequestListId}</p>
             <ChatMessageItem
+                messageListId='1'
                 message={
                     {
                         messageId: "0",
@@ -48,6 +49,7 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                 chatType={ChatType.Group}
             />
             <ChatMessageItem
+                messageListId='1'
                 message={
                     {
                         messageId: "0",
