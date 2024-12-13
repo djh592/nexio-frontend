@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '@/lib/features/auth/authSlice';
 import chatReducer from '@/lib/features/chat/chatSlice';
-import socketMiddleware from '@/lib/middleware/socketMiddleware';
 
 export const makeStore = () => {
     return configureStore({
@@ -9,8 +8,6 @@ export const makeStore = () => {
             auth: authReducer,
             chat: chatReducer,
         },
-        middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(socketMiddleware),
     })
 }
 

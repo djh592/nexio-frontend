@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch ,useCurrentUser} from '@/lib/hooks';
-import { setToken} from '@/lib/features/auth/authSlice';
+import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
+import { setToken } from '@/lib/features/auth/authSlice';
 import { postLogin } from '@/lib/api';
 import { upsertUser } from '@/lib/storage';
+import { connectSocket } from '@/lib/socket';
 
 export default function SigninForm() {
     const theme = useTheme();
@@ -63,6 +64,7 @@ export default function SigninForm() {
                     const token = res.token;
                     const user = res.user;
                     dispatch(setToken(token));
+                    connectSocket(token);
                     setCurrentUser(user);
                     upsertUser(user);
                     setSuccessAlert({ open: true, message: 'Login successful!' });

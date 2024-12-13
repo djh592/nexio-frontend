@@ -6,6 +6,7 @@ import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
 import { setToken } from '@/lib/features/auth/authSlice';
 import { postRegister } from '@/lib/api';
 import { upsertUser } from '@/lib/storage';
+import { connectSocket } from '@/lib/socket';
 
 export default function SignupForm() {
     const theme = useTheme();
@@ -69,6 +70,7 @@ export default function SignupForm() {
                     const token = res.token;
                     const user = res.user;
                     dispatch(setToken(token));
+                    connectSocket(token);
                     setCurrentUser(user);
                     upsertUser(user);
                     setSuccessAlert({ open: true, message: 'Signup successful!' });

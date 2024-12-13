@@ -5,6 +5,7 @@ import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
 import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
 import { deleteUnregister } from '@/lib/api';
+import { disconnectSocket } from '@/lib/socket';
 
 interface UnregisterDialogLogoutDialogProps {
     open: boolean;
@@ -26,6 +27,7 @@ export default function UnregisterDialog(
             const response = await deleteUnregister({ userId: currentUser.userId, password });
             if (response.code === 0) {
                 dispatch(resetAuth());
+                disconnectSocket();
                 router.push('/');
             } else {
                 throw new Error(response.info);

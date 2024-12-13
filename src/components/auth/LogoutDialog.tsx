@@ -6,6 +6,7 @@ import { resetAuth } from '@/lib/features/auth/authSlice';
 import { useRouter } from 'next/navigation';
 import { deleteLogout } from '@/lib/api';
 import { clearDatabase } from '@/lib/storage';
+import { disconnectSocket } from '@/lib/socket';
 
 interface LogoutDialogProps {
     open: boolean;
@@ -23,6 +24,7 @@ export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
             const response = await deleteLogout({ userId: currentUser.userId });
             if (response.code === 0) {
                 dispatch(resetAuth());
+                disconnectSocket();
                 await clearDatabase();
                 router.push('/');
             } else {
