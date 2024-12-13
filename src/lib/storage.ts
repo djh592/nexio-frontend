@@ -28,7 +28,7 @@ export const clearDatabase = async (): Promise<void> => {
     await db.chatMessageLists.clear();
     await db.chatParticipantLists.clear();
     await db.chatNotificationLists.clear();
-    await db.chatMessageLists.clear();
+    await db.chatJoinRequestLists.clear();
 }
 
 
