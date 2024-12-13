@@ -1,21 +1,52 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { IconButton, Badge } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { db } from '@/lib/db';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { useCurrentUser } from '@/lib/hooks';
+import { FriendRequestStatus } from '@/lib/definitions';
 
-export default function FriendRequestNotificationButton() {
-    const router = useRouter();
-    const newRequestCount = useAppSelector((state) => state.friend.newRequestCount);
 
-    const handleClick = () => {
-        router.push('/friends/notifications');
+export function FriendRequestNotificationButtonLoading() {
+    return (
+        <IconButton
+            disabled
+            aria-label="notifications"
+            sx={{ mx: 1 }}
+        >
+            <NotificationsIcon />
+        </IconButton>
+    );
+}
+
+export function FriendRequestNotificationButtonReady() {
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+
+    const handleNavigation = () => {
+        const params = new URLSearchParams(searchParams);
+        replace(`/friends/notifications?${params.toString()}`);
     };
+
+    const [newRequestCount, setNewRequestCount] = useState(0);
+    const { currentUser } = useCurrentUser();
+    const receivedFriendRequests = useLiveQuery(() => {
+        return db.friendRequests.where('toUserId').equals(currentUser?.userId).toArray();
+    }, [currentUser]);
+
+    useEffect(() => {
+        if (receivedFriendRequests) {
+            const count = receivedFriendRequests.filter((request) => request.status === FriendRequestStatus.Pending).length;
+            setNewRequestCount(count);
+        }
+    }
+        , [receivedFriendRequests]);
 
     return (
         <IconButton
-            onClick={handleClick}
+            onClick={handleNavigation}
             aria-label="notifications"
             sx={{ mx: 1 }}
         >
@@ -23,5 +54,13 @@ export default function FriendRequestNotificationButton() {
                 <NotificationsIcon />
             </Badge>
         </IconButton>
+    );
+}
+
+export default function FriendRequestNotificationButton() {
+    return (
+        <Suspense fallback={<FriendRequestNotificationButtonLoading />}>
+            <FriendRequestNotificationButtonReady />
+        </Suspense>
     );
 }

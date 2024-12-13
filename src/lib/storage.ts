@@ -168,8 +168,6 @@ export const updateFriendGroups = async (userId: string): Promise<void> => {
         if (response.code === 0) {
             const fetchedGroups = response.friendGroups;
             const { friendGroups, users } = decomposeResponseFriendGroups(fetchedGroups);
-            console.log(friendGroups);
-            console.log(users);
             await upsertFriendGroups(friendGroups);
             await upsertUsers(users);
         }

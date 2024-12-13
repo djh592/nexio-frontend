@@ -52,7 +52,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
                 throw new Error(response.info);
             }
         } catch (error) {
-            console.error('Error accepting friend request:', error);
+            console.log('Error accepting friend request:', error);
         }
     };
 
@@ -76,7 +76,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
                 throw new Error(response.info);
             }
         } catch (error) {
-            console.error('Error rejecting friend request:', error);
+            console.log('Error rejecting friend request:', error);
         }
     };
 
@@ -100,7 +100,7 @@ export default function FriendRequestDisplayCard({ request }: FriendRequestDispl
                 throw new Error(response.info);
             }
         } catch (error) {
-            console.error('Error cancelling friend request:', error);
+            console.log('Error cancelling friend request:', error);
         }
     };
 
