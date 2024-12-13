@@ -7,6 +7,7 @@ import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
 import ChatMessageInput from "@/components/chat/ChatMessageInput";
 import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
+import ChatMessageWithdrawn from '@/components/chat/ChatMessageWithdrawn';
 
 interface ChatSessionContentProps {
     chatId: string;
@@ -62,6 +63,9 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
             />
             <ChatMessageTimestamp
                 timestamp='2021-10-01T00:00:00Z'
+            />
+            <ChatMessageWithdrawn
+                fromUserId='1'
             />
             <ChatMessageReadBy
                 meta={{
