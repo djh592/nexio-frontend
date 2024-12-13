@@ -2,17 +2,22 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { useCurrentUser } from '@/lib/hooks';
 import { Box, Typography } from '@mui/material';
-import { ChatMessage, ChatType } from "@/lib/definitions";
+import { db } from '@/lib/db';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { ChatType, ChatMessage, ChatMessageMeta } from "@/lib/definitions";
+import { patchMessages } from '@/lib/api';
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
 import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
 
 interface ChatMessageBubbleProps {
-    message: ChatMessage;
+    messageListId: string;
     chatType: ChatType;
+    message: ChatMessage;
 }
 
-export default function ChatMessageBubble({ message, chatType }: ChatMessageBubbleProps) {
+export default function ChatMessageBubble({ messageListId, chatType, message }: ChatMessageBubbleProps) {
     const { currentUser } = useCurrentUser();
+    const fromUser = useLiveQuery(() => db.users.where('userId').equals(message.fromUserId).first(), [message.fromUserId]);
     const [isMe, setIsMe] = useState<boolean>(false);
     const [contextMenu, setContextMenu] = useState<{
         mouseX: number;
@@ -39,9 +44,28 @@ export default function ChatMessageBubble({ message, chatType }: ChatMessageBubb
         setContextMenu(null);
     };
 
-    const handleWithdraw = () => {
-        // 撤回消息的逻辑
-        handleClose();
+    const handleWithdraw = async () => {
+        try {
+            const newChatMessage = { ...message };
+            const newChatMessageMeta: ChatMessageMeta = {
+                ...newChatMessage.meta,
+                withdrawn: true,
+            };
+            newChatMessage.meta = newChatMessageMeta;
+            const response = await patchMessages(messageListId, {
+                fromUserId: currentUser.userId,
+                chatMessage: newChatMessage,
+            });
+            if (response.code ===0) {
+                console.log('Withdraw message successfully');
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            handleClose();
+        }
     };
 
     const handleDelete = () => {
@@ -89,7 +113,7 @@ export default function ChatMessageBubble({ message, chatType }: ChatMessageBubb
         <Box sx={styles.bubbleContainer}>
             {chatType === ChatType.Group && !isMe && (
                 <Typography variant="caption" sx={styles.userName}>
-                    {message.fromUserId}
+                    {fromUser ? fromUser.userName : 'Unknown User'}
                 </Typography>
             )}
             <Box sx={styles.bubble} onContextMenu={handleContextMenu}>

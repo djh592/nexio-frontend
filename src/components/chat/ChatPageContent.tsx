@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ChatType } from "@/lib/definitions";
 import ChatItem from "./ChatItem";
-import ChatItemList from "./ChatItemList";
+import ChatItemList from "@/components/chat/ChatItemList";
 
 export default function ChatPageContent() {
     return (

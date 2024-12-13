@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
     User, ResponseFriendGroup, ResponseFriendGroups, FriendRequest, FriendRequests,
-    Chat, ChatMessageList, ChatMessageContent, ChatMessage, ChatMessageMeta,
+    Chat, ChatMessageList, ChatMessageContent, ChatMessage,
     ChatParticipantList, ChatParticipant, ChatNotificationList, ChatNotification,
     ChatJoinRequestList, ChatJoinRequest
 } from '@/lib/definitions';
@@ -429,7 +429,7 @@ export const postMessages = async (messageListId: string, data: PostMessagesRequ
 // PATCH /messages/{messageListId}
 export interface PatchMessagesRequest {
     fromUserId: string;
-    chatMessageMeta: ChatMessageMeta;
+    chatMessage: ChatMessage;
 }
 
 export interface PatchMessagesResponse {

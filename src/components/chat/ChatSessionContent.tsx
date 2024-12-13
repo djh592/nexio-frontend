@@ -4,7 +4,8 @@ import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { ChatType, ChatMessageContentType } from '@/lib/definitions';
 import ChatMessageItem from '@/components/chat/ChatMessageItem';
-import ChatMessageReadBy from './ChatMessageReadBy';
+import ChatMessageReadBy from '@/components/chat/ChatMessageReadBy';
+import ChatMessageInput from "@/components/chat/ChatMessageInput";
 
 interface ChatSessionContentProps {
     chatId: string;
@@ -71,6 +72,9 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                     ], repliedBy: []
                 }}
                 chatType={ChatType.Private}
+            />
+            <ChatMessageInput
+                messageListId={messageListId? messageListId : ''}
             />
         </>
     );
