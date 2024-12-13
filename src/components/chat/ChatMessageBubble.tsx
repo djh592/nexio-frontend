@@ -11,6 +11,7 @@ import { useAppDispatch } from '@/lib/hooks';
 import { setReplyMessageId, setIsForwarding } from '@/lib/features/chat/chatSlice';
 import ChatMessageBubbleContent from '@/components/chat/ChatMessageBubbleContent';
 import ChatMessageContextMenu from '@/components/chat/ChatMessageContextMenu';
+import ChatMessageReply from '@/components/chat/ChatMessageReply';
 
 interface ChatMessageBubbleProps {
     messageListId: string;
@@ -115,7 +116,7 @@ export default function ChatMessageBubble({ messageListId, chatType, message }: 
     const styles = {
         bubbleContainer: {
             display: 'flex',
-            maxWidth: '70%',
+            maxWidth: '60%',
             flexDirection: 'column',
             alignItems: isMe ? 'flex-end' : 'flex-start',
         },
@@ -147,6 +148,9 @@ export default function ChatMessageBubble({ messageListId, chatType, message }: 
             )}
             <Box sx={styles.bubble} onContextMenu={handleContextMenu}>
                 <ChatMessageBubbleContent content={message.content} />
+                {message.meta.replyMessageId && (
+                    <ChatMessageReply messageListId={messageListId} replyMessageId={message.meta.replyMessageId} />
+                )}
                 <ChatMessageContextMenu
                     anchorReference="anchorPosition"
                     anchorPosition={contextMenu ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
