@@ -1,5 +1,4 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
@@ -16,12 +15,19 @@ interface ChatMessageItemListProps {
 export default function ChatMessageItemList({ chatType, messageListId }: ChatMessageItemListProps) {
     const messageList = useLiveQuery(() => db.chatMessageLists.where('messageListId').equals(messageListId).first(), [messageListId]);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (messageList) {
             setMessages(messageList.messages);
         }
     }, [messageList]);
+
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
     const renderMessages = () => {
         if (!messages.length) return null;
@@ -63,6 +69,7 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
     return (
         <Box sx={{ width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
             {renderMessages()}
+            <div ref={bottomRef} />
         </Box>
     );
 }
