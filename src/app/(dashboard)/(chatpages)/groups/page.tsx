@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import GroupPageContent from '@/components/group/GroupPageContent';
 
 export default function GroupsPage() {
     return (
@@ -8,7 +9,7 @@ export default function GroupsPage() {
                 width: '100%',
             }}
         >
-            <h1>Groups Page</h1>
+            <GroupPageContent />
         </Box>
     );
 }

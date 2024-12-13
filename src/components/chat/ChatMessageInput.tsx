@@ -96,7 +96,6 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
                 multiline
                 rows={3}
                 variant="outlined"
-                margin	='none'
                 placeholder="Type a message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
