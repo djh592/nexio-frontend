@@ -8,29 +8,30 @@ export default function HomePage() {
   return (
     <>
       <AuthAppBar />
-      <Container
-        maxWidth="md"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          mt: 8,
-          textAlign: 'center',
-        }}
-      >
-        <Image src="/nexio_trans_bg.png" alt="Nexio" width={250} height={100} />
-        <Typography variant="h2" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
-          Connect, Engage, Thrive
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 6 }}>
-          Welcome to Nexio, the platform that connects you with the world.
-        </Typography>
-        <Box>
-          <LetsChatButton />
-        </Box>
-      </Container>
+      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Container
+          maxWidth="md"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '5% auto',
+            textAlign: 'center',
+          }}
+        >
+          <Image src="/nexio_trans_bg.png" alt="Nexio" width={250} height={100} />
+          <Typography variant="h2" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
+            Connect, Engage, Thrive
+          </Typography>
+          <Typography variant="h6" sx={{ margin: 4 }}>
+            Welcome to Nexio, the platform that connects you with the world.
+          </Typography>
+          <Box sx={{ mt: 4 }}>
+            <LetsChatButton />
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 }

@@ -57,7 +57,17 @@ export default function ChatItemContent({ chat }: ChatItemContentProps) {
             }}
         >
             <ListItemAvatar>
-                <Avatar alt={chat.chatName} src={chat.chatAvatarUrl} />
+                <Badge
+                    color="error"
+                    badgeContent={unreadCount}
+                    invisible={unreadCount === 0}
+                >
+                    <Avatar
+                        variant="rounded"
+                        alt={chat.chatName}
+                        src={chat.chatAvatarUrl}
+                    />
+                </Badge>
             </ListItemAvatar>
 
             <Box
@@ -73,9 +83,10 @@ export default function ChatItemContent({ chat }: ChatItemContentProps) {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        marginBottom: 0.75,
                     }}
                 >
-                    <Typography variant="subtitle1" noWrap>
+                    <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: '16px' }}>
                         {chat.chatName}
                     </Typography>
                     <Typography
@@ -86,22 +97,10 @@ export default function ChatItemContent({ chat }: ChatItemContentProps) {
                         {new Date(lastMessageTime).toLocaleTimeString()}
                     </Typography>
                 </Box>
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    noWrap
-                    sx={{ maxWidth: "100%" }}
-                >
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                     {lastMessage?.content.contentPayload || "No messages yet"}
                 </Typography>
             </Box>
-
-            <Badge
-                badgeContent={unreadCount}
-                color="error"
-                sx={{ marginLeft: 2 }}
-                invisible={unreadCount === 0}
-            />
         </ListItem>
     );
 };

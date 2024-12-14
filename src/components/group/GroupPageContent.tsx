@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import GroupDisplayCard from "@/components/group/GroupDisplayCard";
 
 export default function GroupPageContent() {
     return (
@@ -13,6 +14,7 @@ export default function GroupPageContent() {
             >
                 Groups
             </Typography>
+            <GroupDisplayCard chatId="1" />
         </Box>
     );
 }
