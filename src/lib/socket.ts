@@ -1,10 +1,13 @@
 import { io, Socket } from 'socket.io-client';
 import {
-    upsertUser,
-    deleteUser,
+    upsertUser, deleteUser,
     upsertFriendRequest,
-    addFriend,
-    removeFriend,
+    addFriend, removeFriend,
+    upsertChat, deleteChat,
+    upsertChatMessageList, deleteChatMessageList,
+    upsertChatParticipantList, deleteChatParticipantList,
+    upsertChatNotificationList, deleteChatNotificationList,
+    upsertChatJoinRequestList, deleteChatJoinRequestList,
 } from '@/lib/storage';
 import { User, FriendRequest } from '@/lib/definitions';
 
@@ -98,6 +101,109 @@ const registerSocketEvents = () => {
             const friend: User = data.user;
             await removeFriend(friend.userId);
         } catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('chat_update', async (data) => {
+        try {
+            const chat = data.chat;
+            await upsertChat(chat);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+
+    socket.on('chat_deleted', async (data) => {
+        try {
+            const chatId = data.chatId;
+            await deleteChat(chatId);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('message_list_update', async (data) => {
+        try {
+            const chatMessageList = data.chatMessageList;
+            await upsertChatMessageList(chatMessageList);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('message_list_deleted', async (data) => {
+        try {
+            const chatId = data.chatId;
+            await deleteChatMessageList(chatId);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('participant_list_update', async (data) => {
+        try {
+            const chatParticipantList = data.chatParticipantList;
+            await upsertChatParticipantList(chatParticipantList);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('participant_list_deleted', async (data) => {
+        try {
+            const chatId = data.chatId;
+            await deleteChatParticipantList(chatId);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+
+    socket.on('notification_list_update', async (data) => {
+        try {
+            const chatNotificationList = data.chatNotificationList;
+            await upsertChatNotificationList(chatNotificationList);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+
+    socket.on('notification_list_deleted', async (data) => {
+        try {
+            const chatId = data.chatId;
+            await deleteChatNotificationList(chatId);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('join_request_list_update', async (data) => {
+        try {
+            const chatJoinRequestList = data.chatJoinRequestList;
+            await upsertChatJoinRequestList(chatJoinRequestList);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+
+    socket.on('join_request_list_deleted', async (data) => {
+        try {
+            const chatId = data.chatId;
+            await deleteChatJoinRequestList(chatId);
+        }
+        catch (e) {
             console.log(e);
         }
     });

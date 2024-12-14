@@ -416,6 +416,10 @@ export const upsertChatParticipantList = async (chatParticipantList: ChatPartici
     await db.chatParticipantLists.put(chatParticipantList); // upsert chatParticipantList
 }
 
+export const deleteChatParticipantList = async (participantListId: string): Promise<void> => {
+    await db.chatParticipantLists.where('participantListId').equals(participantListId).delete();
+}
+
 
 // Notifications
 export const updateChatNotificationList = async (notificationListId: string, fromUserId: string): Promise<void> => {
@@ -443,6 +447,9 @@ export const upsertChatNotificationList = async (chatNotificationList: ChatNotif
     await db.chatNotificationLists.put(chatNotificationList); // upsert chatNotificationList
 }
 
+export const deleteChatNotificationList = async (notificationListId: string): Promise<void> => {
+    await db.chatNotificationLists.where('notificationListId').equals(notificationListId).delete();
+}
 
 // Join Requests
 export const updateChatJoinRequestList = async (joinRequestListId: string, fromUserId: string): Promise<void> => {
