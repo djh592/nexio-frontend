@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { resetAuth } from '@/lib/features/auth/authSlice';
+import {  useCurrentUser } from '@/lib/hooks';
 import { useRouter } from 'next/navigation';
 import { deleteLogout } from '@/lib/api';
 import { clearDatabase } from '@/lib/storage';
@@ -14,7 +13,6 @@ interface LogoutDialogProps {
 }
 
 export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
-    const dispatch = useAppDispatch();
     const { currentUser } = useCurrentUser();
     const router = useRouter();
 
@@ -23,7 +21,9 @@ export default function LogoutDialog({ open, onClose }: LogoutDialogProps) {
         try {
             const response = await deleteLogout({ userId: currentUser.userId });
             if (response.code === 0) {
-                dispatch(resetAuth());
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.dispatchEvent(new Event('storage'));
                 disconnectSocket();
                 await clearDatabase();
                 router.push('/');

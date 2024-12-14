@@ -1,8 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
-import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { setToken } from '@/lib/features/auth/authSlice';
+import { useCurrentUser } from '@/lib/hooks';
 import { putUser } from '@/lib/api';
 
 interface EditUserNameDialogProps {
@@ -12,7 +11,6 @@ interface EditUserNameDialogProps {
 
 export default function EditUserNameDialog({ open, onClose }: EditUserNameDialogProps) {
     const { currentUser, setCurrentUser } = useCurrentUser();
-    const dispatch = useAppDispatch();
     const [newUserName, setNewUserName] = useState(currentUser.userName);
     const [loading, setLoading] = useState(false);
 
@@ -21,7 +19,7 @@ export default function EditUserNameDialog({ open, onClose }: EditUserNameDialog
         try {
             const response = await putUser(currentUser.userId, { userName: newUserName });
             if (response.code === 0) {
-                dispatch(setToken(response.token));
+                localStorage.setItem('token', response.token);
                 setCurrentUser(response.user);
             } else {
                 throw new Error(response.info);

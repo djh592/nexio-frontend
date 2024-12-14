@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Avatar, Button, Typography, OutlinedInput, InputAdornment, IconButton, Stack, Divider, ButtonBase, FormControl, FormHelperText } from '@mui/material';
-import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { setToken } from '@/lib/features/auth/authSlice';
+import { useCurrentUser } from '@/lib/hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import EditUserNameDialog from './EditUserNameDialog';
@@ -24,7 +23,6 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function AccountPageContent() {
     const { currentUser, setCurrentUser } = useCurrentUser();
-    const dispatch = useAppDispatch();
     const [formValues, setFormValues] = useState({
         username: currentUser.userName,
         phone: currentUser.phoneNumber,
@@ -69,7 +67,7 @@ export default function AccountPageContent() {
                         avatarImage: base64String
                     });
                     if (response.code === 0) {
-                        dispatch(setToken(response.token));
+                        localStorage.setItem("token", response.token);
                         setCurrentUser(response.user);
                         upsertUser(response.user);
                     } else {
@@ -93,7 +91,7 @@ export default function AccountPageContent() {
                 emailAddress: formValues.email,
             });
             if (response.code === 0) {
-                dispatch(setToken(response.token));
+                localStorage.setItem("token", response.token);
                 setCurrentUser(response.user);
                 upsertUser(response.user);
                 setEditableFields({ username: false, phone: false, email: false });
@@ -115,7 +113,7 @@ export default function AccountPageContent() {
                 newPassword: formValues.newPassword,
             });
             if (response.code === 0) {
-                dispatch(setToken(response.token));
+                localStorage.setItem("token", response.token);
                 setCurrentUser(response.user);
                 upsertUser(response.user);
             } else {

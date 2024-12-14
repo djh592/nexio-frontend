@@ -2,15 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, Box, TextField, Button, FormControl, InputLabel, OutlinedInput, FormHelperText, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch, useCurrentUser } from '@/lib/hooks';
-import { setToken } from '@/lib/features/auth/authSlice';
+import { useCurrentUser } from '@/lib/hooks';
 import { postLogin } from '@/lib/api';
 import { upsertUser } from '@/lib/storage';
 import { connectSocket } from '@/lib/socket';
 
 export default function SigninForm() {
     const theme = useTheme();
-    const dispatch = useAppDispatch();
     const { setCurrentUser } = useCurrentUser();
     const router = useRouter();
 
@@ -63,10 +61,10 @@ export default function SigninForm() {
                 if (Number(res.code) === 0) {
                     const token = res.token;
                     const user = res.user;
-                    dispatch(setToken(token));
-                    connectSocket(token);
+                    localStorage.setItem("token", token);
                     setCurrentUser(user);
                     upsertUser(user);
+                    connectSocket(token);
                     setSuccessAlert({ open: true, message: 'Login successful!' });
                     router.push('/chats');
                 }
