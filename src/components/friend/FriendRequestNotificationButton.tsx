@@ -50,7 +50,11 @@ export function FriendRequestNotificationButtonReady() {
             aria-label="notifications"
             sx={{ mx: 1 }}
         >
-            <Badge badgeContent={newRequestCount} color="error">
+            <Badge
+                color="error"
+                badgeContent={newRequestCount}
+                invisible={newRequestCount === 0}
+            >
                 <NotificationsIcon />
             </Badge>
         </IconButton>

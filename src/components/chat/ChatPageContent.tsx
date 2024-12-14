@@ -1,6 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import { ChatType } from "@/lib/definitions";
-import ChatItem from "./ChatItem";
 import ChatItemList from "@/components/chat/ChatItemList";
 
 export default function ChatPageContent() {
@@ -17,23 +15,6 @@ export default function ChatPageContent() {
                 Chats
             </Typography>
             <ChatItemList />
-            <ChatItem
-                chat={{
-                    chatId: "1",
-                    createdAt: new Date().toISOString(),
-                    chatType: ChatType.Group,
-                    chatName: "Group Chat",
-                    chatAvatarUrl: "",
-                    chatSettings: {
-                        isMuted: false,
-                        isPinned: false,
-                    },
-                    messageListId: "1",
-                    participantListId: "1",
-                    notificationListId: "1",
-                    joinRequestListId: "1",
-                }}
-            />
         </Box>
     );
 }
