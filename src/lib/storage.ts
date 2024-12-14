@@ -255,10 +255,14 @@ export const getReceivedRequests = async (userId: string): Promise<FriendRequest
 
 export const upsertFriendRequest = async (request: FriendRequest): Promise<void> => {
     const existingRequest = await db.friendRequests.where('requestId').equals(request.requestId).first();
+    let newRequest: FriendRequest;
     if (existingRequest) {
-        request.id = existingRequest.id; // combine existing request with new request
+        newRequest = { id: existingRequest.id, ...request }; // combine existing request with new request
     }
-    await db.friendRequests.put(request); // upsert request
+    else {
+        newRequest = request;
+    }
+    await db.friendRequests.put(newRequest); // upsert request
 }
 
 export const upsertFriendRequests = async (requests: FriendRequest[]): Promise<void> => {
@@ -310,10 +314,8 @@ export const getChats = async (): Promise<Chat[]> => {
 
 export const upsertChat = async (chat: Chat): Promise<void> => {
     const existingChat = await db.chats.where('chatId').equals(chat.chatId).first();
-    if (existingChat) {
-        chat.id = existingChat.id; // combine existing chat with new chat
-    }
-    await db.chats.put(chat); // upsert chat
+    const newChat: Chat = existingChat ? { id: existingChat.id, ...chat } : chat;
+    await db.chats.put(newChat);
 }
 
 export const upsertChats = async (chats: Chat[]): Promise<void> => {
@@ -362,10 +364,8 @@ export const getChatMessageList = async (messageListId: string): Promise<ChatMes
 
 export const upsertChatMessageList = async (chatMessageList: ChatMessageList): Promise<void> => {
     const existingChatMessageList = await db.chatMessageLists.where('messageListId').equals(chatMessageList.messageListId).first();
-    if (existingChatMessageList) {
-        chatMessageList.id = existingChatMessageList.id; // combine existing chatMessageList with new chatMessageList
-    }
-    await db.chatMessageLists.put(chatMessageList); // upsert chatMessageList
+    const newChatMessageList: ChatMessageList = existingChatMessageList ? { id: existingChatMessageList.id, ...chatMessageList } : chatMessageList;
+    await db.chatMessageLists.put(newChatMessageList);
 }
 
 export const deleteChatMessageList = async (messageListId: string): Promise<void> => {
@@ -410,10 +410,8 @@ export const getChatParticipantList = async (participantListId: string): Promise
 
 export const upsertChatParticipantList = async (chatParticipantList: ChatParticipantList): Promise<void> => {
     const existingChatParticipantList = await db.chatParticipantLists.where('participantListId').equals(chatParticipantList.participantListId).first();
-    if (existingChatParticipantList) {
-        chatParticipantList.id = existingChatParticipantList.id; // combine existing chatParticipantList with new chatParticipantList
-    }
-    await db.chatParticipantLists.put(chatParticipantList); // upsert chatParticipantList
+    const newChatParticipantList: ChatParticipantList = existingChatParticipantList ? { id: existingChatParticipantList.id, ...chatParticipantList } : chatParticipantList;
+    await db.chatParticipantLists.put(newChatParticipantList);
 }
 
 export const deleteChatParticipantList = async (participantListId: string): Promise<void> => {
@@ -441,10 +439,8 @@ export const getChatNotificationList = async (notificationListId: string): Promi
 
 export const upsertChatNotificationList = async (chatNotificationList: ChatNotificationList): Promise<void> => {
     const existingChatNotificationList = await db.chatNotificationLists.where('notificationListId').equals(chatNotificationList.notificationListId).first();
-    if (existingChatNotificationList) {
-        chatNotificationList.id = existingChatNotificationList.id; // combine existing chatNotificationList with new chatNotificationList
-    }
-    await db.chatNotificationLists.put(chatNotificationList); // upsert chatNotificationList
+    const newChatNotificationList: ChatNotificationList = existingChatNotificationList ? { id: existingChatNotificationList.id, ...chatNotificationList } : chatNotificationList;
+    await db.chatNotificationLists.put(newChatNotificationList);
 }
 
 export const deleteChatNotificationList = async (notificationListId: string): Promise<void> => {
@@ -471,10 +467,8 @@ export const getChatJoinRequestList = async (joinRequestListId: string): Promise
 
 export const upsertChatJoinRequestList = async (chatJoinRequestList: ChatJoinRequestList): Promise<void> => {
     const existingChatJoinRequestList = await db.chatJoinRequestLists.where('joinRequestListId').equals(chatJoinRequestList.joinRequestListId).first();
-    if (existingChatJoinRequestList) {
-        chatJoinRequestList.id = existingChatJoinRequestList.id; // combine existing chatJoinRequestList with new chatJoinRequestList
-    }
-    await db.chatJoinRequestLists.put(chatJoinRequestList); // upsert chatJoinRequestList
+    const newChatJoinRequestList: ChatJoinRequestList = existingChatJoinRequestList ? { id: existingChatJoinRequestList.id, ...chatJoinRequestList } : chatJoinRequestList;
+    await db.chatJoinRequestLists.put(newChatJoinRequestList);
 }
 
 export const deleteChatJoinRequestList = async (joinRequestListId: string): Promise<void> => {

@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Avatar, Typography, Button, DialogActions, DialogContent, DialogTitle, Dialog, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useCurrentUser} from '@/lib/hooks';
+import { useCurrentUser } from '@/lib/hooks';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import DeleteFriendDialog from '@/components/friend/DeleteFriendDialog';
 import SendFriendRequestDialog from '@/components/friend/SendFriendRequestDialog';
 import FriendGroupSelect from '@/components/friend/FriendGroupSelect';
+import FriendChatButton from '@/components/friend/FriendChatButton';
 
 interface UserDialogProps {
     userId: string;
@@ -114,6 +115,7 @@ export default function UserDisplayDialog({ userId, open, onClose }: UserDialogP
                                     onClose={() => setDeleteDialogOpen(false)}
                                 />
                             }
+                            <FriendChatButton friendUserId={user?.userId || ''} />
                         </>
                     )}
                     {isOther && (

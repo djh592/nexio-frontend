@@ -17,8 +17,8 @@ export default function SendFriendRequestDialog({ toUserId, open, onClose }: Sen
     const { currentUser } = useCurrentUser();
 
     const handleSendRequest = async () => {
+        if (!toUser) return;
         try {
-            if (!toUser) return;
             const response = await postFriendsRequests({
                 fromUserId: currentUser.userId,
                 toUserId: toUser.userId
