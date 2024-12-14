@@ -530,6 +530,7 @@ export const getJoinRequests = async (joinRequestListId: string, data: GetJoinRe
 
 // POST /joinRequests/{joinRequestListId}
 export interface PostJoinRequestsRequest {
+    userId: string;
     fromUserId: string;
     toChatId: string;
 }

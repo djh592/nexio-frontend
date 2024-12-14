@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useCurrentUser } from '@/lib/hooks';
 import GroupParticipantDisplay from '@/components/group/GroupParticipantDisplay';
+import GroupJoinButton from '@/components/group/GroupJoinButton';
 
 
 interface GroupDisplayDialogProps {
@@ -47,7 +48,7 @@ export default function GroupDisplayDialog({ chatId, open, onClose }: GroupDispl
                 {myParticipantType ?
                     <Button onClick={onClose}>Invite Friend</Button>
                     :
-                    <Button onClick={onClose}>Join Chat</Button>
+                    <GroupJoinButton chatId={chatId} />
                 }
             </DialogActions>
         </Dialog >
