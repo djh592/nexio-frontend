@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Chat } from '@/lib/definitions';
 import { getChatsSearch } from '@/lib/api';
 import { upsertChats } from '@/lib/storage';
-import GroupDisplayCard from '@/components/group/GroupDisplayCard';
+import GroupDisplayItem from '@/components/group/GroupDisplayItem';
 
 export default function GroupSearch() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -94,7 +94,7 @@ export default function GroupSearch() {
             >
                 <Stack sx={{ px: 1, py: 2 }}>
                     {searchResults.map((chat) => (
-                        <GroupDisplayCard key={chat.chatId} chatId={chat.chatId} />
+                        <GroupDisplayItem key={chat.chatId} chatId={chat.chatId} />
                     ))}
                 </Stack>
             </Popover>

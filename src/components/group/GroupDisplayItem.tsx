@@ -6,11 +6,11 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import GroupDisplayDialog from '@/components/group/GroupDisplayDialog';
 
 
-interface GroupDisplayCardProps {
+interface GroupDisplayItemProps {
     chatId: string;
 }
 
-export default function GroupDisplayCard({ chatId }: GroupDisplayCardProps) {
+export default function GroupDisplayItem({ chatId }: GroupDisplayItemProps) {
     const chat = useLiveQuery(() => db.chats.where('chatId').equals(chatId).first(), [chatId]);
 
     const [open, setOpen] = useState(false);
