@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import GroupDisplayCard from "@/components/group/GroupDisplayCard";
 import UserDisplayAvatar from "@/components/user/UserDisplayAvatar";
+import GroupSearch from "@/components/group/GroupSearch";
 
 export default function GroupPageContent() {
     return (
@@ -15,6 +16,7 @@ export default function GroupPageContent() {
             >
                 Groups
             </Typography>
+            <GroupSearch />
             <GroupDisplayCard chatId="1" />
             <GroupDisplayCard chatId="2" />
             <UserDisplayAvatar userId="1" />
