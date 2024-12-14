@@ -1,9 +1,10 @@
 'use client';
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, List, ListItem } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem } from '@mui/material';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import ChatNotificationItem from "@/components/chat/ChatNotificationItem";
+import ChatNotificationAddButton from "@/components/chat/ChatNotificationAddButton";
 
 
 interface ChatNotificationListDialogProps {
@@ -20,6 +21,7 @@ export default function ChatNotificationListDialog({ notificationListId, open, o
             open={open}
             onClose={onClose}
             scroll='paper'
+            fullWidth
         >
             <DialogTitle>
                 Notifications
@@ -34,7 +36,7 @@ export default function ChatNotificationListDialog({ notificationListId, open, o
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <ChatNotificationAddButton notificationListId={notificationListId} />
             </DialogActions>
         </Dialog>
     );

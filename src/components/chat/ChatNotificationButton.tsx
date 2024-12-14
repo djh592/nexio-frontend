@@ -28,7 +28,7 @@ export default function ChatNotificationButton({ chatId }: ChatNotificationButto
 
     return (
         <>
-            <IconButton>
+            <IconButton onClick={() => setOpen(true)}>
                 <NotificationsIcon />
             </IconButton>
             <ChatNotificationListDialog notificationListId={notificationListId} open={open} onClose={() => setOpen(false)} />

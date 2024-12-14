@@ -1,10 +1,11 @@
 'use client';
 import React from 'react';
-import { Box, Avatar, Typography, IconButton } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Box, Avatar, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import { ChatType } from '@/lib/definitions';
 import ChatSettingButton from '@/components/chat/ChatSettingButton';
+import ChatNotificationButton from '@/components/chat/ChatNotificationButton';
 
 interface ChatSessionTitleProps {
     chatId: string;
@@ -22,9 +23,7 @@ export default function ChatSessionTitle({ chatId }: ChatSessionTitleProps) {
                 </Typography>
             </Box>
             <Box>
-                <IconButton>
-                    <NotificationsIcon />
-                </IconButton>
+                <ChatNotificationButton chatId={chatId} />
                 <ChatSettingButton chatId={chatId} />
             </Box>
         </Box>
