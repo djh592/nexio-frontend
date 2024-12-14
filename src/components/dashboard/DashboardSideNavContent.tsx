@@ -11,7 +11,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LogoutDialog from '@/components/auth/LogoutDialog';
-import UserStack from '@/components/UserDisplayCard';
+import UserDisplayCard from '@/components/user/UserDisplayCard';
 
 export const drawerWidth = 200;
 
@@ -43,7 +43,7 @@ export default function DashboardSideNavContent() {
             }}
         >
             <Toolbar />
-            <UserStack userId={currentUser.userId} />
+            <UserDisplayCard userId={currentUser.userId} />
             <Divider
                 sx={{
                     mb: 2,

@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { updateUser } from '@/lib/storage';
 import { Avatar, Box, } from '@mui/material';
-import UserDisplayDialog from '@/components/UserDisplayDialog';
+import UserDisplayDialog from '@/components/user/UserDisplayDialog';
 
 interface ChatMessageUserAvatarProps {
     userId: string;

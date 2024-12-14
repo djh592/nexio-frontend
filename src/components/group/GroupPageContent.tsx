@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import GroupDisplayCard from "@/components/group/GroupDisplayCard";
-import UserDisplayAvatar from "@/components/UserDisplayAvatar";
+import UserDisplayAvatar from "@/components/user/UserDisplayAvatar";
 
 export default function GroupPageContent() {
     return (

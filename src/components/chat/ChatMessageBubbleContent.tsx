@@ -22,8 +22,8 @@ export default function ChatMessageBubbleContent({ content }: ChatMessageBubbleC
         case ChatMessageContentType.Video:
             return <ChatBubbleContentPayloadVideo contentPayload={contentPayload} />;
         case ChatMessageContentType.Forwarded:
-            const forwardedMessage: ChatMessage = JSON.parse(contentPayload);
-            return <ChatBubbleContentPayloadForwarded message={forwardedMessage} />;
+            const forwardedMessages: ChatMessage[] = JSON.parse(contentPayload);
+            return <ChatBubbleContentPayloadForwarded messages={forwardedMessages} />;
         default:
             return null;
     }
@@ -78,17 +78,19 @@ function ChatBubbleContentPayloadVideo({ contentPayload }: ChatBubbleContentPayl
 }
 
 interface ChatBubbleContentPayloadForwardedProps {
-    message: ChatMessage;
+    messages: ChatMessage[];
 }
 
-function ChatBubbleContentPayloadForwarded({ message }: ChatBubbleContentPayloadForwardedProps) {
+function ChatBubbleContentPayloadForwarded({ messages }: ChatBubbleContentPayloadForwardedProps) {
     return (
         <Card variant="outlined">
             <CardContent>
                 <Typography variant="subtitle2" color="textSecondary">
                     Forwarded Message:
                 </Typography>
-                <ChatMessageBubbleContent content={message.content} />
+                {messages.map((message, index) => (
+                    <ChatMessageBubbleContent key={index} content={message.content} />
+                ))}
             </CardContent>
         </Card>
     );

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IconButton, Popover, Paper, Stack, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import UserDisplayCard from '@/components/UserDisplayCard';
+import UserDisplayCard from '@/components/user/UserDisplayCard';
 import { User } from '@/lib/definitions';
 import { getUsersSearch } from '@/lib/api';
 import { upsertUsers } from '@/lib/storage';

@@ -7,7 +7,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import UserDisplayCard from '@/components/UserDisplayCard';
+import UserDisplayCard from '@/components/user/UserDisplayCard';
 import AddFriendGroupDialog from '@/components/friend/AddFriendGroupDialog';
 import DeleteFriendGroupDialog from './DeleteFriendGroupDialog';
 import { useCurrentUser } from '@/lib/hooks';

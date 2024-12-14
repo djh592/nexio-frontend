@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import UserDisplayAvatar from '@/components/UserDisplayAvatar';
+import UserDisplayAvatar from '@/components/user/UserDisplayAvatar';
 
 import { placeholderChatParticipantList } from '@/lib/placeholder';
 

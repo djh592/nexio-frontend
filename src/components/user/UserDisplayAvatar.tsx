@@ -4,7 +4,7 @@ import { Box, Avatar, Typography } from "@mui/material";
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { updateUser } from '@/lib/storage';
-import UserDisplayDialog from './UserDisplayDialog';
+import UserDisplayDialog from '@/components/user/UserDisplayDialog';
 
 interface UserDisplayAvatarProps {
     userId: string;
