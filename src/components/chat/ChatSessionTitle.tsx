@@ -11,7 +11,7 @@ interface ChatSessionTitleProps {
 }
 
 export default function ChatSessionTitle({ chatId }: ChatSessionTitleProps) {
-    const chat = useLiveQuery(() => db.chats.get(chatId), [chatId]);
+    const chat = useLiveQuery(() => db.chats.where('chatId').equals(chatId).first(), [chatId]);
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 2, borderBottom: '1px solid #e0e0e0' }}>
