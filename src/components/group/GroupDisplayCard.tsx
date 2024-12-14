@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Avatar, Stack, Typography } from "@mui/material";
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-// import GroupDisplayDialog from '@/components/group/GroupDisplayDialog';
+import GroupDisplayDialog from '@/components/group/GroupDisplayDialog';
 
 
 interface GroupDisplayCardProps {
@@ -40,18 +40,18 @@ export default function GroupDisplayCard({ chatId }: GroupDisplayCardProps) {
                 />
                 <Box sx={{ mr: 'auto' }}>
                     <Typography variant="body1" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                        {chat?.chatName || 'ChatName'}
+                        {chat?.chatName || 'Group Name'}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                         {chat?.createdAt || 'createdAt'}
                     </Typography>
                 </Box>
             </Stack>
-            {/* <GroupDisplayDialog
+            <GroupDisplayDialog
                 chatId={chatId}
                 open={open}
                 onClose={() => setOpen(false)}
-            /> */}
+            />
         </>
     );
 }
