@@ -8,7 +8,8 @@ interface ChatMessageBubbleContentProps {
 
 export default function ChatMessageBubbleContent({ content }: ChatMessageBubbleContentProps) {
     const contentType = content.contentType;
-    const contentPayload = atob(content.contentPayload); // Decode base64 payload
+    // Decode base64 payload
+    const contentPayload = atob(content.contentPayload);
 
     switch (contentType) {
         case ChatMessageContentType.Text:

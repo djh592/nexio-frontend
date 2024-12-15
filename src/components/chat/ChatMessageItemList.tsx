@@ -35,20 +35,24 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
             if (!newReadBy.includes(currentUser.userId)) {
                 newReadBy.push(currentUser.userId);
                 const newMeta: ChatMessageMeta = { ...message.meta, readBy: newReadBy };
-                const response = await patchMessages(messageListId, {
-                    fromUserId: currentUser.userId,
-                    chatMessage: {
-                        ...message,
-                        meta: newMeta
+                try {
+                    const response = await patchMessages(messageListId, {
+                        fromUserId: currentUser.userId,
+                        chatMessage: {
+                            ...message,
+                            meta: newMeta
+                        }
+                    });
+                    if (response.code !== 0) {
+                        throw new Error(response.info);
                     }
-                });
-                if (response.code !== 0) {
-                    console.log(response.info);
+                }
+                catch (error) {
+                    console.log(error);
                 }
             }
         });
-    }
-        , [currentUser, messageList, messageListId]);
+    }, [currentUser, messageList, messageListId]);
 
     useEffect(() => {
         if (!currentUser) {
@@ -74,7 +78,7 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
         if (!messages.length) return null;
 
         const renderedMessages = [];
-        let lastTimestamp = new Date(messages[0].createdAt).getTime() - 100 * 60 * 1000;
+        let lastTimestamp = new Date(messages[0].createdAt).getTime();
 
         renderedMessages.push(
             <ChatMessageTimestamp key='timestamp-000' timestamp={messages[0].createdAt} />

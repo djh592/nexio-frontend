@@ -34,6 +34,7 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
         try {
             const chatMessageContent: ChatMessageContent = {
                 contentType: ChatMessageContentType.Text,
+                // Encode the message to base64
                 contentPayload: btoa(message),
             };
             const chatMessageContents: ChatMessageContent[] = [chatMessageContent];
