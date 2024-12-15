@@ -4,10 +4,11 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
 import { updateChatMessageList } from '@/lib/storage';
 import { useCurrentUser } from '@/lib/hooks';
+import { patchMessages } from '@/lib/api';
 import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
 import ChatMessageWithdrawn from '@/components/chat/ChatMessageWithdrawn';
-import { ChatMessage, ChatType } from '@/lib/definitions';
+import { ChatMessage, ChatMessageMeta, ChatType } from '@/lib/definitions';
 
 interface ChatMessageItemListProps {
     chatType: ChatType;
@@ -19,6 +20,31 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
     const messageList = useLiveQuery(() => db.chatMessageLists.where('messageListId').equals(messageListId).first(), [messageListId]);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!messageList || !currentUser) {
+            return;
+        }
+        const newMessageList = messageList;
+        newMessageList.messages.forEach(async message => {
+            const newReadBy = message.meta.readBy;
+            if (!newReadBy.includes(currentUser.userId)) {
+                newReadBy.push(currentUser.userId);
+                const newMeta: ChatMessageMeta = { ...message.meta, readBy: newReadBy };
+                const response = await patchMessages(messageListId, {
+                    fromUserId: currentUser.userId,
+                    chatMessage: {
+                        ...message,
+                        meta: newMeta
+                    }
+                });
+                if (response.code !== 0) {
+                    console.log(response.info);
+                }
+            }
+        });
+    }
+        , [currentUser, messageList, messageListId]);
 
     useEffect(() => {
         if (!currentUser) {
