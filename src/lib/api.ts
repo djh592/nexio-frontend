@@ -426,6 +426,7 @@ export const getMessages = async (messageListId: string, data: GetMessagesReques
 export interface PostMessagesRequest {
     fromUserId: string;
     chatMessageContents: ChatMessageContent[];
+    replyMessageId?: string;
 }
 
 export interface PostMessagesResponse {

@@ -17,6 +17,8 @@ import {
 import { useCurrentUser } from '@/lib/hooks';
 import { postMessages } from '@/lib/api';
 import { ChatMessageContent, ChatMessageContentType } from '@/lib/definitions';
+import { useAppSelector } from '@/lib/hooks';
+import ChatMessageReply from '@/components/chat/ChatMessageReply';
 
 interface ChatMessageInputProps {
     messageListId: string;
@@ -24,6 +26,7 @@ interface ChatMessageInputProps {
 
 export default function ChatMessageInput({ messageListId }: ChatMessageInputProps) {
     const { currentUser } = useCurrentUser();
+    const replyMessageId = useAppSelector((state) => state.chat.replyMessageId);
     const [message, setMessage] = useState('');
 
     const handleSendMessage = async () => {
@@ -37,6 +40,7 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
             const response = await postMessages(messageListId, {
                 fromUserId: currentUser.userId,
                 chatMessageContents: chatMessageContents,
+                replyMessageId: replyMessageId,
             });
 
             if (response.code === 0) {
@@ -79,94 +83,100 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
     };
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                gap: 1,
-                px: 1,
-                // borderTop: '1px solid #ddd',
-                // overflow: 'hidden',
-                flexShrink: 0,
-            }}
-        >
-            <TextField
-                fullWidth
-                multiline
-                rows={3}
-                variant="outlined"
-                placeholder="Type a message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+        <>
+            {
+                replyMessageId &&
+                <ChatMessageReply messageListId={messageListId} replyMessageId={replyMessageId} />
+            }
+            <Box
                 sx={{
-                    // borderRadius: 4,
-                    flexGrow: 1,
-                    overflow: 'auto',
+                    display: 'flex',
+                    gap: 1,
+                    px: 1,
+                    // borderTop: '1px solid #ddd',
+                    // overflow: 'hidden',
+                    flexShrink: 0,
                 }}
-            />
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                flexShrink: 0,
-            }}
             >
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Tooltip title="Image">
-                        <IconButton component="label" >
-                            <ImageIcon />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                hidden
-                                onChange={(e) => handleFileUpload(e, ChatMessageContentType.Image)}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="File">
-                        <IconButton component="label" >
-                            <FileIcon />
-                            <input
-                                type="file"
-                                hidden
-                                onChange={(e) => handleFileUpload(e, ChatMessageContentType.File)}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Video">
-                        <IconButton component="label" >
-                            <VideoIcon />
-                            <input
-                                type="file"
-                                accept="video/*"
-                                hidden
-                                onChange={(e) => handleFileUpload(e, ChatMessageContentType.Video)}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Audio">
-                        <IconButton component="label" >
-                            <AudioIcon />
-                            <input
-                                type="file"
-                                accept="audio/*"
-                                hidden
-                                onChange={(e) => handleFileUpload(e, ChatMessageContentType.Audio)}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSendMessage}
-                    endIcon={<SendIcon />}
-                // sx={{ alignSelf: 'flex-start' }}
+                <TextField
+                    fullWidth
+                    multiline
+                    rows={3}
+                    variant="outlined"
+                    placeholder="Type a message..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    sx={{
+                        // borderRadius: 4,
+                        flexGrow: 1,
+                        overflow: 'auto',
+                    }}
+                />
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    flexShrink: 0,
+                }}
                 >
-                    Send
-                </Button>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Tooltip title="Image">
+                            <IconButton component="label" >
+                                <ImageIcon />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    onChange={(e) => handleFileUpload(e, ChatMessageContentType.Image)}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="File">
+                            <IconButton component="label" >
+                                <FileIcon />
+                                <input
+                                    type="file"
+                                    hidden
+                                    onChange={(e) => handleFileUpload(e, ChatMessageContentType.File)}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Video">
+                            <IconButton component="label" >
+                                <VideoIcon />
+                                <input
+                                    type="file"
+                                    accept="video/*"
+                                    hidden
+                                    onChange={(e) => handleFileUpload(e, ChatMessageContentType.Video)}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Audio">
+                            <IconButton component="label" >
+                                <AudioIcon />
+                                <input
+                                    type="file"
+                                    accept="audio/*"
+                                    hidden
+                                    onChange={(e) => handleFileUpload(e, ChatMessageContentType.Audio)}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSendMessage}
+                        endIcon={<SendIcon />}
+                    // sx={{ alignSelf: 'flex-start' }}
+                    >
+                        Send
+                    </Button>
+                </Box>
             </Box>
-        </Box>
+        </>
     );
 }
