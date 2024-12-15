@@ -41,7 +41,7 @@ export default function ChatMessageReadBy({ meta, chatType }: ChatMessageReadByP
         >
             {chatType === ChatType.Private ? (
                 <Typography variant="caption" color="textSecondary">
-                    {meta.readBy.length > 0 ? 'Read' : 'Unread'}
+                    {meta.readBy.length > 1 ? 'Read' : 'Unread'}
                 </Typography>
             ) : (
                 <Typography variant="caption" color="textSecondary">

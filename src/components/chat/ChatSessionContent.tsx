@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { ChatType } from '@/lib/definitions';
 import ChatMessageInput from "@/components/chat/ChatMessageInput";
 import ChatMessageItemList from '@/components/chat/ChatMessageItemList';
 import ChatSessionTitle from '@/components/chat/ChatSessionTitle';
@@ -28,15 +27,15 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                 <ChatSessionTitle chatId={chatId} />
             </Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-                {messageListId ?
+                {messageListId && chat ?
                     <ChatMessageItemList
-                        chatType={ChatType.Group}
+                        chatType={chat.chatType}
                         messageListId={messageListId}
                     />
                     : null}
             </Box>
             <Box sx={{ flexShrink: 0 }}>
-                {messageListId ?
+                {messageListId && chat ?
                     <ChatMessageInput
                         messageListId={messageListId}
                     />

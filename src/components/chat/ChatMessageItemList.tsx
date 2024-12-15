@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Checkbox } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
 import { updateChatMessageList } from '@/lib/storage';
-import { useCurrentUser } from '@/lib/hooks';
+import { useCurrentUser, useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { addForwardingMessage, removeForwardingMessage } from '@/lib/features/chat/chatSlice';
 import { patchMessages } from '@/lib/api';
 import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
@@ -17,6 +18,9 @@ interface ChatMessageItemListProps {
 
 export default function ChatMessageItemList({ chatType, messageListId }: ChatMessageItemListProps) {
     const { currentUser } = useCurrentUser();
+    const dispatch = useAppDispatch();
+    const isForwarding = useAppSelector(state => state.chat.isForwarding);
+    const forwardingMessages = useAppSelector(state => state.chat.forwardingMessages);
     const messageList = useLiveQuery(() => db.chatMessageLists.where('messageListId').equals(messageListId).first(), [messageListId]);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const bottomRef = useRef<HTMLDivElement>(null);
@@ -73,7 +77,7 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
         let lastTimestamp = new Date(messages[0].createdAt).getTime() - 100 * 60 * 1000;
 
         renderedMessages.push(
-            <ChatMessageTimestamp key={`timestamp-${messages[0].messageId}`} timestamp={messages[0].createdAt} />
+            <ChatMessageTimestamp key='timestamp-000' timestamp={messages[0].createdAt} />
         );
 
         messages.forEach(message => {
@@ -95,7 +99,23 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
                 );
             } else {
                 renderedMessages.push(
-                    <ChatMessageItem key={message.messageId} messageListId={messageListId} chatType={chatType} message={message} />
+                    <Box key={message.messageId} sx={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'flex-start' }}>
+                        {
+                            isForwarding ?
+                                <Checkbox
+                                    checked={forwardingMessages.some(forwardingMessage => forwardingMessage.messageId === message.messageId)}
+                                    onChange={(event) => {
+                                        if (event.target.checked) {
+                                            dispatch(addForwardingMessage(message));
+                                        } else {
+                                            dispatch(removeForwardingMessage(message));
+                                        }
+                                    }}
+                                />
+                                : null
+                        }
+                        <ChatMessageItem messageListId={messageListId} chatType={chatType} message={message} />
+                    </Box>
                 );
             }
         });
