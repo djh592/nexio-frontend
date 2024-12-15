@@ -13,7 +13,7 @@ interface ChatSessionContentProps {
 }
 
 export default function ChatSessionContent({ chatId }: ChatSessionContentProps) {
-    const chat = useLiveQuery(() => db.chats.get(chatId), [chatId]);
+    const chat = useLiveQuery(() => db.chats.where('chatId').equals(chatId).first(), [chatId]);
     const [messageListId, setMessageListId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -28,15 +28,19 @@ export default function ChatSessionContent({ chatId }: ChatSessionContentProps) 
                 <ChatSessionTitle chatId={chatId} />
             </Box>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
-                <ChatMessageItemList
-                    chatType={ChatType.Group}
-                    messageListId={messageListId ? messageListId : ''}
-                />
+                {messageListId ?
+                    <ChatMessageItemList
+                        chatType={ChatType.Group}
+                        messageListId={messageListId}
+                    />
+                    : null}
             </Box>
             <Box sx={{ flexShrink: 0 }}>
-                <ChatMessageInput
-                    messageListId={messageListId ? messageListId : ''}
-                />
+                {messageListId ?
+                    <ChatMessageInput
+                        messageListId={messageListId}
+                    />
+                    : null}
             </Box>
         </Box>
     );

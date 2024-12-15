@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { ChatParticipantType } from '@/lib/definitions';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -41,9 +41,21 @@ export default function GroupDisplayDialog({ chatId, open, onClose }: GroupDispl
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {chat?.createdAt || 'createdAt'}
+                    Participants
                 </DialogContentText>
                 <GroupParticipantDisplay chatParticipantListId={chat?.participantListId || 'placeholder'} />
+                <DialogContentText>
+                    My Role: {myParticipantType}
+                </DialogContentText>
+                {
+                    myParticipantType === ChatParticipantType.Owner ?
+                        <>
+                            <Button>
+                                Delete Group
+                            </Button>
+                        </>
+                        : null
+                }
             </DialogContent>
             <DialogActions>
                 {myParticipantType ?

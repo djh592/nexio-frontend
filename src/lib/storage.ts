@@ -45,7 +45,7 @@ export const updateUsers = async (userIds: string[]): Promise<void> => {
         }
     }
     catch (error) {
-        console.log(`Failed to fetch users: ${error}`);
+        console.log(error);
     }
 }
 
@@ -175,7 +175,7 @@ export const updateFriendGroups = async (userId: string): Promise<void> => {
             throw new Error(response.info);
         }
     } catch (error) {
-        console.log(`Failed to fetch friend groups: ${error}`);
+        console.log(error);
     }
 }
 
@@ -241,7 +241,7 @@ export const updateFriendRequests = async (userId: string): Promise<void> => {
         }
     }
     catch (error) {
-        console.log(`Failed to fetch friend requests: ${error}`);
+        console.log(error);
     }
 }
 
@@ -294,7 +294,7 @@ export const deleteFriendRequests = async (requestIds: string[]): Promise<void> 
 // Chats
 export const updateChats = async (userId: string): Promise<void> => {
     try {
-        const response = await getChatsFromBackend({ userId: userId });
+        const response = await getChatsFromBackend({ fromUserId: userId });
         if (response.code === 0) {
             const fetchedChats = response.chats;
             await upsertChats(fetchedChats);
@@ -304,7 +304,7 @@ export const updateChats = async (userId: string): Promise<void> => {
         }
     }
     catch (error) {
-        console.log(`Failed to fetch chats: ${error}`);
+        console.log(error);
     }
 }
 
@@ -354,7 +354,7 @@ export const updateChatMessageList = async (messageListId: string, fromUserId: s
         }
     }
     catch (error) {
-        console.log(`Failed to fetch chat message list: ${error}`);
+        console.log(error);
     }
 }
 
@@ -400,7 +400,7 @@ export const updateChatParticipantList = async (participantListId: string, fromU
         }
     }
     catch (error) {
-        console.log(`Failed to fetch chat participant list: ${error}`);
+        console.log(error);
     }
 }
 
@@ -457,7 +457,7 @@ export const updateChatJoinRequestList = async (joinRequestListId: string, fromU
         }
     }
     catch (error) {
-        console.log(`Failed to fetch chat join request list: ${error}`);
+        console.log(error);
     }
 }
 

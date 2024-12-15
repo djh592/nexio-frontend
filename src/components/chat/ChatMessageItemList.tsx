@@ -50,7 +50,7 @@ export default function ChatMessageItemList({ chatType, messageListId }: ChatMes
         if (!currentUser) {
             return;
         }
-        updateChatMessageList(currentUser.userId, messageListId);
+        updateChatMessageList(messageListId, currentUser.userId);
     }
         , [currentUser, messageListId]);
 

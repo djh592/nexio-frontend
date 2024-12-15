@@ -28,25 +28,24 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
 
     const handleSendMessage = async () => {
         if (!message.trim()) return;
-
-        const chatMessageContent: ChatMessageContent = {
-            contentType: ChatMessageContentType.Text,
-            contentPayload: btoa(message),
-        };
-
         try {
+            const chatMessageContent: ChatMessageContent = {
+                contentType: ChatMessageContentType.Text,
+                contentPayload: btoa(message),
+            };
+            const chatMessageContents: ChatMessageContent[] = [chatMessageContent];
             const response = await postMessages(messageListId, {
                 fromUserId: currentUser.userId,
-                chatMessageContent,
+                chatMessageContents: chatMessageContents,
             });
 
             if (response.code === 0) {
                 setMessage('');
             } else {
-                console.error(response.info);
+                console.log(response.info);
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     };
 
@@ -55,16 +54,15 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
         if (file) {
             const reader = new FileReader();
             reader.onload = async () => {
-                const contentPayload = btoa(reader.result as string);
-                const chatMessageContent: ChatMessageContent = {
-                    contentType,
-                    contentPayload,
-                };
-
                 try {
+                    const contentPayload = btoa(reader.result as string);
+                    const chatMessageContent: ChatMessageContent = {
+                        contentType,
+                        contentPayload,
+                    };
                     const response = await postMessages(messageListId, {
                         fromUserId: currentUser.userId,
-                        chatMessageContent,
+                        chatMessageContents: [chatMessageContent],
                     });
 
                     if (response.code === 0) {

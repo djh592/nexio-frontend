@@ -3,12 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
-import ChatItem from '@/components/chat/ChatItem';
+import { updateChats } from '@/lib/storage';
+import { useCurrentUser } from '@/lib/hooks';
 import { Chat } from '@/lib/definitions';
+import ChatItem from '@/components/chat/ChatItem';
+
 
 export default function ChatItemList() {
-    const chats = useLiveQuery(() => db.chats.toArray(), []);
+    const { currentUser } = useCurrentUser();
+    const chats = useLiveQuery(() => db.chats.toArray());
     const [sortedChats, setSortedChats] = useState<Chat[]>([]);
+
+    useEffect(() => {
+        if (currentUser.userId !== '') {
+            updateChats(currentUser.userId);
+        }
+    }, [currentUser]);
 
     useEffect(() => {
         if (chats) {

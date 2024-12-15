@@ -320,7 +320,7 @@ export const patchFriendsRequests = async (data: PatchFriendsRequestsRequest): P
 
 // GET /chats
 export interface GetChatsRequest {
-    userId: string;
+    fromUserId: string;
 }
 
 export interface GetChatsResponse {
@@ -425,7 +425,7 @@ export const getMessages = async (messageListId: string, data: GetMessagesReques
 // POST /messages/{messageListId}
 export interface PostMessagesRequest {
     fromUserId: string;
-    chatMessageContent: ChatMessageContent;
+    chatMessageContents: ChatMessageContent[];
 }
 
 export interface PostMessagesResponse {
