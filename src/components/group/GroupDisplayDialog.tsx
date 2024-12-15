@@ -8,6 +8,7 @@ import { useCurrentUser } from '@/lib/hooks';
 import GroupParticipantDisplay from '@/components/group/GroupParticipantDisplay';
 import GroupInviteButton from '@/components/group/GroupInviteButton';
 import GroupJoinButton from '@/components/group/GroupJoinButton';
+import GroupDeleteButton from '@/components/group/GroupDeleteButton';
 
 
 interface GroupDisplayDialogProps {
@@ -50,8 +51,9 @@ export default function GroupDisplayDialog({ chatId, open, onClose }: GroupDispl
                 {
                     myParticipantType === ChatParticipantType.Owner ?
                         <>
+                            <GroupDeleteButton chatId={chatId} />
                             <Button>
-                                Delete Group
+                                Change Owner
                             </Button>
                         </>
                         : null
