@@ -44,6 +44,11 @@ export function FriendRequestNotificationButtonReady() {
     }
         , [receivedFriendRequests]);
 
+    const [invisible, setInvisible] = useState(newRequestCount === 0);
+    useEffect(() => {
+        setInvisible(newRequestCount === 0);
+    }, [newRequestCount]);
+
     return (
         <IconButton
             onClick={handleNavigation}
@@ -53,7 +58,7 @@ export function FriendRequestNotificationButtonReady() {
             <Badge
                 color="error"
                 badgeContent={newRequestCount}
-                invisible={newRequestCount === 0}
+                invisible={invisible}
             >
                 <NotificationsIcon />
             </Badge>
