@@ -32,7 +32,7 @@ export default function ChatItemContent({ chat }: ChatItemContentProps) {
         setLastMessageTime(lastMessage ? lastMessage.createdAt : chat.createdAt);
     }
         , [chat, lastMessage, messageList]);
-        
+
     const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
@@ -47,11 +47,11 @@ export default function ChatItemContent({ chat }: ChatItemContentProps) {
         replace(`${pathname}?${params.toString()}`);
     };
 
-    const[invisible, setInvisible] = useState(unreadCount === 0);
+    const [invisible, setInvisible] = useState(chat.chatSettings.isMuted || unreadCount === 0);
 
     useEffect(() => {
-        setInvisible(unreadCount === 0);
-    }, [unreadCount]);
+        setInvisible(chat.chatSettings.isMuted || unreadCount === 0);
+    }, [chat.chatSettings.isMuted, unreadCount]);
 
     return (
         <ListItem
