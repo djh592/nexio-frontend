@@ -43,7 +43,10 @@ export default function ChatSessionTitle({ chatId }: ChatSessionTitleProps) {
                         <GroupJoinRequestButton chatId={chatId} />
                     ) : null
                 }
-                <ChatNotificationButton chatId={chatId} />
+                {
+                    chat?.chatType === ChatType.Group &&
+                    <ChatNotificationButton chatId={chatId} />
+                }
                 <ChatSettingButton chatId={chatId} />
             </Box>
         </Box>
