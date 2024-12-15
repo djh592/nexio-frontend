@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import GroupInviteDialog from '@/components/group/GroupInviteDialog';

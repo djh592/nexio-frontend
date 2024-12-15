@@ -1,12 +1,13 @@
+'use client';
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import GroupJoinDialog from '@/components/group/GroupJoinDialog';
 
-interface GroupJoinButton {
+interface GroupJoinButtonProps {
     chatId: string;
 }
 
-export default function GroupJoinButton({ chatId }: GroupJoinButton) {
+export default function GroupJoinButton({ chatId }: GroupJoinButtonProps) {
     const [open, setOpen] = useState(false);
 
     return (
