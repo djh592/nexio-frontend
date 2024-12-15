@@ -72,10 +72,10 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
                     if (response.code === 0) {
                         setMessage('');
                     } else {
-                        console.error(response.info);
+                        throw new Error(response.info);
                     }
                 } catch (error) {
-                    console.error(error);
+                    console.log(error);
                 }
             };
             reader.readAsDataURL(file);
