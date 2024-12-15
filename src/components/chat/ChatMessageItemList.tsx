@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import { updateChatMessageList } from '@/lib/storage';
+import { useCurrentUser } from '@/lib/hooks';
 import ChatMessageItem from '@/components/chat/ChatMessageItem';
 import ChatMessageTimestamp from '@/components/chat/ChatMessageTimestamp';
 import ChatMessageWithdrawn from '@/components/chat/ChatMessageWithdrawn';
@@ -13,9 +15,18 @@ interface ChatMessageItemListProps {
 }
 
 export default function ChatMessageItemList({ chatType, messageListId }: ChatMessageItemListProps) {
+    const { currentUser } = useCurrentUser();
     const messageList = useLiveQuery(() => db.chatMessageLists.where('messageListId').equals(messageListId).first(), [messageListId]);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!currentUser) {
+            return;
+        }
+        updateChatMessageList(currentUser.userId, messageListId);
+    }
+        , [currentUser, messageListId]);
 
     useEffect(() => {
         if (messageList) {
