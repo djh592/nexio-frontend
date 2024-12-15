@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import GroupSearch from "@/components/group/GroupSearch";
 import GroupDisplayItemList from "@/components/group/GroupDisplayItemList";
+import GroupAddButton from "@/components/group/GroupAddButton";
 
 export default function GroupPageContent() {
     return (
@@ -15,7 +16,10 @@ export default function GroupPageContent() {
             >
                 Groups
             </Typography>
-            <GroupSearch />
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', my: 1 }}>
+                <GroupSearch />
+                <GroupAddButton />
+            </Box>
             <GroupDisplayItemList />
         </Box>
     );
