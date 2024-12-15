@@ -36,6 +36,7 @@ export default function GroupDisplayDialog({ chatId, open, onClose }: GroupDispl
             open={open}
             onClose={onClose}
             scroll='paper'
+            fullWidth
         >
             <DialogTitle>
                 {chat?.chatName || 'Group Name'}

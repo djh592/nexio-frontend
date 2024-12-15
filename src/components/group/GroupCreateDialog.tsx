@@ -51,7 +51,7 @@ export default function GroupCreateDialog({ open, onClose }: GroupCreateDialogPr
             const response = await postChats({
                 fromUserId: currentUser.userId,
                 chatType: ChatType.Group,
-                participantIds: selectedFriends,
+                participantIds: [currentUser.userId, ...selectedFriends],
             });
             if (response.code === 0) {
                 try {await upsertChat(response.chat);}

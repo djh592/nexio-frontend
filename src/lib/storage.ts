@@ -313,8 +313,9 @@ export const getChats = async (): Promise<Chat[]> => {
 }
 
 export const upsertChat = async (chat: Chat): Promise<void> => {
+    let newChat: Chat = { ...chat, id: undefined };
     const existingChat = await db.chats.where('chatId').equals(chat.chatId).first();
-    const newChat: Chat = existingChat ? { id: existingChat.id, ...chat } : chat;
+    newChat = existingChat ? { id: existingChat.id, ...chat } : chat;
     await db.chats.put(newChat);
 }
 
@@ -329,7 +330,7 @@ export const upsertChats = async (chats: Chat[]): Promise<void> => {
     // combine existing chats with new chats
     const chatsWithId = chats.map(chat => {
         const existingChat = chatMap.get(chat.chatId);
-        return existingChat ? { ...chat, id: existingChat.id } : chat;
+        return existingChat ? { ...chat, id: existingChat.id } : { ...chat, id: undefined };
     });
 
     await db.chats.bulkPut(chatsWithId);
