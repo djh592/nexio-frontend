@@ -4,17 +4,17 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, FormCon
 import { useCurrentUser } from '@/lib/hooks';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { postChats } from '@/lib/api';
-import { ChatType } from '@/lib/definitions';
-import { upsertChat } from '@/lib/storage';
+import { postJoinRequests } from '@/lib/api';
 import UserDisplayAvatar from '@/components/user/UserDisplayAvatar';
 
-interface GroupCreateDialogProps {
+interface GroupInviteDialogProps {
+    chatId: string;
     open: boolean;
     onClose: () => void;
 }
 
-export default function GroupCreateDialog({ open, onClose }: GroupCreateDialogProps) {
+export default function GroupInviteDialog({ chatId, open, onClose }: GroupInviteDialogProps) {
+    const chat = useLiveQuery(() => db.chats.where('chatId').equals(chatId).first(), [chatId]);
     const { currentUser } = useCurrentUser();
     const friendGroups = useLiveQuery(() => db.friendGroups.toArray(), []);
     const [friendIds, setFriendIds] = useState<string[]>([]);
@@ -25,39 +25,28 @@ export default function GroupCreateDialog({ open, onClose }: GroupCreateDialogPr
         }
     }, [friendGroups]);
 
-    const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
+    const [selectedFriendId, setSelectedFriendId] = useState<string>('');
 
-    useEffect(() => {
-        selectedFriends.forEach((userId) => {
-            if (!friendIds.includes(userId)) {
-                setSelectedFriends((prevSelected) => prevSelected.filter((id) => id !== userId));
-            }
-        });
-    }, [selectedFriends, friendIds]);
 
-    const handleToggle = (userId: string) => {
-        setSelectedFriends((prevSelected) => {
-            if (prevSelected.includes(userId)) {
-                return prevSelected.filter((id) => id !== userId);
-            } else {
-                setSelectedFriends((prevSelected) => [...prevSelected, userId]);
-                return [...prevSelected, userId];
-            }
-        });
+    const handleToggle = (friendUserId: string) => {
+        if (selectedFriendId === friendUserId) {
+            setSelectedFriendId('');
+        }
+        else {
+            setSelectedFriendId(friendUserId);
+        }
     };
 
     const handleCreate = async () => {
+        if (selectedFriendId === '') return;
+        if (!currentUser.userId || !chat) return;
         try {
-            const response = await postChats({
+            const response = await postJoinRequests(chat.joinRequestListId, {
+                userId: currentUser.userId,
                 fromUserId: currentUser.userId,
-                chatType: ChatType.Group,
-                participantIds: selectedFriends,
+                toChatId: chat.chatId,
             });
-            if (response.code === 0) {
-                try {await upsertChat(response.chat);}
-                catch (error) {console.log(error);}
-            }
-            else {
+            if (response.code !== 0) {
                 throw new Error(response.info);
             }
         }
@@ -71,15 +60,15 @@ export default function GroupCreateDialog({ open, onClose }: GroupCreateDialogPr
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth>
-            <DialogTitle>Create Group</DialogTitle>
+            <DialogTitle>Invite Friend to Group</DialogTitle>
             <DialogContent>
-                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>]
                     {friendIds.map((friendId) => (
                         <FormControlLabel
                             key={friendId}
                             control={
                                 <Checkbox
-                                    checked={selectedFriends.includes(friendId)}
+                                    checked={selectedFriendId === friendId}
                                     onChange={() => handleToggle(friendId)}
                                 />
                             }
@@ -89,7 +78,7 @@ export default function GroupCreateDialog({ open, onClose }: GroupCreateDialogPr
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCreate} disabled={selectedFriends.length === 0}>
+                <Button onClick={handleCreate} disabled={!selectedFriendId}>
                     Create
                 </Button>
                 <Button onClick={onClose}>Cancel</Button>
