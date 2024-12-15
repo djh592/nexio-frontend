@@ -17,7 +17,7 @@ export default function ChatMessageForwardButton({ chatId }: ChatMessageForwardB
         <>
             <Button
                 onClick={() => setOpen(true)}
-                disabled={isForwarding && forwardingMessages.length > 0}
+                disabled={!(isForwarding && forwardingMessages.length > 0)}
             >
                 Forward
             </Button>
