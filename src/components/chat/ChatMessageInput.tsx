@@ -19,6 +19,7 @@ import { postMessages } from '@/lib/api';
 import { ChatMessageContent, ChatMessageContentType } from '@/lib/definitions';
 import { useAppSelector } from '@/lib/hooks';
 import ChatMessageReply from '@/components/chat/ChatMessageReply';
+import ChatMessageForwardButton from '@/components/chat/ChatMessageForwardButton';
 
 interface ChatMessageInputProps {
     messageListId: string;
@@ -27,6 +28,7 @@ interface ChatMessageInputProps {
 export default function ChatMessageInput({ messageListId }: ChatMessageInputProps) {
     const { currentUser } = useCurrentUser();
     const replyMessageId = useAppSelector((state) => state.chat.replyMessageId);
+    const isForwarding = useAppSelector((state) => state.chat.isForwarding);
     const [message, setMessage] = useState('');
 
     const handleSendMessage = async () => {
@@ -166,18 +168,19 @@ export default function ChatMessageInput({ messageListId }: ChatMessageInputProp
                         </Tooltip>
                     </Box>
 
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSendMessage}
-                        endIcon={<SendIcon />}
-                    // sx={{ alignSelf: 'flex-start' }}
-                    >
-                        Send
-                    </Button>
+                    {isForwarding ?
+                        <ChatMessageForwardButton chatId={messageListId} />
+                        :
+                        < Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSendMessage}
+                            endIcon={<SendIcon />}
+                        >
+                            Send
+                        </Button>}
                 </Box>
-            </Box>
+            </Box >
         </>
     );
 }
